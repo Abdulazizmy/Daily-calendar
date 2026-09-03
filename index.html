@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NOVA Calendar</title>
+
+<title>Abdulaziz Calendar</title>
 
 <style>
+
 *{
     box-sizing:border-box;
 }
@@ -13,36 +15,98 @@
 body{
     margin:0;
     min-height:100vh;
-    font-family:Arial, sans-serif;
-    color:white;
+    font-family:Arial,sans-serif;
+    color:#fff;
+
     background:
-        radial-gradient(circle at 10% 10%, #39206b 0%, transparent 35%),
-        radial-gradient(circle at 90% 90%, #102d55 0%, transparent 35%),
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(124,58,237,.30),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 85%,
+            rgba(37,99,235,.25),
+            transparent 30%
+        ),
         #080a12;
+
     display:flex;
     justify-content:center;
     align-items:center;
-    padding:20px;
+    padding:25px;
 }
 
 .app{
     width:min(1500px,96vw);
-    min-height:90vh;
-    padding:32px;
-    border-radius:36px;
-    background:rgba(20,22,34,.82);
+
+    background:rgba(18,20,32,.82);
+
     border:1px solid rgba(255,255,255,.08);
-    box-shadow:0 30px 80px rgba(0,0,0,.45);
+
     backdrop-filter:blur(20px);
+
+    border-radius:36px;
+
+    padding:32px;
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.45);
 }
 
-/* HEADER */
+
+/* =========================
+   Header
+========================= */
 
 .header{
     display:grid;
-    grid-template-columns:1fr auto 1fr;
+
+    grid-template-columns:
+        1fr
+        auto
+        1fr;
+
     align-items:center;
-    margin-bottom:28px;
+
+    margin-bottom:25px;
+}
+
+.nav{
+    display:flex;
+
+    gap:10px;
+
+    direction:ltr;
+
+    justify-self:start;
+}
+
+.nav button{
+    width:48px;
+    height:48px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    color:#fff;
+
+    font-size:25px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.nav button:hover{
+    background:
+        rgba(255,255,255,.16);
+
+    transform:scale(1.05);
 }
 
 .title{
@@ -51,276 +115,424 @@ body{
 
 .title h1{
     margin:0;
-    font-size:38px;
-    font-weight:700;
+
+    font-size:32px;
+
+    font-weight:800;
 }
 
-.title p{
-    margin:7px 0 0;
-    color:#a8aabd;
-    font-size:15px;
-}
+.clock{
+    margin-top:7px;
 
-.nav{
-    display:flex;
-    gap:10px;
+    font-size:14px;
+
+    opacity:.55;
+
     direction:ltr;
-    justify-self:start;
-}
-
-.nav button{
-    width:48px;
-    height:48px;
-    border:none;
-    border-radius:16px;
-    background:rgba(255,255,255,.08);
-    color:white;
-    font-size:25px;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.nav button:hover{
-    background:rgba(255,255,255,.16);
-    transform:translateY(-2px);
 }
 
 .today-btn{
     justify-self:end;
+
     border:none;
-    border-radius:16px;
+
     padding:13px 20px;
-    color:white;
-    background:linear-gradient(135deg,#7c3aed,#a855f7);
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #6366f1
+        );
+
+    color:#fff;
+
     font-weight:bold;
+
     cursor:pointer;
 }
 
-/* WEEKDAYS */
 
-.weekdays{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:10px;
-    direction:ltr;
-    margin-bottom:10px;
-}
+/* =========================
+   Weekdays
+========================= */
 
-.weekdays div{
-    text-align:center;
-    color:#85889b;
-    font-size:13px;
-    font-weight:bold;
-    padding:10px 0;
-}
-
-/* CALENDAR */
-
+.weekdays,
 .calendar{
     display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:10px;
+
+    grid-template-columns:
+        repeat(7,1fr);
+
     direction:ltr;
+
+    gap:10px;
 }
 
+.weekday{
+    text-align:center;
+
+    padding:10px;
+
+    color:
+        rgba(255,255,255,.45);
+
+    font-size:13px;
+
+    font-weight:bold;
+}
+
+
+/* =========================
+   Calendar days
+========================= */
+
 .day{
-    direction:rtl;
     min-height:125px;
+
     padding:13px;
+
     border-radius:20px;
-    background:rgba(255,255,255,.045);
-    border:1px solid rgba(255,255,255,.045);
-    transition:.2s;
+
+    background:
+        rgba(255,255,255,.045);
+
+    border:
+        1px solid
+        rgba(255,255,255,.05);
+
     position:relative;
+
     cursor:pointer;
+
+    transition:.2s;
+
+    direction:rtl;
 }
 
 .day:hover{
-    background:rgba(255,255,255,.08);
+    background:
+        rgba(255,255,255,.075);
+
     transform:translateY(-2px);
 }
 
 .day.empty{
     opacity:0;
+
     pointer-events:none;
 }
 
 .day.current{
-    background:linear-gradient(145deg,#6d28d9,#9333ea);
-    transform:scale(1.025);
-    box-shadow:0 12px 35px rgba(124,58,237,.35);
-    border-color:rgba(255,255,255,.18);
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(255,255,255,.18),
+            transparent 35%
+        ),
+        linear-gradient(
+            145deg,
+            #7c3aed,
+            #4f46e5
+        );
+
+    transform:scale(1.035);
+
+    box-shadow:
+        0 15px 35px
+        rgba(99,102,241,.28);
 }
 
 .day.current::after{
     content:"";
+
+    width:7px;
+    height:7px;
+
+    background:#fff;
+
+    border-radius:50%;
+
     position:absolute;
+
     top:12px;
     left:12px;
-    width:8px;
-    height:8px;
-    background:white;
-    border-radius:50%;
-    box-shadow:0 0 12px white;
 }
 
 .day-number{
-    font-size:22px;
-    font-weight:bold;
-    margin-bottom:8px;
+    font-size:20px;
+
+    font-weight:800;
+
+    direction:ltr;
+
+    display:inline-block;
 }
 
-/* EVENTS */
+
+/* =========================
+   Events
+========================= */
 
 .events{
+    margin-top:12px;
+
     display:flex;
+
     flex-direction:column;
+
     gap:5px;
 }
 
 .event{
     font-size:11px;
-    line-height:1.3;
-    padding:5px 7px;
-    border-radius:8px;
-    background:rgba(255,255,255,.09);
-    color:#e9e9f3;
+
+    padding:6px 8px;
+
+    border-radius:9px;
+
+    background:
+        rgba(255,255,255,.09);
+
+    white-space:nowrap;
+
     overflow:hidden;
+
     text-overflow:ellipsis;
+
+    cursor:pointer;
+
+    transition:.15s;
 }
+
+.event:hover{
+    background:
+        rgba(255,255,255,.18);
+}
+
+
+/* است */
 
 .event.rest{
-    background:rgba(34,197,94,.16);
-    color:#86efac;
+    background:
+        rgba(255,170,0,.15);
 }
+
+
+/* خنزرة */
 
 .event.khanzara{
-    background:rgba(239,68,68,.16);
-    color:#fca5a5;
+    background:
+        rgba(255,255,255,.10);
 }
 
-.event.national{
-    background:rgba(239,68,68,.18);
-    color:#fca5a5;
-}
 
-.event.holiday{
-    background:rgba(59,130,246,.18);
-    color:#93c5fd;
-}
-
-.event.ramadan{
-    background:rgba(139,92,246,.18);
-    color:#c4b5fd;
-}
-
-.event.important{
-    background:rgba(245,158,11,.18);
-    color:#fcd34d;
-}
+/* عيد الميلاد */
 
 .event.birthday{
-    background:rgba(236,72,153,.18);
-    color:#f9a8d4;
+    background:
+        rgba(236,72,153,.20);
 }
+
+
+/* المناسبات الوطنية */
+
+.event.national{
+    background:
+        rgba(34,197,94,.18);
+}
+
+
+/* الإجازات */
+
+.event.holiday{
+    background:
+        rgba(59,130,246,.18);
+}
+
+
+/* رمضان */
+
+.event.ramadan{
+    background:
+        rgba(139,92,246,.20);
+}
+
+
+/* المناسبات المهمة */
+
+.event.important{
+    background:
+        rgba(245,158,11,.18);
+}
+
+
+/* الفواتير */
 
 .event.bills{
-    background:rgba(6,182,212,.15);
-    color:#67e8f9;
+    background:
+        rgba(14,165,233,.17);
 }
 
-/* MODAL */
+
+/* =========================
+   Ramadan background
+========================= */
+
+.day.ramadan-day{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(124,58,237,.13),
+            rgba(255,255,255,.035)
+        );
+}
+
+
+/* =========================
+   Modal
+========================= */
 
 .modal-overlay{
     position:fixed;
+
     inset:0;
-    background:rgba(0,0,0,.68);
-    backdrop-filter:blur(8px);
-    display:none;
-    align-items:center;
+
+    background:
+        rgba(0,0,0,.72);
+
+    backdrop-filter:blur(10px);
+
+    display:flex;
+
     justify-content:center;
+
+    align-items:center;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
     z-index:999;
-    padding:20px;
 }
 
 .modal-overlay.show{
-    display:flex;
+    opacity:1;
+
+    visibility:visible;
 }
 
 .modal{
-    width:min(430px,92vw);
-    padding:32px;
+    width:min(500px,90vw);
+
+    background:#171927;
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
     border-radius:30px;
+
+    padding:30px;
+
     text-align:center;
-    background:
-        radial-gradient(circle at top right,rgba(124,58,237,.3),transparent 45%),
-        #151724;
-    border:1px solid rgba(255,255,255,.1);
-    box-shadow:0 30px 100px rgba(0,0,0,.6);
-    animation:modalIn .25s ease;
+
+    box-shadow:
+        0 30px 80px
+        rgba(0,0,0,.5);
+
+    position:relative;
 }
 
-@keyframes modalIn{
-    from{
-        opacity:0;
-        transform:scale(.9) translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:scale(1) translateY(0);
-    }
+.close{
+    position:absolute;
+
+    top:15px;
+    left:15px;
+
+    width:38px;
+    height:38px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    color:#fff;
+
+    font-size:20px;
+
+    cursor:pointer;
 }
 
 .modal-icon{
-    font-size:42px;
+    font-size:48px;
+
     margin-bottom:10px;
 }
 
 .modal h2{
-    margin:0 0 22px;
-    font-size:25px;
+    margin:
+        5px 0 25px;
+
+    font-size:24px;
 }
 
-.countdown-number{
-    font-size:65px;
+.countdown{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:10px;
+}
+
+.time-box{
+    background:
+        rgba(255,255,255,.06);
+
+    border-radius:18px;
+
+    padding:16px 8px;
+}
+
+.time-number{
+    font-size:28px;
+
     font-weight:800;
-    line-height:1;
-    margin:10px 0;
-    background:linear-gradient(135deg,#c084fc,#818cf8);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
 }
 
-.countdown-label{
-    color:#a8aabd;
-    font-size:14px;
-    margin-bottom:25px;
+.time-label{
+    font-size:11px;
+
+    opacity:.45;
+
+    margin-top:5px;
 }
 
-.countdown-time{
-    direction:ltr;
-    font-size:20px;
-    font-weight:bold;
-    letter-spacing:1px;
-    margin-bottom:25px;
+
+/* =========================
+   Loading
+========================= */
+
+.loading{
+    font-size:16px;
+
+    opacity:.7;
+
+    margin:20px 0;
 }
 
-.close-modal{
-    width:100%;
-    border:none;
-    padding:13px;
-    border-radius:14px;
-    background:rgba(255,255,255,.08);
-    color:white;
-    cursor:pointer;
-    font-size:15px;
-}
 
-.close-modal:hover{
-    background:rgba(255,255,255,.14);
-}
-
-/* RESPONSIVE */
+/* =========================
+   Responsive
+========================= */
 
 @media(max-width:900px){
 
@@ -329,146 +541,332 @@ body{
     }
 
     .day{
-        min-height:100px;
+        min-height:105px;
+
+        padding:9px;
     }
 
     .event{
         font-size:9px;
+
+        padding:5px;
     }
 
-    .day-number{
-        font-size:18px;
-    }
 }
 
-@media(max-width:600px){
+
+@media(max-width:650px){
 
     body{
-        padding:8px;
+        padding:10px;
     }
 
     .app{
         padding:12px;
-        border-radius:24px;
+
+        border-radius:25px;
     }
 
     .header{
-        grid-template-columns:1fr;
-        gap:15px;
-    }
-
-    .nav{
-        justify-self:center;
-        order:2;
-    }
-
-    .title{
-        order:1;
-    }
-
-    .today-btn{
-        justify-self:center;
-        order:3;
+        grid-template-columns:
+            auto
+            1fr
+            auto;
     }
 
     .title h1{
-        font-size:28px;
+        font-size:22px;
     }
 
-    .calendar,
-    .weekdays{
-        gap:4px;
+    .nav button{
+        width:38px;
+        height:38px;
+
+        font-size:20px;
+    }
+
+    .today-btn{
+        padding:9px 12px;
+
+        font-size:11px;
+    }
+
+    .weekdays,
+    .calendar{
+        gap:5px;
+    }
+
+    .weekday{
+        font-size:9px;
+
+        padding:5px 0;
     }
 
     .day{
-        min-height:80px;
+        min-height:90px;
+
         padding:7px;
+
         border-radius:12px;
     }
 
     .day-number{
         font-size:15px;
-        margin-bottom:5px;
+    }
+
+    .events{
+        margin-top:7px;
+
+        gap:3px;
     }
 
     .event{
         font-size:7px;
-        padding:3px 4px;
-        border-radius:5px;
+
+        padding:4px;
+
+        border-radius:6px;
     }
 
-    .weekdays div{
-        font-size:9px;
-    }
 }
+
+
+@media(max-width:450px){
+
+    .day{
+        min-height:75px;
+    }
+
+    .event{
+        font-size:6px;
+    }
+
+    .countdown{
+        gap:6px;
+    }
+
+    .time-number{
+        font-size:21px;
+    }
+
+}
+
 </style>
 </head>
 
+
 <body>
+
 
 <div class="app">
 
+
+    <!-- Header -->
+
     <div class="header">
 
-        <!-- LEFT: PREVIOUS / NEXT -->
+
         <div class="nav">
-            <button onclick="changeMonth(-1)">←</button>
-            <button onclick="changeMonth(1)">→</button>
+
+            <button
+                onclick="changeMonth(-1)"
+            >
+                ←
+            </button>
+
+            <button
+                onclick="changeMonth(1)"
+            >
+                →
+            </button>
+
         </div>
+
 
         <div class="title">
+
             <h1 id="monthTitle"></h1>
-            <p id="clock"></p>
+
+            <div
+                class="clock"
+                id="clock"
+            ></div>
+
         </div>
 
-        <button class="today-btn" onclick="goToday()">TODAY</button>
 
-    </div>
-
-    <!-- SAT → FRI -->
-    <div class="weekdays">
-        <div>SAT</div>
-        <div>SUN</div>
-        <div>MON</div>
-        <div>TUE</div>
-        <div>WED</div>
-        <div>THU</div>
-        <div>FRI</div>
-    </div>
-
-    <div id="calendar" class="calendar"></div>
-
-</div>
-
-
-<!-- COUNTDOWN MODAL -->
-
-<div id="modalOverlay" class="modal-overlay" onclick="closeModal(event)">
-
-    <div class="modal" onclick="event.stopPropagation()">
-
-        <div id="modalIcon" class="modal-icon">🌙</div>
-
-        <h2 id="modalTitle">باقي على رمضان</h2>
-
-        <div id="countdownDays" class="countdown-number">0</div>
-
-        <div class="countdown-label">يوم</div>
-
-        <div id="countdownTime" class="countdown-time">
-            00 : 00 : 00
-        </div>
-
-        <button class="close-modal" onclick="hideModal()">
-            إغلاق
+        <button
+            class="today-btn"
+            onclick="goToday()"
+        >
+            TODAY
         </button>
 
+
+    </div>
+
+
+    <!-- Weekdays -->
+
+    <div class="weekdays">
+
+        <div class="weekday">SAT</div>
+
+        <div class="weekday">SUN</div>
+
+        <div class="weekday">MON</div>
+
+        <div class="weekday">TUE</div>
+
+        <div class="weekday">WED</div>
+
+        <div class="weekday">THU</div>
+
+        <div class="weekday">FRI</div>
+
+    </div>
+
+
+    <!-- Calendar -->
+
+    <div
+        class="calendar"
+        id="calendar"
+    ></div>
+
+
+</div>
+
+
+
+<!-- =========================
+     Countdown Modal
+========================= -->
+
+<div
+    class="modal-overlay"
+    id="modalOverlay"
+>
+
+    <div
+        class="modal"
+        onclick="event.stopPropagation()"
+    >
+
+
+        <button
+            class="close"
+            onclick="closeCountdown()"
+        >
+            ×
+        </button>
+
+
+        <div
+            class="modal-icon"
+            id="modalIcon"
+        >
+            ⏳
+        </div>
+
+
+        <h2 id="modalTitle">
+            باقي على
+        </h2>
+
+
+        <div
+            id="loading"
+            class="loading"
+            style="display:none;"
+        >
+            جاري حساب وقت الاست...
+        </div>
+
+
+        <div
+            class="countdown"
+            id="countdownBox"
+        >
+
+            <div class="time-box">
+
+                <div
+                    class="time-number"
+                    id="days"
+                >
+                    0
+                </div>
+
+                <div class="time-label">
+                    يوم
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    class="time-number"
+                    id="hours"
+                >
+                    0
+                </div>
+
+                <div class="time-label">
+                    ساعة
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    class="time-number"
+                    id="minutes"
+                >
+                    0
+                </div>
+
+                <div class="time-label">
+                    دقيقة
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    class="time-number"
+                    id="seconds"
+                >
+                    0
+                </div>
+
+                <div class="time-label">
+                    ثانية
+                </div>
+
+            </div>
+
+        </div>
+
+
     </div>
 
 </div>
+
 
 
 <script>
+
+
+/* =========================
+   Variables
+========================= */
 
 let currentDate = new Date();
 
@@ -476,177 +874,482 @@ let countdownTimer = null;
 
 
 /* =========================
-   MONTH NAMES
+   Arabic months
 ========================= */
 
-const monthNames = [
+const months = [
+
     "يناير",
+
     "فبراير",
+
     "مارس",
+
     "أبريل",
+
     "مايو",
+
     "يونيو",
+
     "يوليو",
+
     "أغسطس",
+
     "سبتمبر",
+
     "أكتوبر",
+
     "نوفمبر",
+
     "ديسمبر"
+
 ];
 
 
 /* =========================
-   FIXED EVENTS
+   Fixed Events
 ========================= */
 
 const fixedEvents = {
 
-    "2-22": {
-        text:"🇸🇦 يوم التأسيس",
+
+    "2-22":{
+
+        title:"يوم التأسيس 🇸🇦",
+
         className:"national",
+
         countdown:"يوم التأسيس",
+
         icon:"🇸🇦"
+
     },
 
-    "3-11": {
-        text:"🇸🇦 يوم العلم",
-        className:"important",
-        countdown:"يوم العلم",
-        icon:"🇸🇦"
-    },
 
-    "6-5": {
-        text:"🌱 يوم البيئة",
-        className:"important",
-        countdown:"يوم البيئة",
-        icon:"🌱"
-    },
+    "3-11":{
 
-    "9-23": {
-        text:"🇸🇦 اليوم الوطني",
+        title:"يوم العلم 🇸🇦",
+
         className:"national",
-        countdown:"اليوم الوطني",
+
+        countdown:"يوم العلم",
+
         icon:"🇸🇦"
+
     },
 
-    "12-9": {
-        text:"⚖️ مكافحة الفساد",
+
+    "6-5":{
+
+        title:"يوم البيئة العالمي 🌱",
+
         className:"important",
-        countdown:"اليوم الدولي لمكافحة الفساد",
+
+        countdown:"يوم البيئة العالمي",
+
+        icon:"🌱"
+
+    },
+
+
+    "9-23":{
+
+        title:"اليوم الوطني 🇸🇦",
+
+        className:"national",
+
+        countdown:"اليوم الوطني",
+
+        icon:"🇸🇦"
+
+    },
+
+
+    "12-9":{
+
+        title:"اليوم العالمي لمكافحة الفساد",
+
+        className:"important",
+
+        countdown:"اليوم العالمي لمكافحة الفساد",
+
         icon:"⚖️"
+
     },
 
-    "12-18": {
-        text:"📚 يوم اللغة العربية",
+
+    "12-18":{
+
+        title:"اليوم العالمي للغة العربية",
+
         className:"important",
+
         countdown:"اليوم العالمي للغة العربية",
+
         icon:"📚"
+
     }
 
 };
 
 
 /* =========================
-   GET HIJRI DATE
+   Weekend rotation
 ========================= */
 
-function getHijri(date){
+function getWeekendEvent(date){
 
-    try{
 
-        return new Intl.DateTimeFormat(
-            "en-US-u-ca-islamic-umalqura",
-            {
-                day:"numeric",
-                month:"numeric",
-                year:"numeric"
-            }
-        ).formatToParts(date);
+    const day =
+        date.getDay();
 
-    }catch(e){
 
-        return new Intl.DateTimeFormat(
-            "en-US-u-ca-islamic",
-            {
-                day:"numeric",
-                month:"numeric",
-                year:"numeric"
-            }
-        ).formatToParts(date);
+    /*
+       الخميس = 4
+       الجمعة = 5
+    */
+
+    if(
+        day !== 4 &&
+        day !== 5
+    ){
+
+        return null;
 
     }
 
-}
+
+    /*
+       البداية:
+
+       الخميس 3 سبتمبر 2026
+       الجمعة 4 سبتمبر 2026
+
+       = است 🔥
+
+       الأسبوع التالي
+       = خنزرة 💤
+    */
+
+    const base =
+        new Date(
+            2026,
+            8,
+            3
+        );
 
 
-/* =========================
-   HIJRI VALUES
-========================= */
+    base.setHours(
+        0,0,0,0
+    );
 
-function getHijriValues(date){
 
-    const parts = getHijri(date);
+    const diff =
+        Math.floor(
+            (date-base) /
+            86400000
+        );
 
-    let day = 0;
-    let month = 0;
-    let year = 0;
 
-    parts.forEach(p => {
+    const week =
+        Math.floor(
+            diff/7
+        );
 
-        if(p.type === "day") day = Number(p.value);
-        if(p.type === "month") month = Number(p.value);
-        if(p.type === "year") year = Number(p.value);
 
-    });
+    if(
+        week % 2 === 0
+    ){
+
+        return {
+
+            title:"است 🔥",
+
+            className:"rest",
+
+            countdown:"است",
+
+            icon:"🔥",
+
+            isRest:true
+
+        };
+
+    }
+
 
     return {
-        day,
-        month,
-        year
+
+        title:"خنزرة 💤",
+
+        className:"khanzara",
+
+        countdown:"خنزرة",
+
+        icon:"💤",
+
+        isRest:false
+
     };
 
 }
 
 
 /* =========================
-   GET UPCOMING HIJRI EVENT
+   Islamic Calendar
 ========================= */
 
-function findNextHijriEvent(type){
+function getIslamicDate(date){
 
-    let testDate = new Date();
 
-    for(let i = 0; i < 450; i++){
+    try{
 
-        const h = getHijriValues(testDate);
+        const formatter =
+            new Intl.DateTimeFormat(
 
-        if(type === "ramadan" && h.month === 9 && h.day === 1){
+                "en-US-u-ca-islamic-umalqura",
 
-            return new Date(testDate);
+                {
 
-        }
+                    day:"numeric",
 
-        if(type === "eidFitr" && h.month === 10 && h.day === 1){
+                    month:"numeric",
 
-            return new Date(testDate);
+                    year:"numeric"
 
-        }
+                }
 
-        if(type === "arafah" && h.month === 12 && h.day === 9){
+            );
 
-            return new Date(testDate);
 
-        }
+        const parts =
+            formatter.formatToParts(
+                date
+            );
 
-        if(type === "eidAdha" && h.month === 12 && h.day === 10){
 
-            return new Date(testDate);
+        let day = null;
 
-        }
+        let month = null;
 
-        testDate.setDate(testDate.getDate() + 1);
+        let year = null;
+
+
+        parts.forEach(part=>{
+
+
+            if(
+                part.type === "day"
+            ){
+
+                day =
+                    Number(
+                        part.value
+                    );
+
+            }
+
+
+            if(
+                part.type === "month"
+            ){
+
+                month =
+                    Number(
+                        part.value
+                    );
+
+            }
+
+
+            if(
+                part.type === "year"
+            ){
+
+                year =
+                    Number(
+                        part.value
+                    );
+
+            }
+
+        });
+
+
+        return {
+
+            day,
+            month,
+            year
+
+        };
 
     }
+
+    catch(e){
+
+        return null;
+
+    }
+
+}
+
+
+/* =========================
+   Prayer time
+========================= */
+
+/*
+   يجلب وقت العشاء من الرياض
+   للتاريخ الذي ضغط عليه المستخدم.
+
+   method=4
+   = Umm Al-Qura University, Makkah
+*/
+
+async function getIshaTime(date){
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2,"0");
+
+
+    const month =
+        String(
+            date.getMonth()+1
+        ).padStart(2,"0");
+
+
+    const year =
+        date.getFullYear();
+
+
+    const dateString =
+        `${day}-${month}-${year}`;
+
+
+    const url =
+        `https://api.aladhan.com/v1/timingsByCity/${dateString}?city=Riyadh&country=Saudi%20Arabia&method=4`;
+
+
+    const response =
+        await fetch(url);
+
+
+    if(!response.ok){
+
+        throw new Error(
+            "Prayer API error"
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    if(
+        !data.data ||
+        !data.data.timings ||
+        !data.data.timings.Isha
+    ){
+
+        throw new Error(
+            "Isha time unavailable"
+        );
+
+    }
+
+
+    const isha =
+        data.data.timings.Isha;
+
+
+    /*
+       أحيانًا قد تأتي القيمة
+       معها معلومات إضافية.
+
+       نأخذ أول 5 أحرف فقط:
+       HH:MM
+    */
+
+    const cleanIsha =
+        isha.substring(0,5);
+
+
+    const parts =
+        cleanIsha.split(":");
+
+
+    const hours =
+        Number(parts[0]);
+
+
+    const minutes =
+        Number(parts[1]);
+
+
+    /*
+       إنشاء وقت العشاء
+       في نفس تاريخ الحدث
+    */
+
+    const target =
+        new Date(date);
+
+
+    target.setHours(
+        hours,
+        minutes,
+        0,
+        0
+    );
+
+
+    /*
+       الاست = بعد العشاء بساعة
+    */
+
+    target.setMinutes(
+        target.getMinutes()+60
+    );
+
+
+    return target;
+
+}
+
+
+/* =========================
+   Normal countdown target
+========================= */
+
+function getNormalTarget(
+    title,
+    selectedDate
+){
+
+
+    if(selectedDate){
+
+        const target =
+            new Date(
+                selectedDate
+            );
+
+
+        target.setHours(
+            0,0,0,0
+        );
+
+
+        return target;
+
+    }
+
 
     return null;
 
@@ -654,403 +1357,994 @@ function findNextHijriEvent(type){
 
 
 /* =========================
-   ADD EVENT
+   Open Countdown
 ========================= */
 
-function addEvent(events,text,className,countdown,icon){
-
-    events.push({
-        text,
-        className,
-        countdown,
-        icon
-    });
-
-}
+async function openCountdown(
+    title,
+    icon,
+    selectedDate,
+    isRest=false
+){
 
 
-/* =========================
-   GET EVENTS FOR DAY
-========================= */
+    clearInterval(
+        countdownTimer
+    );
 
-function getEvents(date){
 
-    const events = [];
-
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-
-    const key = `${month}-${day}`;
-
-    /* BIRTHDAY */
-
-    if(month === 1 && day === 21){
-
-        addEvent(
-            events,
-            "🎂 يوم ميلاد عمكم",
-            "birthday",
-            "يوم ميلاد عمكم",
-            "🎂"
+    const overlay =
+        document.getElementById(
+            "modalOverlay"
         );
 
-    }
 
-
-    /* MONTHLY BILLS */
-
-    if(day === 25){
-
-        addEvent(
-            events,
-            "📡 قطة النت",
-            "bills",
-            "قطة النت",
-            "📡"
+    const loading =
+        document.getElementById(
+            "loading"
         );
 
-        addEvent(
-            events,
-            "👷 قطة العامل",
-            "bills",
-            "قطة العامل",
-            "👷"
+
+    const countdownBox =
+        document.getElementById(
+            "countdownBox"
         );
 
-        addEvent(
-            events,
-            "⚡ قطة الكهرب",
-            "bills",
-            "قطة الكهرب",
-            "⚡"
-        );
 
-    }
+    document.getElementById(
+        "modalIcon"
+    ).textContent =
+        icon || "⏳";
 
 
-    /* HIJRI */
-
-    const hijri = getHijriValues(date);
-
-    if(hijri.month === 9){
-
-        if(hijri.day === 1){
-
-            addEvent(
-                events,
-                "🌙 رمضان",
-                "ramadan",
-                "رمضان",
-                "🌙"
-            );
-
-        }
-        else if(hijri.day === 21){
-
-            addEvent(
-                events,
-                "🌙 العشر الأواخر",
-                "ramadan",
-                "العشر الأواخر",
-                "🌙"
-            );
-
-        }
-
-    }
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        `باقي على ${title}`;
 
 
-    /* EID AL FITR */
+    overlay.classList.add(
+        "show"
+    );
 
-    if(hijri.month === 10){
-
-        if(hijri.day === 1){
-
-            addEvent(
-                events,
-                "🎉 عيد الفطر",
-                "holiday",
-                "عيد الفطر",
-                "🎉"
-            );
-
-        }
-        else if(hijri.day >= 2 && hijri.day <= 4){
-
-            addEvent(
-                events,
-                "🎉 إجازة العيد",
-                "holiday",
-                "عيد الفطر",
-                "🎉"
-            );
-
-        }
-
-    }
-
-
-    /* ARAFAT + EID AL ADHA */
-
-    if(hijri.month === 12){
-
-        if(hijri.day === 9){
-
-            addEvent(
-                events,
-                "🕋 يوم عرفة",
-                "important",
-                "يوم عرفة",
-                "🕋"
-            );
-
-        }
-
-        if(hijri.day === 10){
-
-            addEvent(
-                events,
-                "🐑 عيد الأضحى",
-                "holiday",
-                "عيد الأضحى",
-                "🐑"
-            );
-
-        }
-
-        if(hijri.day >= 11 && hijri.day <= 13){
-
-            addEvent(
-                events,
-                "🐑 إجازة العيد",
-                "holiday",
-                "عيد الأضحى",
-                "🐑"
-            );
-
-        }
-
-    }
-
-
-    /* FIXED EVENTS */
-
-    if(fixedEvents[key]){
-
-        const e = fixedEvents[key];
-
-        addEvent(
-            events,
-            e.text,
-            e.className,
-            e.countdown,
-            e.icon
-        );
-
-    }
-
-
-    /* WEEKEND ROTATION */
 
     /*
-       Sep 3 + 4 2026 = است
-       Sep 10 + 11 = خنزرة
-       Sep 17 + 18 = است
-       Sep 24 + 25 = خنزرة
+       إذا كان الحدث = است
+       نجيب وقت العشاء لذلك اليوم
+       ثم نضيف ساعة.
     */
 
-    if(date.getDay() === 4 || date.getDay() === 5){
+    if(isRest){
 
-        const start = new Date(2026,8,3);
 
-        start.setHours(0,0,0,0);
+        loading.style.display =
+            "block";
 
-        const diff = Math.floor(
-            (date - start) / 86400000
-        );
 
-        const weekNumber = Math.floor(diff / 7);
+        countdownBox.style.display =
+            "none";
 
-        if(weekNumber % 2 === 0){
 
-            addEvent(
-                events,
-                "است",
-                "rest",
-                "است",
-                "😴"
+        try{
+
+
+            const target =
+                await getIshaTime(
+                    selectedDate
+                );
+
+
+            /*
+               بعد ما جاب وقت العشاء
+               نبدأ العد التنازلي.
+            */
+
+            loading.style.display =
+                "none";
+
+
+            countdownBox.style.display =
+                "grid";
+
+
+            updateCountdown(
+                target
             );
 
-        }else{
 
-            addEvent(
-                events,
-                "خنزرة",
-                "khanzara",
-                "خنزرة",
-                "🔥"
-            );
+            countdownTimer =
+                setInterval(
+
+                    function(){
+
+                        updateCountdown(
+                            target
+                        );
+
+                    },
+
+                    1000
+
+                );
+
 
         }
 
+        catch(error){
+
+
+            loading.textContent =
+                "تعذر جلب وقت صلاة العشاء";
+
+
+            console.error(error);
+
+        }
+
+
+        return;
+
     }
 
-    return events;
+
+    /*
+       بقية الأحداث:
+       العد يكون إلى بداية اليوم المحدد.
+    */
+
+    loading.style.display =
+        "none";
+
+
+    countdownBox.style.display =
+        "grid";
+
+
+    const target =
+        getNormalTarget(
+            title,
+            selectedDate
+        );
+
+
+    if(!target){
+
+        return;
+
+    }
+
+
+    updateCountdown(
+        target
+    );
+
+
+    countdownTimer =
+        setInterval(
+
+            function(){
+
+                updateCountdown(
+                    target
+                );
+
+            },
+
+            1000
+
+        );
 
 }
 
 
 /* =========================
-   RENDER CALENDAR
+   Update Countdown
+========================= */
+
+function updateCountdown(
+    target
+){
+
+
+    const now =
+        new Date();
+
+
+    let diff =
+        target-now;
+
+
+    if(diff < 0){
+
+        diff = 0;
+
+    }
+
+
+    const days =
+        Math.floor(
+            diff /
+            86400000
+        );
+
+
+    diff %=
+        86400000;
+
+
+    const hours =
+        Math.floor(
+            diff /
+            3600000
+        );
+
+
+    diff %=
+        3600000;
+
+
+    const minutes =
+        Math.floor(
+            diff /
+            60000
+        );
+
+
+    diff %=
+        60000;
+
+
+    const seconds =
+        Math.floor(
+            diff /
+            1000
+        );
+
+
+    document.getElementById(
+        "days"
+    ).textContent =
+        days;
+
+
+    document.getElementById(
+        "hours"
+    ).textContent =
+        hours;
+
+
+    document.getElementById(
+        "minutes"
+    ).textContent =
+        minutes;
+
+
+    document.getElementById(
+        "seconds"
+    ).textContent =
+        seconds;
+
+}
+
+
+/* =========================
+   Close Countdown
+========================= */
+
+function closeCountdown(){
+
+
+    document
+        .getElementById(
+            "modalOverlay"
+        )
+        .classList
+        .remove("show");
+
+
+    clearInterval(
+        countdownTimer
+    );
+
+
+    countdownTimer =
+        null;
+
+}
+
+
+/* =========================
+   Render Calendar
 ========================= */
 
 function renderCalendar(){
 
-    const calendar = document.getElementById("calendar");
 
-    calendar.innerHTML = "";
+    const calendar =
+        document.getElementById(
+            "calendar"
+        );
 
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
 
-    document.getElementById("monthTitle").textContent =
-        `${monthNames[month]} ${year}`;
+    calendar.innerHTML =
+        "";
+
+
+    const year =
+        currentDate.getFullYear();
+
+
+    const month =
+        currentDate.getMonth();
+
+
+    document.getElementById(
+        "monthTitle"
+    ).textContent =
+        `${months[month]} ${year}`;
 
 
     /*
+       JavaScript:
 
-       JS:
        Sunday = 0
        Monday = 1
        ...
        Saturday = 6
 
-       We want:
-       SAT = 0
-       SUN = 1
-       MON = 2
-       ...
-       FRI = 6
+       نحن نريد:
 
+       SAT SUN MON TUE WED THU FRI
     */
 
-    const firstDay = new Date(year,month,1).getDay();
+    const firstDay =
+        new Date(
+            year,
+            month,
+            1
+        ).getDay();
 
-    const offset = (firstDay + 1) % 7;
+
+    const offset =
+        (firstDay+1)%7;
+
 
     const daysInMonth =
-        new Date(year,month + 1,0).getDate();
+        new Date(
+            year,
+            month+1,
+            0
+        ).getDate();
 
 
-    /* EMPTY DAYS */
+    /*
+       Empty cells
+    */
 
-    for(let i = 0; i < offset; i++){
+    for(
+        let i=0;
+        i<offset;
+        i++
+    ){
 
-        const empty = document.createElement("div");
+        const empty =
+            document.createElement(
+                "div"
+            );
 
-        empty.className = "day empty";
 
-        calendar.appendChild(empty);
+        empty.className =
+            "day empty";
+
+
+        calendar.appendChild(
+            empty
+        );
 
     }
 
 
-    /* DAYS */
+    /*
+       Days
+    */
 
-    const today = new Date();
-
-    for(let day = 1; day <= daysInMonth; day++){
-
-        const date = new Date(year,month,day);
-
-        const cell = document.createElement("div");
-
-        cell.className = "day";
+    for(
+        let day=1;
+        day<=daysInMonth;
+        day++
+    ){
 
 
-        /* CURRENT DAY */
+        const date =
+            new Date(
+                year,
+                month,
+                day
+            );
+
+
+        date.setHours(
+            0,0,0,0
+        );
+
+
+        const cell =
+            document.createElement(
+                "div"
+            );
+
+
+        cell.className =
+            "day";
+
+
+        /*
+           Today
+        */
+
+        const today =
+            new Date();
+
 
         if(
-            day === today.getDate() &&
-            month === today.getMonth() &&
-            year === today.getFullYear()
+
+            day ===
+            today.getDate()
+
+            &&
+
+            month ===
+            today.getMonth()
+
+            &&
+
+            year ===
+            today.getFullYear()
+
         ){
 
-            cell.classList.add("current");
+            cell.classList.add(
+                "current"
+            );
 
         }
 
 
-        const number = document.createElement("div");
+        /*
+           Day number
+        */
 
-        number.className = "day-number";
-
-        number.textContent = day;
-
-        cell.appendChild(number);
-
-
-        /* EVENTS */
-
-        const eventsContainer =
-            document.createElement("div");
-
-        eventsContainer.className = "events";
+        const number =
+            document.createElement(
+                "div"
+            );
 
 
-        const events = getEvents(date);
+        number.className =
+            "day-number";
 
 
-        events.forEach(e => {
-
-            const event =
-                document.createElement("div");
-
-            event.className =
-                `event ${e.className}`;
-
-            event.textContent = e.text;
-
-            event.onclick = function(event){
-
-                event.stopPropagation();
-
-                openCountdown(
-                    e.countdown,
-                    e.icon
-                );
-
-            };
-
-            eventsContainer.appendChild(event);
-
-        });
+        number.textContent =
+            day;
 
 
-        cell.appendChild(eventsContainer);
+        cell.appendChild(
+            number
+        );
 
 
         /*
-           Clicking the day itself:
-           If it has events, open the first one.
+           Events container
         */
 
-        cell.onclick = function(){
+        const eventsContainer =
+            document.createElement(
+                "div"
+            );
 
-            if(events.length > 0){
 
-                openCountdown(
-                    events[0].countdown,
-                    events[0].icon
+        eventsContainer.className =
+            "events";
+
+
+        /*
+           ALL events
+        */
+
+        const events = [];
+
+
+        /* =========================
+           Birthday
+        ========================= */
+
+        if(
+
+            month === 0
+
+            &&
+
+            day === 21
+
+        ){
+
+            events.push({
+
+                title:
+                    "يوم ميلاد عمكم 🎂",
+
+                className:
+                    "birthday",
+
+                countdown:
+                    "يوم ميلاد عمكم",
+
+                icon:
+                    "🎂",
+
+                isRest:
+                    false
+
+            });
+
+        }
+
+
+        /* =========================
+           Bills - Day 25
+        ========================= */
+
+        if(
+            day === 25
+        ){
+
+            events.push({
+
+                title:
+                    "📡 قطة النت",
+
+                className:
+                    "bills",
+
+                countdown:
+                    "قطة النت",
+
+                icon:
+                    "📡",
+
+                isRest:
+                    false
+
+            });
+
+
+            events.push({
+
+                title:
+                    "👷 قطة العامل",
+
+                className:
+                    "bills",
+
+                countdown:
+                    "قطة العامل",
+
+                icon:
+                    "👷",
+
+                isRest:
+                    false
+
+            });
+
+
+            events.push({
+
+                title:
+                    "⚡ قطة الكهرب",
+
+                className:
+                    "bills",
+
+                countdown:
+                    "قطة الكهرب",
+
+                icon:
+                    "⚡",
+
+                isRest:
+                    false
+
+            });
+
+        }
+
+
+        /* =========================
+           Islamic Date
+        ========================= */
+
+        const islamic =
+            getIslamicDate(
+                date
+            );
+
+
+        if(islamic){
+
+
+            /*
+               Ramadan
+            */
+
+            if(
+                islamic.month === 9
+            ){
+
+                cell.classList.add(
+                    "ramadan-day"
                 );
+
+
+                if(
+                    islamic.day === 1
+                ){
+
+                    events.push({
+
+                        title:
+                            "رمضان 🌙",
+
+                        className:
+                            "ramadan",
+
+                        countdown:
+                            "رمضان",
+
+                        icon:
+                            "🌙",
+
+                        isRest:
+                            false
+
+                    });
+
+                }
+
+
+                if(
+                    islamic.day === 21
+                ){
+
+                    events.push({
+
+                        title:
+                            "العشر الأواخر 🌙",
+
+                        className:
+                            "ramadan",
+
+                        countdown:
+                            "العشر الأواخر",
+
+                        icon:
+                            "🌙",
+
+                        isRest:
+                            false
+
+                    });
+
+                }
 
             }
 
-        };
+
+            /*
+               Eid Al-Fitr
+            */
+
+            if(
+                islamic.month === 10
+            ){
+
+                if(
+                    islamic.day === 1
+                ){
+
+                    events.push({
+
+                        title:
+                            "عيد الفطر 🎉",
+
+                        className:
+                            "holiday",
+
+                        countdown:
+                            "عيد الفطر",
+
+                        icon:
+                            "🎉",
+
+                        isRest:
+                            false
+
+                    });
+
+                }
 
 
-        calendar.appendChild(cell);
+                if(
+
+                    islamic.day >= 2
+
+                    &&
+
+                    islamic.day <= 4
+
+                ){
+
+                    events.push({
+
+                        title:
+                            "إجازة العيد",
+
+                        className:
+                            "holiday",
+
+                        countdown:
+                            "إجازة العيد",
+
+                        icon:
+                            "🎉",
+
+                        isRest:
+                            false
+
+                    });
+
+                }
+
+            }
+
+
+            /*
+               Eid Al-Adha
+            */
+
+            if(
+                islamic.month === 12
+            ){
+
+                if(
+                    islamic.day === 9
+                ){
+
+                    events.push({
+
+                        title:
+                            "يوم عرفة 🕋",
+
+                        className:
+                            "holiday",
+
+                        countdown:
+                            "يوم عرفة",
+
+                        icon:
+                            "🕋",
+
+                        isRest:
+                            false
+
+                    });
+
+                }
+
+
+                if(
+                    islamic.day === 10
+                ){
+
+                    events.push({
+
+                        title:
+                            "عيد الأضحى 🐑",
+
+                        className:
+                            "holiday",
+
+                        countdown:
+                            "عيد الأضحى",
+
+                        icon:
+                            "🐑",
+
+                        isRest:
+                            false
+
+                    });
+
+                }
+
+
+                if(
+
+                    islamic.day >= 11
+
+                    &&
+
+                    islamic.day <= 13
+
+                ){
+
+                    events.push({
+
+                        title:
+                            "إجازة العيد",
+
+                        className:
+                            "holiday",
+
+                        countdown:
+                            "إجازة العيد",
+
+                        icon:
+                            "🐑",
+
+                        isRest:
+                            false
+
+                    });
+
+                }
+
+            }
+
+        }
+
+
+        /* =========================
+           Fixed events
+        ========================= */
+
+        const key =
+            `${month+1}-${day}`;
+
+
+        if(
+            fixedEvents[key]
+        ){
+
+            events.push({
+
+                ...fixedEvents[key],
+
+                isRest:false
+
+            });
+
+        }
+
+
+        /* =========================
+           Weekend
+        ========================= */
+
+        const weekendEvent =
+            getWeekendEvent(
+                date
+            );
+
+
+        if(weekendEvent){
+
+            events.push(
+                weekendEvent
+            );
+
+        }
+
+
+        /* =========================
+           Render ALL events
+        ========================= */
+
+        events.forEach(
+            e=>{
+
+                const event =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                event.className =
+                    `event ${e.className}`;
+
+
+                event.textContent =
+                    e.title;
+
+
+                /*
+                   مهم:
+
+                   نمرر date نفسها
+                   للعدّاد.
+
+                   لذلك إذا رحت مثلًا
+                   إلى ديسمبر وضغطت است
+                   يحسب ديسمبر نفسه،
+                   وليس أقرب است من اليوم.
+                */
+
+                event.onclick =
+                    function(ev){
+
+                        ev.stopPropagation();
+
+
+                        openCountdown(
+
+                            e.countdown,
+
+                            e.icon,
+
+                            date,
+
+                            e.isRest === true
+
+                        );
+
+                    };
+
+
+                eventsContainer.appendChild(
+                    event
+                );
+
+            }
+        );
+
+
+        cell.appendChild(
+            eventsContainer
+        );
+
+
+        /*
+           إذا ضغط على اليوم نفسه
+           نفتح أول حدث.
+        */
+
+        cell.onclick =
+            function(){
+
+                if(
+                    events.length > 0
+                ){
+
+                    openCountdown(
+
+                        events[0].countdown,
+
+                        events[0].icon,
+
+                        date,
+
+                        events[0].isRest === true
+
+                    );
+
+                }
+
+            };
+
+
+        calendar.appendChild(
+            cell
+        );
 
     }
 
@@ -1058,14 +2352,17 @@ function renderCalendar(){
 
 
 /* =========================
-   MONTH NAVIGATION
+   Change Month
 ========================= */
 
-function changeMonth(amount){
+function changeMonth(
+    amount
+){
 
     currentDate.setMonth(
-        currentDate.getMonth() + amount
+        currentDate.getMonth()+amount
     );
+
 
     renderCalendar();
 
@@ -1073,12 +2370,14 @@ function changeMonth(amount){
 
 
 /* =========================
-   TODAY
+   Go Today
 ========================= */
 
 function goToday(){
 
-    currentDate = new Date();
+    currentDate =
+        new Date();
+
 
     renderCalendar();
 
@@ -1086,326 +2385,117 @@ function goToday(){
 
 
 /* =========================
-   CLOCK
+   Clock
 ========================= */
 
 function updateClock(){
 
-    const now = new Date();
+    const now =
+        new Date();
 
-    const time =
+
+    document.getElementById(
+        "clock"
+    ).textContent =
+
         now.toLocaleTimeString(
-            "ar-SA",
+            "en-SA",
+
             {
+
                 hour:"2-digit",
+
                 minute:"2-digit",
+
                 second:"2-digit"
+
             }
-        );
 
-    document.getElementById("clock").textContent =
-        time;
-
-}
-
-
-/* =========================
-   COUNTDOWN TARGET
-========================= */
-
-function getCountdownTarget(title){
-
-    const now = new Date();
-
-
-    /* RAMADAN */
-
-    if(title === "رمضان"){
-
-        return findNextHijriEvent("ramadan");
-
-    }
-
-
-    /* EID FITR */
-
-    if(title === "عيد الفطر"){
-
-        return findNextHijriEvent("eidFitr");
-
-    }
-
-
-    /* ARAFAT */
-
-    if(title === "يوم عرفة"){
-
-        return findNextHijriEvent("arafah");
-
-    }
-
-
-    /* EID ADHA */
-
-    if(title === "عيد الأضحى"){
-
-        return findNextHijriEvent("eidAdha");
-
-    }
-
-
-    /* BIRTHDAY */
-
-    if(title === "يوم ميلاد عمكم"){
-
-        let target =
-            new Date(
-                now.getFullYear(),
-                0,
-                21,
-                0,0,0
-            );
-
-        if(target <= now){
-
-            target.setFullYear(
-                now.getFullYear() + 1
-            );
-
-        }
-
-        return target;
-
-    }
-
-
-    /* FIXED ANNUAL EVENTS */
-
-    const fixedMap = {
-
-        "يوم التأسيس":[1,22],
-        "يوم العلم":[2,11],
-        "يوم البيئة":[5,5],
-        "اليوم الوطني":[8,23],
-        "اليوم الدولي لمكافحة الفساد":[11,9],
-        "اليوم العالمي للغة العربية":[11,18]
-
-    };
-
-
-    if(fixedMap[title]){
-
-        const [month,day] =
-            fixedMap[title];
-
-        let target =
-            new Date(
-                now.getFullYear(),
-                month,
-                day,
-                0,0,0
-            );
-
-        if(target <= now){
-
-            target.setFullYear(
-                now.getFullYear() + 1
-            );
-
-        }
-
-        return target;
-
-    }
-
-
-    /*
-       For simple recurring monthly events
-       we use the next 25th.
-    */
-
-    if(
-        title === "قطة النت" ||
-        title === "قطة العامل" ||
-        title === "قطة الكهرب"
-    ){
-
-        let target =
-            new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                25,
-                0,0,0
-            );
-
-        if(target <= now){
-
-            target.setMonth(
-                target.getMonth() + 1
-            );
-
-        }
-
-        return target;
-
-    }
-
-
-    return null;
-
-}
-
-
-/* =========================
-   OPEN COUNTDOWN
-========================= */
-
-function openCountdown(title,icon){
-
-    const target =
-        getCountdownTarget(title);
-
-    if(!target) return;
-
-
-    document.getElementById("modalIcon")
-        .textContent = icon || "⏳";
-
-    document.getElementById("modalTitle")
-        .textContent = `باقي على ${title}`;
-
-
-    document.getElementById("modalOverlay")
-        .classList.add("show");
-
-
-    updateCountdown(target);
-
-
-    clearInterval(countdownTimer);
-
-    countdownTimer =
-        setInterval(
-            () => updateCountdown(target),
-            1000
         );
 
 }
 
 
 /* =========================
-   UPDATE COUNTDOWN
+   Start
 ========================= */
 
-function updateCountdown(target){
-
-    const now = new Date();
-
-    let difference =
-        target.getTime() - now.getTime();
-
-
-    if(difference < 0){
-
-        difference = 0;
-
-    }
-
-
-    const totalSeconds =
-        Math.floor(
-            difference / 1000
-        );
-
-
-    const days =
-        Math.floor(
-            totalSeconds / 86400
-        );
-
-
-    const hours =
-        Math.floor(
-            (totalSeconds % 86400) / 3600
-        );
-
-
-    const minutes =
-        Math.floor(
-            (totalSeconds % 3600) / 60
-        );
-
-
-    const seconds =
-        totalSeconds % 60;
-
-
-    document.getElementById("countdownDays")
-        .textContent = days;
-
-
-    document.getElementById("countdownTime")
-        .textContent =
-        `${String(hours).padStart(2,"0")} : ` +
-        `${String(minutes).padStart(2,"0")} : ` +
-        `${String(seconds).padStart(2,"0")}`;
-
-}
-
-
-/* =========================
-   CLOSE MODAL
-========================= */
-
-function hideModal(){
-
-    document.getElementById("modalOverlay")
-        .classList.remove("show");
-
-    clearInterval(countdownTimer);
-
-}
-
-
-function closeModal(event){
-
-    if(
-        event.target.id === "modalOverlay"
-    ){
-
-        hideModal();
-
-    }
-
-}
-
-
-/* =========================
-   AUTO UPDATE
-========================= */
-
-setInterval(updateClock,1000);
-
-setInterval(() => {
-
-    /*
-       Re-render every minute so
-       today's highlight and dates
-       stay accurate.
-    */
-
-    renderCalendar();
-
-},60000);
-
-
-/* =========================
-   START
-========================= */
+renderCalendar();
 
 updateClock();
 
-renderCalendar();
+
+/*
+   تحديث الساعة كل ثانية
+*/
+
+setInterval(
+
+    updateClock,
+
+    1000
+
+);
+
+
+/*
+   تحديث التقويم كل دقيقة
+   إذا كان على الشهر الحالي.
+*/
+
+setInterval(
+
+    function(){
+
+        const now =
+            new Date();
+
+
+        if(
+
+            currentDate.getFullYear()
+            ===
+            now.getFullYear()
+
+            &&
+
+            currentDate.getMonth()
+            ===
+            now.getMonth()
+
+        ){
+
+            renderCalendar();
+
+        }
+
+    },
+
+    60000
+
+);
+
+
+/*
+   إغلاق النافذة إذا ضغط
+   خارج العداد.
+*/
+
+document
+    .getElementById(
+        "modalOverlay"
+    )
+    .addEventListener(
+
+        "click",
+
+        function(){
+
+            closeCountdown();
+
+        }
+
+    );
 
 </script>
 
