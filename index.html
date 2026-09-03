@@ -14,11 +14,14 @@ body {
     margin: 0;
     min-height: 100vh;
     font-family: Arial, sans-serif;
+
     background:
         radial-gradient(circle at 10% 20%, #312e81 0%, transparent 35%),
         radial-gradient(circle at 90% 80%, #7e22ce 0%, transparent 35%),
         linear-gradient(135deg, #020617, #0f172a);
+
     color: white;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,17 +30,24 @@ body {
 .container {
     width: 92%;
     max-width: 1300px;
+
     background: rgba(15,23,42,.92);
+
     border: 1px solid rgba(255,255,255,.12);
+
     border-radius: 28px;
+
     padding: 35px;
-    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.5);
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     margin-bottom: 30px;
 }
 
@@ -62,8 +72,11 @@ button {
 .nav {
     width: 50px;
     height: 50px;
+
     border-radius: 15px;
+
     background: rgba(255,255,255,.08);
+
     font-size: 30px;
 }
 
@@ -73,9 +86,13 @@ button {
 
 .today-btn {
     padding: 13px 22px;
+
     border-radius: 30px;
+
     background: rgba(139,92,246,.2);
+
     color: #c4b5fd;
+
     font-weight: bold;
 }
 
@@ -92,20 +109,29 @@ button {
 
 .weekday {
     text-align: center;
+
     color: #94a3b8;
+
     font-weight: bold;
 }
 
 .day {
     height: 105px;
+
     border-radius: 18px;
+
     background: rgba(255,255,255,.06);
+
     border: 1px solid rgba(255,255,255,.07);
+
     display: flex;
     flex-direction: column;
+
     align-items: center;
     justify-content: center;
+
     font-size: 28px;
+
     position: relative;
 }
 
@@ -115,29 +141,50 @@ button {
 }
 
 .day.today {
-    background: linear-gradient(135deg,#4f46e5,#7c3aed,#a855f7);
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed,
+            #a855f7
+        );
+
     transform: scale(1.04);
+
     font-size: 40px;
+
     font-weight: bold;
-    box-shadow: 0 12px 35px rgba(124,58,237,.55);
+
+    box-shadow:
+        0 12px 35px rgba(124,58,237,.55);
 }
 
 .day.today::after {
     content: "";
+
     width: 8px;
     height: 8px;
+
     background: white;
+
     border-radius: 50%;
+
     position: absolute;
+
     bottom: 9px;
 }
 
 .event {
     margin-top: 6px;
+
     padding: 5px 9px;
+
     border-radius: 8px;
+
     font-size: 11px;
+
     font-weight: bold;
+
     white-space: nowrap;
 }
 
@@ -203,21 +250,39 @@ button {
 
         <div class="controls">
 
-            <button class="nav" onclick="changeMonth(-1)">‹</button>
+            <button
+                class="nav"
+                onclick="changeMonth(-1)"
+            >
+                ‹
+            </button>
 
-            <div class="month" id="monthYear"></div>
+            <div
+                class="month"
+                id="monthYear"
+            ></div>
 
-            <button class="nav" onclick="changeMonth(1)">›</button>
+            <button
+                class="nav"
+                onclick="changeMonth(1)"
+            >
+                ›
+            </button>
 
         </div>
 
-        <button class="today-btn" onclick="goToday()">
+        <button
+            class="today-btn"
+            onclick="goToday()"
+        >
             TODAY
         </button>
 
     </div>
 
+
     <div class="weekdays">
+
         <div class="weekday">SUN</div>
         <div class="weekday">MON</div>
         <div class="weekday">TUE</div>
@@ -225,73 +290,136 @@ button {
         <div class="weekday">THU</div>
         <div class="weekday">FRI</div>
         <div class="weekday">SAT</div>
+
     </div>
 
-    <div class="calendar" id="calendar"></div>
+
+    <div
+        class="calendar"
+        id="calendar"
+    ></div>
 
 </div>
 
+
 <script>
+
 
 let currentDate = new Date();
 
-/* تاريخ بداية التناوب */
-const startDate = new Date(2026, 8, 3);
+
+/*
+    تاريخ بداية التناوب
+    الخميس والجمعة
+*/
+
+const startDate =
+    new Date(2026, 8, 3);
 
 
-/* المناسبات */
+/*
+    المناسبات الرسمية والمهمة
+*/
+
 const events = {
-"2026-01-21": ["important", "يوم ميلاد عمكم 🎂"],
-    "2026-02-22": ["national", "يوم التأسيس"],
 
-    "2026-03-11": ["national", "يوم العلم"],
+    "2026-02-22":
+        ["national", "يوم التأسيس"],
 
-    "2026-03-20": ["holiday", "عيد الفطر"],
-    "2026-03-21": ["holiday", "إجازة العيد"],
-    "2026-03-22": ["holiday", "إجازة العيد"],
-    "2026-03-23": ["holiday", "إجازة العيد"],
+    "2026-03-11":
+        ["national", "يوم العلم"],
 
-    "2026-05-26": ["holiday", "يوم عرفة"],
-    "2026-05-27": ["holiday", "عيد الأضحى"],
-    "2026-05-28": ["holiday", "إجازة العيد"],
-    "2026-05-29": ["holiday", "إجازة العيد"],
-    "2026-05-30": ["holiday", "إجازة العيد"],
+    "2026-03-20":
+        ["holiday", "عيد الفطر"],
 
-    "2026-06-05": ["important", "يوم البيئة"],
+    "2026-03-21":
+        ["holiday", "إجازة العيد"],
 
-    "2026-09-23": ["national", "اليوم الوطني"],
+    "2026-03-22":
+        ["holiday", "إجازة العيد"],
 
-    "2026-12-09": ["important", "مكافحة الفساد"],
+    "2026-03-23":
+        ["holiday", "إجازة العيد"],
 
-    "2026-12-18": ["important", "اليوم العالمي للغة العربية"]
+    "2026-05-26":
+        ["holiday", "يوم عرفة"],
+
+    "2026-05-27":
+        ["holiday", "عيد الأضحى"],
+
+    "2026-05-28":
+        ["holiday", "إجازة العيد"],
+
+    "2026-05-29":
+        ["holiday", "إجازة العيد"],
+
+    "2026-05-30":
+        ["holiday", "إجازة العيد"],
+
+    "2026-06-05":
+        ["important", "يوم البيئة"],
+
+    "2026-09-23":
+        ["national", "اليوم الوطني"],
+
+    "2026-12-09":
+        ["important", "مكافحة الفساد"],
+
+    "2026-12-18":
+        ["important", "اليوم العالمي للغة العربية"]
+
 };
 
 
-/* تحويل التاريخ إلى YYYY-MM-DD */
+/*
+    تحويل التاريخ إلى YYYY-MM-DD
+*/
+
 function dateKey(date) {
 
-    const y = date.getFullYear();
+    const y =
+        date.getFullYear();
 
-    const m = String(
-        date.getMonth() + 1
-    ).padStart(2, "0");
+    const m =
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0");
 
-    const d = String(
-        date.getDate()
-    ).padStart(2, "0");
+    const d =
+        String(
+            date.getDate()
+        ).padStart(2, "0");
 
     return `${y}-${m}-${d}`;
 }
 
 
-/* مناسبات الخميس والجمعة */
+/*
+    أحداث الخميس والجمعة
+
+    استراحة → است
+    ثم خنزرة
+    ثم است
+    ثم خنزرة
+*/
+
 function weekendEvent(date) {
 
-    const day = date.getDay();
+    const day =
+        date.getDay();
 
-    if (day !== 4 && day !== 5) {
+    /*
+        4 = Thursday
+        5 = Friday
+    */
+
+    if (
+        day !== 4 &&
+        day !== 5
+    ) {
         return null;
     }
+
 
     const diff =
         Math.floor(
@@ -299,45 +427,77 @@ function weekendEvent(date) {
             (1000 * 60 * 60 * 24)
         );
 
+
     const week =
         Math.floor(diff / 7);
 
-    if (week % 2 === 0) {
 
-        return ["rest", "است"];
+    if (
+        week % 2 === 0
+    ) {
+
+        return [
+            "rest",
+            "است"
+        ];
 
     } else {
 
-        return ["khanzara", "خنزرة"];
+        return [
+            "khanzara",
+            "خنزرة"
+        ];
 
     }
 }
 
 
-/* إنشاء التقويم */
+/*
+    إنشاء التقويم
+*/
+
 function renderCalendar() {
 
     const calendar =
-        document.getElementById("calendar");
+        document.getElementById(
+            "calendar"
+        );
+
 
     const title =
-        document.getElementById("monthYear");
+        document.getElementById(
+            "monthYear"
+        );
+
 
     const year =
         currentDate.getFullYear();
 
+
     const month =
         currentDate.getMonth();
+
 
     const today =
         new Date();
 
+
+    /*
+        اسم الشهر
+    */
+
     const monthName =
-        new Date(year, month, 1)
-        .toLocaleDateString(
+        new Date(
+            year,
+            month,
+            1
+        ).toLocaleDateString(
             "en-US",
-            { month: "long" }
+            {
+                month: "long"
+            }
         );
+
 
     title.textContent =
         `${monthName} ${year}`;
@@ -346,12 +506,22 @@ function renderCalendar() {
     calendar.innerHTML = "";
 
 
-    /* أول يوم في الشهر */
+    /*
+        أول يوم في الشهر
+    */
+
     const firstDay =
-        new Date(year, month, 1).getDay();
+        new Date(
+            year,
+            month,
+            1
+        ).getDay();
 
 
-    /* عدد أيام الشهر */
+    /*
+        عدد أيام الشهر
+    */
+
     const days =
         new Date(
             year,
@@ -360,21 +530,39 @@ function renderCalendar() {
         ).getDate();
 
 
-    /* الفراغات */
-    for (let i = 0; i < firstDay; i++) {
+    /*
+        الأيام الفارغة
+    */
+
+    for (
+        let i = 0;
+        i < firstDay;
+        i++
+    ) {
 
         const empty =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         empty.className =
             "day empty";
 
-        calendar.appendChild(empty);
+        calendar.appendChild(
+            empty
+        );
     }
 
 
-    /* الأيام */
-    for (let dayNumber = 1; dayNumber <= days; dayNumber++) {
+    /*
+        إنشاء الأيام
+    */
+
+    for (
+        let dayNumber = 1;
+        dayNumber <= days;
+        dayNumber++
+    ) {
 
         const date =
             new Date(
@@ -383,54 +571,112 @@ function renderCalendar() {
                 dayNumber
             );
 
+
         const box =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
-        box.className = "day";
+        box.className =
+            "day";
 
 
-        /* رقم اليوم */
+        /*
+            رقم اليوم
+        */
+
         const number =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         number.textContent =
             dayNumber;
 
-        box.appendChild(number);
+        box.appendChild(
+            number
+        );
 
 
-        /* اليوم الحالي */
+        /*
+            تحديد اليوم الحالي
+        */
+
         if (
+
             dayNumber === today.getDate() &&
+
             month === today.getMonth() &&
+
             year === today.getFullYear()
+
         ) {
 
-            box.classList.add("today");
+            box.classList.add(
+                "today"
+            );
+
         }
 
 
-        /* الحدث */
+        /*
+            البحث عن مناسبة
+        */
+
         const key =
             dateKey(date);
+
 
         let event =
             events[key];
 
 
-        /* إذا ما فيه مناسبة، نستخدم الخميس والجمعة */
-        if (!event) {
+        /*
+            🎂 يوم ميلاد عمكم
+            21 يناير من كل سنة
 
-            event =
-                weekendEvent(date);
+            له الأولوية على أي
+            حدث آخر حتى لو كان
+            الخميس أو الجمعة.
+        */
+
+        if (
+            date.getMonth() === 0 &&
+            date.getDate() === 21
+        ) {
+
+            event = [
+                "important",
+                "يوم ميلاد عمكم 🎂"
+            ];
+
         }
 
 
-        /* إضافة الحدث */
+        /*
+            إذا لم يكن هناك
+            مناسبة، نستخدم
+            جدول الخميس والجمعة.
+        */
+
+        else if (!event) {
+
+            event =
+                weekendEvent(date);
+
+        }
+
+
+        /*
+            عرض الحدث
+        */
+
         if (event) {
 
             const eventBox =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             eventBox.className =
                 `event ${event[0]}`;
@@ -438,16 +684,25 @@ function renderCalendar() {
             eventBox.textContent =
                 event[1];
 
-            box.appendChild(eventBox);
+            box.appendChild(
+                eventBox
+            );
         }
 
 
-        calendar.appendChild(box);
+        calendar.appendChild(
+            box
+        );
+
     }
+
 }
 
 
-/* الشهر السابق / التالي */
+/*
+    الشهر السابق / التالي
+*/
+
 function changeMonth(amount) {
 
     currentDate.setMonth(
@@ -458,20 +713,30 @@ function changeMonth(amount) {
 }
 
 
-/* الرجوع للشهر الحالي */
+/*
+    الرجوع للشهر الحالي
+*/
+
 function goToday() {
 
-    currentDate = new Date();
+    currentDate =
+        new Date();
 
     renderCalendar();
 }
 
 
-/* تشغيل */
+/*
+    تشغيل التقويم
+*/
+
 renderCalendar();
 
 
-/* تحديث تلقائي */
+/*
+    تحديث تلقائي كل دقيقة
+*/
+
 setInterval(
     renderCalendar,
     60000
