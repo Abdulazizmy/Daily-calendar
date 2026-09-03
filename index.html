@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:
+        radial-gradient(circle at 10% 15%, #312e81 0%, transparent 35%),
+        radial-gradient(circle at 90% 85%, #7e22ce 0%, transparent 35%),
+        radial-gradient(circle at 80% 10%, #0e7490 0%, transparent 30%),
+        linear-gradient(135deg, #020617, #0f172a 50%, #1e1b4b);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+.calendar-container {
+    width: 90%;
+    max-width: 1250px;
+
+    background: rgba(15, 23, 42, 0.88);
+
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 32px;
+
+    padding: 45px;
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,0.55),
+        0 0 80px rgba(99,102,241,0.15);
+
+    backdrop-filter: blur(20px);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 35px;
+}
+
+.month-year {
+    font-size: 58px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.today-text {
+    font-size: 20px;
+    font-weight: bold;
+
+    color: #a78bfa;
+
+    padding: 12px 20px;
+
+    border-radius: 50px;
+
+    background: rgba(139,92,246,0.12);
+
+    border: 1px solid rgba(139,92,246,0.25);
+}
+
+.weekdays {
+    display: grid;
+
+    grid-template-columns: repeat(7, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 15px;
+}
+
+.weekday {
+    text-align: center;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    color: #94a3b8;
+}
+
+.calendar {
+    display: grid;
+
+    grid-template-columns: repeat(7, 1fr);
+
+    gap: 12px;
+}
+
+.day {
+    height: 110px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    position: relative;
+
+    border-radius: 20px;
+
+    font-size: 30px;
+
+    font-weight: 500;
+
+    color: #e2e8f0;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.09),
+            rgba(255,255,255,0.035)
+        );
+
+    border: 1px solid rgba(255,255,255,0.07);
+
+    transition: all 0.25s ease;
+}
+
+.empty {
+    background: transparent;
+
+    border: none;
+
+    box-shadow: none;
+}
+
+.today {
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed,
+            #a855f7
+        );
+
+    color: white;
+
+    font-size: 42px;
+
+    font-weight: bold;
+
+    transform: scale(1.05);
+
+    border: 1px solid rgba(255,255,255,0.25);
+
+    box-shadow:
+        0 12px 35px rgba(124,58,237,0.55),
+        0 0 35px rgba(139,92,246,0.25);
+}
+
+.today::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: 10px;
+
+    width: 8px;
+
+    height: 8px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 10px rgba(255,255,255,0.8);
+}
+
+.event {
+    margin-top: 7px;
+
+    padding: 5px 10px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    color: white;
+
+    background: rgba(59,130,246,0.8);
+
+    box-shadow:
+        0 4px 12px rgba(59,130,246,0.25);
+}
+
+.rest {
+    background:
+        linear-gradient(
+            135deg,
+            #0891b2,
+            #06b6d4
+        );
+
+    box-shadow:
+        0 4px 15px rgba(6,182,212,0.3);
+}
+
+.riyadh {
+    background:
+        linear-gradient(
+            135deg,
+            #ec4899,
+            #f43f5e
+        );
+
+    box-shadow:
+        0 4px 15px rgba(244,63,94,0.3);
+}
+
+.day:not(.empty):hover {
+    transform: translateY(-3px);
+}
+
+.today:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 900px) {
+
+    .calendar-container {
+        width: 95%;
+
+        padding: 25px;
+    }
+
+    .month-year {
+        font-size: 40px;
+    }
+
+    .day {
+        height: 80px;
+
+        font-size: 23px;
+    }
+
+    .today {
+        font-size: 34px;
+    }
+
+    .event {
+        font-size: 10px;
+
+        padding: 4px 6px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="calendar-container">
+
+    <div class="header">
+
+        <div class="month-year" id="monthYear"></div>
+
+        <div class="today-text">
+            TODAY
+        </div>
+
+    </div>
+
+    <div class="weekdays">
+
+        <div class="weekday">SUN</div>
+        <div class="weekday">MON</div>
+        <div class="weekday">TUE</div>
+        <div class="weekday">WED</div>
+        <div class="weekday">THU</div>
+        <div class="weekday">FRI</div>
+        <div class="weekday">SAT</div>
+
+    </div>
+
+    <div class="calendar" id="calendar"></div>
+
+</div>
+
+
+<script>
+
+/* بداية الجدول */
+const startDate = new Date(2026, 8, 3);
+
+
+/* تحديد أحداث الخميس والجمعة */
+function getWeekendEvent(date) {
+
+    const day = date.getDay();
+
+    /* الخميس = 4
+       الجمعة = 5 */
+
+    if (day !== 4 && day !== 5) {
+        return null;
+    }
+
+    const difference = date - startDate;
+
+    const days = Math.floor(
+        difference / (1000 * 60 * 60 * 24)
+    );
+
+    const week = Math.floor(days / 7);
+
+
+    /*
+
+       3 و 4 سبتمبر  = استراحة
+       10 و 11 سبتمبر = خنزرة
+       17 و 18 سبتمبر = استراحة
+       24 و 25 سبتمبر = خنزرة
+
+       ويتكرر تلقائياً
+
+    */
+
+    if (week % 2 === 0) {
+
+        return "rest";
+
+    } else {
+
+        return "riyadh";
+
+    }
+}
+
+
+/* إنشاء التقويم */
+function createCalendar() {
+
+    const calendar =
+        document.getElementById("calendar");
+
+    const monthYear =
+        document.getElementById("monthYear");
+
+
+    const today = new Date();
+
+    const year = today.getFullYear();
+
+    const month = today.getMonth();
+
+    const currentDate = today.getDate();
+
+
+    /* أول يوم في الشهر */
+    const firstDay =
+        new Date(year, month, 1).getDay();
+
+
+    /* عدد أيام الشهر */
+    const daysInMonth =
+        new Date(year, month + 1, 0).getDate();
+
+
+    /* اسم الشهر */
+    const monthName =
+        today.toLocaleDateString(
+            "en-US",
+            {
+                month: "long"
+            }
+        );
+
+
+    monthYear.textContent =
+        monthName + " " + year;
+
+
+    /* تنظيف التقويم */
+    calendar.innerHTML = "";
+
+
+    /* الأيام الفارغة قبل بداية الشهر */
+    for (let i = 0; i < firstDay; i++) {
+
+        const empty =
+            document.createElement("div");
+
+        empty.classList.add(
+            "day",
+            "empty"
+        );
+
+        calendar.appendChild(empty);
+    }
+
+
+    /* إنشاء أيام الشهر */
+    for (let i = 1; i <= daysInMonth; i++) {
+
+        const day =
+            document.createElement("div");
+
+        day.classList.add("day");
+
+
+        /* رقم اليوم */
+        const number =
+            document.createElement("div");
+
+        number.textContent = i;
+
+        day.appendChild(number);
+
+
+        /* تاريخ اليوم */
+        const thisDate =
+            new Date(year, month, i);
+
+
+        /* تحديد اليوم الحالي */
+        if (i === currentDate) {
+
+            day.classList.add("today");
+
+        }
+
+
+        /* معرفة الحدث */
+        const event =
+            getWeekendEvent(thisDate);
+
+
+        if (event) {
+
+            const eventElement =
+                document.createElement("div");
+
+            eventElement.classList.add(
+                "event"
+            );
+
+
+            /* استراحة */
+            if (event === "rest") {
+
+                eventElement.classList.add(
+                    "rest"
+                );
+
+                eventElement.textContent =
+                    "استراحة";
+            }
+
+
+            /* خنزرة */
+            if (event === "riyadh") {
+
+                eventElement.classList.add(
+                    "riyadh"
+                );
+
+                eventElement.textContent =
+                    "خنزرة";
+            }
+
+
+            day.appendChild(eventElement);
+        }
+
+
+        calendar.appendChild(day);
+    }
+}
+
+
+/* تشغيل التقويم */
+createCalendar();
+
+
+/* تحديث التقويم كل دقيقة */
+setInterval(
+    createCalendar,
+    60000
+);
+
+</script>
+
+</body>
+</html>
