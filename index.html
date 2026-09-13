@@ -586,6 +586,12 @@
       margin-bottom: 10px;
     }
 
+    .match-round {
+      color: var(--gold);
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
     .match-teams {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
@@ -635,30 +641,26 @@
       border-top: 1px solid var(--border);
     }
 
-    .match-details-title {
-      margin-bottom: 8px;
-      color: var(--gold);
+    .detail-line {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 6px;
+      color: #e2e8f0;
       font-size: 12px;
-      font-weight: 800;
     }
 
     .goal-line {
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
       gap: 7px;
-      margin-bottom: 7px;
+      margin-bottom: 5px;
       color: #e2e8f0;
       font-size: 12px;
     }
 
     .goal-line .assist {
       color: var(--muted);
-    }
-
-    .goal-minute {
-      color: var(--blue);
-      font-weight: 700;
     }
 
     .lineup-box {
@@ -1007,15 +1009,11 @@
         </div>
 
         <div>
-
-          <h1>
-            Calendar
-          </h1>
+          <h1>Calendar</h1>
 
           <div class="subtitle">
             مواقيت الصلاة والمناسبات والمواعيد
           </div>
-
         </div>
 
       </div>
@@ -1024,29 +1022,12 @@
 
         <select id="citySelect">
 
-          <option value="Riyadh">
-            الرياض
-          </option>
-
-          <option value="Makkah">
-            مكة المكرمة
-          </option>
-
-          <option value="Madinah">
-            المدينة المنورة
-          </option>
-
-          <option value="Jeddah">
-            جدة
-          </option>
-
-          <option value="Dammam">
-            الدمام
-          </option>
-
-          <option value="Abha">
-            أبها
-          </option>
+          <option value="Riyadh">الرياض</option>
+          <option value="Makkah">مكة المكرمة</option>
+          <option value="Madinah">المدينة المنورة</option>
+          <option value="Jeddah">جدة</option>
+          <option value="Dammam">الدمام</option>
+          <option value="Abha">أبها</option>
 
         </select>
 
@@ -1063,24 +1044,15 @@
 
       <div class="card hero-main">
 
-        <div
-          class="location"
-          id="locationText"
-        >
+        <div class="location" id="locationText">
           مواقيت الصلاة في الرياض
         </div>
 
-        <div
-          class="today"
-          id="gregorianDate"
-        >
+        <div class="today" id="gregorianDate">
           جاري التحميل...
         </div>
 
-        <div
-          class="hijri"
-          id="hijriDate"
-        >
+        <div class="hijri" id="hijriDate">
           جاري تحميل التاريخ الهجري...
         </div>
 
@@ -1090,17 +1062,11 @@
 
         <div class="next-prayer">
 
-          <div
-            class="next-prayer-name"
-            id="nextPrayerName"
-          >
+          <div class="next-prayer-name" id="nextPrayerName">
             --
           </div>
 
-          <div
-            class="countdown"
-            id="countdown"
-          >
+          <div class="countdown" id="countdown">
             --:--:--
           </div>
 
@@ -1111,10 +1077,7 @@
 
       <div class="card date-box">
 
-        <div
-          class="clock"
-          id="clock"
-        >
+        <div class="clock" id="clock">
           --:--:--
         </div>
 
@@ -1144,10 +1107,7 @@
     </div>
 
 
-    <section
-      class="prayer-grid"
-      id="prayerGrid"
-    ></section>
+    <section class="prayer-grid" id="prayerGrid"></section>
 
 
     <section class="dashboard">
@@ -1184,20 +1144,14 @@
         </div>
 
 
-        <div
-          class="days"
-          id="calendarDays"
-        ></div>
+        <div class="days" id="calendarDays"></div>
 
       </div>
 
 
       <div class="card events-card">
 
-        <div
-          class="section-title"
-          style="margin-top: 0;"
-        >
+        <div class="section-title" style="margin-top: 0;">
 
           <h2>
             أحداث الشهر
@@ -1224,9 +1178,7 @@
 
           <div class="live-title">
 
-            <span>
-              ⚽
-            </span>
+            <span>⚽</span>
 
             <h2>
               مباريات الهلال
@@ -1239,7 +1191,7 @@
             <span class="live-dot"></span>
 
             <span id="footballUpdateStatus">
-              جاري تحديث المباريات...
+              جاري تحديث مباريات الهلال...
             </span>
 
           </div>
@@ -1247,22 +1199,13 @@
         </div>
 
 
-        <div
-          id="nextMatchCountdown"
-          class="next-match-countdown"
-        ></div>
+        <div id="nextMatchCountdown" class="next-match-countdown"></div>
 
 
-        <div
-          id="matchesGrid"
-          class="matches-grid"
-        ></div>
+        <div id="matchesGrid" class="matches-grid"></div>
 
 
-        <div
-          id="moreMatches"
-          class="more-matches"
-        ></div>
+        <div id="moreMatches" class="more-matches"></div>
 
       </div>
 
@@ -1276,17 +1219,11 @@
   </div>
 
 
-  <div
-    class="modal-overlay"
-    id="eventModal"
-  >
+  <div class="modal-overlay" id="eventModal">
 
     <div class="modal">
 
-      <button
-        class="close-modal"
-        id="closeModal"
-      >
+      <button class="close-modal" id="closeModal">
         ×
       </button>
 
@@ -1294,17 +1231,11 @@
         إضافة حدث
       </h2>
 
-      <p
-        class="selected-date"
-        id="selectedDateText"
-      ></p>
+      <p class="selected-date" id="selectedDateText"></p>
 
       <form id="eventForm">
 
-        <input
-          type="hidden"
-          id="eventDate"
-        >
+        <input type="hidden" id="eventDate">
 
         <label for="eventTitle">
           اسم الحدث
@@ -1353,10 +1284,7 @@
           الوقت
         </label>
 
-        <input
-          type="time"
-          id="eventTime"
-        >
+        <input type="time" id="eventTime">
 
         <label for="eventNotes">
           ملاحظات
@@ -1368,10 +1296,7 @@
           placeholder="اكتب أي ملاحظات..."
         ></textarea>
 
-        <button
-          type="submit"
-          class="save-event"
-        >
+        <button type="submit" class="save-event">
           حفظ الحدث
         </button>
 
@@ -1382,38 +1307,23 @@
   </div>
 
 
-  <div
-    class="modal-overlay"
-    id="countdownModal"
-  >
+  <div class="modal-overlay" id="countdownModal">
 
     <div class="modal countdown-modal">
 
-      <button
-        class="close-modal"
-        id="closeCountdownModal"
-      >
+      <button class="close-modal" id="closeCountdownModal">
         ×
       </button>
 
-      <div
-        class="countdown-event-icon"
-        id="countdownEventIcon"
-      >
+      <div class="countdown-event-icon" id="countdownEventIcon">
         📅
       </div>
 
-      <div
-        class="countdown-event-title"
-        id="countdownEventTitle"
-      >
+      <div class="countdown-event-title" id="countdownEventTitle">
         --
       </div>
 
-      <div
-        class="countdown-event-date"
-        id="countdownEventDate"
-      >
+      <div class="countdown-event-date" id="countdownEventDate">
         --
       </div>
 
@@ -1423,27 +1333,17 @@
           الوقت المتبقي
         </div>
 
-        <div
-          class="event-countdown"
-          id="eventCountdown"
-        >
+        <div class="event-countdown" id="eventCountdown">
           --:--:--
         </div>
 
-        <div
-          class="event-countdown-note"
-          id="eventCountdownNote"
-        >
+        <div class="event-countdown-note" id="eventCountdownNote">
           --
         </div>
 
       </div>
 
-      <button
-        type="button"
-        class="close-countdown"
-        id="closeCountdownButton"
-      >
+      <button type="button" class="close-countdown" id="closeCountdownButton">
         إغلاق
       </button>
 
@@ -1452,17 +1352,11 @@
   </div>
 
 
-  <div
-    class="modal-overlay"
-    id="dayEventsModal"
-  >
+  <div class="modal-overlay" id="dayEventsModal">
 
     <div class="modal day-events-modal">
 
-      <button
-        class="close-modal"
-        id="closeDayEventsModal"
-      >
+      <button class="close-modal" id="closeDayEventsModal">
         ×
       </button>
 
@@ -1472,25 +1366,15 @@
           أحداث اليوم
         </h2>
 
-        <div
-          class="day-events-date"
-          id="dayEventsDate"
-        >
+        <div class="day-events-date" id="dayEventsDate">
           --
         </div>
 
       </div>
 
-      <div
-        class="day-events-list"
-        id="dayEventsList"
-      ></div>
+      <div class="day-events-list" id="dayEventsList"></div>
 
-      <button
-        type="button"
-        class="add-day-event"
-        id="addDayEventButton"
-      >
+      <button type="button" class="add-day-event" id="addDayEventButton">
         ＋ إضافة حدث جديد
       </button>
 
@@ -1535,7 +1419,6 @@
 
     let eventCountdownTimer = null;
     let selectedCountdownEvent = null;
-
     let selectedDayForEvents = null;
 
     const HILAL_TEAM_ID = 21895;
@@ -1594,9 +1477,7 @@
     try {
 
       events = JSON.parse(
-        localStorage.getItem(
-          "myCalendarEvents"
-        ) || "[]"
+        localStorage.getItem("myCalendarEvents") || "[]"
       );
 
     } catch (error) {
@@ -1635,29 +1516,26 @@
 
       let changed = false;
 
-      officialEvents.forEach(
-        newEvent => {
+      officialEvents.forEach(newEvent => {
 
-          const exists =
-            events.some(
-              event =>
-                event.date === newEvent.date &&
-                event.title === newEvent.title
-            );
+        const exists = events.some(
+          event =>
+            event.date === newEvent.date &&
+            event.title === newEvent.title
+        );
 
-          if (!exists) {
+        if (!exists) {
 
-            events.push({
-              ...newEvent,
-              systemEvent: true
-            });
+          events.push({
+            ...newEvent,
+            systemEvent: true
+          });
 
-            changed = true;
-
-          }
+          changed = true;
 
         }
-      );
+
+      });
 
       if (changed) {
         saveEvents();
@@ -1670,18 +1548,15 @@
 
     function formatDate(date) {
 
-      const year =
-        date.getFullYear();
+      const year = date.getFullYear();
 
-      const month =
-        String(
-          date.getMonth() + 1
-        ).padStart(2, "0");
+      const month = String(
+        date.getMonth() + 1
+      ).padStart(2, "0");
 
-      const day =
-        String(
-          date.getDate()
-        ).padStart(2, "0");
+      const day = String(
+        date.getDate()
+      ).padStart(2, "0");
 
       return `${year}-${month}-${day}`;
 
@@ -1705,18 +1580,15 @@
 
     function formatApiDate(date) {
 
-      const day =
-        String(
-          date.getDate()
-        ).padStart(2, "0");
+      const day = String(
+        date.getDate()
+      ).padStart(2, "0");
 
-      const month =
-        String(
-          date.getMonth() + 1
-        ).padStart(2, "0");
+      const month = String(
+        date.getMonth() + 1
+      ).padStart(2, "0");
 
-      const year =
-        date.getFullYear();
+      const year = date.getFullYear();
 
       return `${day}-${month}-${year}`;
 
@@ -1735,10 +1607,9 @@
       const [
         hours,
         minutes
-      ] =
-        String(time)
-          .split(":")
-          .map(Number);
+      ] = String(time)
+        .split(":")
+        .map(Number);
 
       if (
         Number.isNaN(hours) ||
@@ -1747,24 +1618,15 @@
         return time;
       }
 
-      const suffix =
-        hours >= 12
-          ? "م"
-          : "ص";
+      const suffix = hours >= 12 ? "م" : "ص";
 
-      let hour =
-        hours % 12;
+      let hour = hours % 12;
 
       if (hour === 0) {
         hour = 12;
       }
 
-      return `${hour}:${String(
-        minutes
-      ).padStart(
-        2,
-        "0"
-      )} ${suffix}`;
+      return `${hour}:${String(minutes).padStart(2, "0")} ${suffix}`;
 
     }
 
@@ -1773,9 +1635,7 @@
 
       const now = new Date();
 
-      document.getElementById(
-        "clock"
-      ).textContent =
+      document.getElementById("clock").textContent =
         now.toLocaleTimeString(
           "ar-SA",
           {
@@ -1786,14 +1646,10 @@
           }
         );
 
-      document.getElementById(
-        "gregorianDate"
-      ).textContent =
+      document.getElementById("gregorianDate").textContent =
         formatArabicDate(now);
 
-      document.getElementById(
-        "weekday"
-      ).textContent =
+      document.getElementById("weekday").textContent =
         new Intl.DateTimeFormat(
           "ar-SA",
           {
@@ -1806,10 +1662,7 @@
 
     async function loadPrayerTimes() {
 
-      const date =
-        formatApiDate(
-          new Date()
-        );
+      const date = formatApiDate(new Date());
 
       const url =
         `https://api.aladhan.com/v1/timingsByCity/${date}` +
@@ -1818,43 +1671,28 @@
 
       try {
 
-        document.getElementById(
-          "lastUpdated"
-        ).textContent =
+        document.getElementById("lastUpdated").textContent =
           "جاري التحديث...";
 
-        const response =
-          await fetch(url);
+        const response = await fetch(url);
 
         if (!response.ok) {
-
-          throw new Error(
-            `HTTP Error: ${response.status}`
-          );
-
+          throw new Error(`HTTP Error: ${response.status}`);
         }
 
-        const result =
-          await response.json();
+        const result = await response.json();
 
         if (
           !result ||
           !result.data ||
           !result.data.timings
         ) {
-
-          throw new Error(
-            "لم تصل بيانات المواقيت"
-          );
-
+          throw new Error("لم تصل بيانات المواقيت");
         }
 
-        prayerTimes =
-          result.data.timings;
+        prayerTimes = result.data.timings;
 
-        document.getElementById(
-          "locationText"
-        ).textContent =
+        document.getElementById("locationText").textContent =
           `مواقيت الصلاة في ${cityArabic[currentCity]}`;
 
         if (
@@ -1862,9 +1700,7 @@
           result.data.date.hijri
         ) {
 
-          document.getElementById(
-            "hijriDate"
-          ).textContent =
+          document.getElementById("hijriDate").textContent =
             `${result.data.date.hijri.day} ` +
             `${result.data.date.hijri.month.ar} ` +
             `${result.data.date.hijri.year} هـ`;
@@ -1874,9 +1710,7 @@
         renderPrayerCards();
         startCountdown();
 
-        document.getElementById(
-          "lastUpdated"
-        ).textContent =
+        document.getElementById("lastUpdated").textContent =
           "تم التحديث الآن";
 
       } catch (error) {
@@ -1886,14 +1720,10 @@
           error
         );
 
-        document.getElementById(
-          "lastUpdated"
-        ).textContent =
+        document.getElementById("lastUpdated").textContent =
           "تعذر تحميل المواقيت";
 
-        document.getElementById(
-          "hijriDate"
-        ).textContent =
+        document.getElementById("hijriDate").textContent =
           "تعذر تحميل التاريخ الهجري";
 
       }
@@ -1917,27 +1747,20 @@
     function renderPrayerCards() {
 
       const grid =
-        document.getElementById(
-          "prayerGrid"
-        );
+        document.getElementById("prayerGrid");
 
       grid.innerHTML = "";
 
-      Object.entries(
-        prayerNames
-      ).forEach(
+      Object.entries(prayerNames).forEach(
         ([key, name]) => {
 
           const rawTime =
             cleanTime(
-              prayerTimes[key] ||
-              "--:--"
+              prayerTimes[key] || "--:--"
             );
 
           const time =
-            formatTimeArabic(
-              rawTime
-            );
+            formatTimeArabic(rawTime);
 
           grid.innerHTML += `
             <div
@@ -1968,8 +1791,7 @@
 
     function getPrayerDate(time) {
 
-      const now =
-        new Date();
+      const now = new Date();
 
       if (
         !time ||
@@ -1981,10 +1803,9 @@
       const [
         hours,
         minutes
-      ] =
-        time
-          .split(":")
-          .map(Number);
+      ] = time
+        .split(":")
+        .map(Number);
 
       if (
         Number.isNaN(hours) ||
@@ -1993,8 +1814,7 @@
         return null;
       }
 
-      const date =
-        new Date(now);
+      const date = new Date(now);
 
       date.setHours(
         hours,
@@ -2010,53 +1830,31 @@
 
     function startCountdown() {
 
-      clearInterval(
-        countdownTimer
-      );
+      clearInterval(countdownTimer);
 
       function updateCountdown() {
 
-        const now =
-          new Date();
+        const now = new Date();
 
         const prayers =
-          Object.entries(
-            prayerNames
-          )
-          .filter(
-            ([key]) =>
-              prayerTimes[key]
-          )
-          .map(
-            ([key, name]) => ({
-
+          Object.entries(prayerNames)
+            .filter(([key]) => prayerTimes[key])
+            .map(([key, name]) => ({
               key,
               name,
-
               date:
                 getPrayerDate(
-                  cleanTime(
-                    prayerTimes[key]
-                  )
+                  cleanTime(prayerTimes[key])
                 )
-
-            })
-          )
-          .filter(
-            prayer =>
-              prayer.date
-          );
+            }))
+            .filter(prayer => prayer.date);
 
         if (!prayers.length) {
 
-          document.getElementById(
-            "nextPrayerName"
-          ).textContent =
+          document.getElementById("nextPrayerName").textContent =
             "--";
 
-          document.getElementById(
-            "countdown"
-          ).textContent =
+          document.getElementById("countdown").textContent =
             "--:--:--";
 
           return;
@@ -2065,14 +1863,12 @@
 
         let next =
           prayers.find(
-            prayer =>
-              prayer.date > now
+            prayer => prayer.date > now
           );
 
         if (!next) {
 
-          const tomorrow =
-            new Date(now);
+          const tomorrow = new Date(now);
 
           tomorrow.setDate(
             tomorrow.getDate() + 1
@@ -2080,8 +1876,7 @@
 
           const fajr =
             prayers.find(
-              prayer =>
-                prayer.key === "Fajr"
+              prayer => prayer.key === "Fajr"
             );
 
           if (!fajr) {
@@ -2114,15 +1909,11 @@
         const totalSeconds =
           Math.max(
             0,
-            Math.floor(
-              remaining / 1000
-            )
+            Math.floor(remaining / 1000)
           );
 
         const hours =
-          Math.floor(
-            totalSeconds / 3600
-          );
+          Math.floor(totalSeconds / 3600);
 
         const minutes =
           Math.floor(
@@ -2130,36 +1921,26 @@
           );
 
         const seconds =
-          totalSeconds %
-          60;
+          totalSeconds % 60;
 
-        document.getElementById(
-          "nextPrayerName"
-        ).textContent =
+        document.getElementById("nextPrayerName").textContent =
           next.name;
 
-        document.getElementById(
-          "countdown"
-        ).textContent =
+        document.getElementById("countdown").textContent =
           `${String(hours).padStart(2, "0")}:` +
           `${String(minutes).padStart(2, "0")}:` +
           `${String(seconds).padStart(2, "0")}`;
 
-        document
-          .querySelectorAll(
-            ".prayer-card"
-          )
-          .forEach(
-            card => {
+        document.querySelectorAll(".prayer-card").forEach(
+          card => {
 
-              card.classList.toggle(
-                "active",
-                card.dataset.prayer ===
-                next.key
-              );
+            card.classList.toggle(
+              "active",
+              card.dataset.prayer === next.key
+            );
 
-            }
-          );
+          }
+        );
 
       }
 
@@ -2182,19 +1963,14 @@
 
       const response =
         await fetch(
-          "https://www.sofascore.com/api/v1" +
-          endpoint,
+          "https://www.sofascore.com/api/v1" + endpoint,
           {
             cache: "no-store"
           }
         );
 
       if (!response.ok) {
-
-        throw new Error(
-          `HTTP ${response.status}`
-        );
-
+        throw new Error(`HTTP ${response.status}`);
       }
 
       return await response.json();
@@ -2202,9 +1978,17 @@
     }
 
 
-    /* =========================================================
-       ترجمة أسماء الفرق
-    ========================================================= */
+    function normalizeName(name) {
+
+      return String(name || "")
+        .toLowerCase()
+        .replace(/[’'`]/g, "")
+        .replace(/[-_.]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    }
+
 
     function translateHilalTeamName(name) {
 
@@ -2222,12 +2006,7 @@
         return raw;
       }
 
-      const key =
-        raw
-          .toLowerCase()
-          .replace(/[-_.]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
+      const key = normalizeName(raw);
 
       const translations = {
 
@@ -2242,7 +2021,7 @@
 
         "al ittihad": "الاتحاد",
         "al etihad": "الاتحاد",
-        "al ittihad club": "الاتحاد",
+        "al ittihad jeddah": "الاتحاد",
 
         "al nassr": "النصر",
         "al nasr": "النصر",
@@ -2274,6 +2053,7 @@
         "al fayha": "الفيحاء",
 
         "damac": "ضمك",
+        "damac fc": "ضمك",
 
         "al okhdood": "الأخدود",
         "al akhdoud": "الأخدود",
@@ -2289,24 +2069,25 @@
 
         "al diriyah": "الدرعية",
 
-        "al shamal": "الشمال",
+        "al shamal": "الشمال القطري",
+        "al shamal sc": "الشمال القطري",
 
-        "al sadd": "السد",
-        "al sadd sc": "السد",
+        "al sadd": "السد القطري",
+        "al sadd sc": "السد القطري",
 
-        "al ain": "العين",
+        "al ain": "العين الإماراتي",
+        "al ain fc": "العين الإماراتي",
 
-        "shabab al ahli": "شباب الأهلي",
+        "shabab al ahli": "شباب الأهلي الإماراتي",
+        "shabab al ahli club": "شباب الأهلي الإماراتي",
 
-        "shabab al ahli club": "شباب الأهلي",
+        "neftchi": "نيفتشي الأوزبكي",
+        "neftchi baku": "نيفتشي الأذربيجاني",
 
-        "neftchi": "نيفتشي",
+        "pakhtakor": "باختاكور الأوزبكي",
 
-        "pakhtakor": "باختاكور",
-
-        "al wasl": "الوصل",
-
-        "al wasl uae": "الوصل",
+        "al wasl": "الوصل الإماراتي",
+        "al wasl uae": "الوصل الإماراتي",
 
         "manchester city": "مانشستر سيتي",
 
@@ -2317,7 +2098,6 @@
         "pachuca": "باتشوكا",
 
         "salzburg": "سالزبورغ",
-
         "red bull salzburg": "سالزبورغ",
 
         "flamengo": "فلامنغو",
@@ -2326,7 +2106,57 @@
 
         "al juwair": "الجبلين",
 
-        "al jabalain": "الجبلين"
+        "al jabalain": "الجبلين",
+
+        "al bukayriyah": "البكيرية",
+
+        "al batin": "الباطن",
+
+        "al arabi": "العربي",
+
+        "al qaisumah": "القيصومة",
+
+        "al safa": "الصفا",
+
+        "al jandal": "الجندل",
+
+        "al bukayriyah fc": "البكيرية",
+
+        "al rawdhah": "الروضة",
+
+        "al kharj": "الخرج",
+
+        "al najma": "النجمة",
+
+        "al jubail": "الجبيل",
+
+        "al anwar": "الأنوار",
+
+        "al ttaqdom": "التقدم",
+
+        "al sahel": "الساحل",
+
+        "al suqoor": "الصقور",
+
+        "al qous": "القوس",
+
+        "al khaleej club": "الخليج",
+
+        "al orubah": "العروبة",
+
+        "al okhdood club": "الأخدود",
+
+        "al raed club": "الرائد",
+
+        "al hazm": "الحزم",
+
+        "al fayha fc": "الفيحاء",
+
+        "al ettifaq fc": "الاتفاق",
+
+        "al fateh sc": "الفتح",
+
+        "al qadsiah fc": "القادسية"
 
       };
 
@@ -2341,14 +2171,10 @@
         return "الهلال";
       }
 
-      return raw;
+      return "الفريق المنافس";
 
     }
 
-
-    /* =========================================================
-       ترجمة أسماء اللاعبين
-    ========================================================= */
 
     function translateHilalPlayerName(name) {
 
@@ -2366,29 +2192,76 @@
         return raw;
       }
 
-      const key =
-        raw
-          .toLowerCase()
-          .replace(/[-_.]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
+      const key = normalizeName(raw);
 
       const translations = {
 
-        "yassine bounou": "ياسين بونو",
-        "bounou": "ياسين بونو",
-        "bono": "ياسين بونو",
-
-        "salem al dawsari": "سالم الدوسري",
-        "salem al-dawsari": "سالم الدوسري",
-        "salem al dawsary": "سالم الدوسري",
+        "gabriel martinelli": "غابرييل مارتينيلي",
+        "ollie watkins": "أولي واتكينز",
+        "mohamed kader meite": "محمد قادر ميتي",
+        "sultan mandash": "سلطان مندش",
 
         "ruben neves": "روبن نيفيز",
-        "ruben neves": "روبن نيفيز",
+        "ruben neves ": "روبن نيفيز",
+
+        "crysencio summerville": "كريسينسيو سامرفيل",
 
         "sergej milinkovic savic": "سيرجي سافيتش",
         "sergej milinkovic-savic": "سيرجي سافيتش",
-        "sergej milinković savić": "سيرجي سافيتش",
+
+        "salem al dawsari": "سالم الدوسري",
+        "salem al-dawsari": "سالم الدوسري",
+
+        "mohamed kanno": "محمد كنو",
+        "mohammed kanno": "محمد كنو",
+
+        "saimon bouabre": "سايمون بوبري",
+
+        "nasser al dawsari": "ناصر الدوسري",
+        "nasser al-dawsari": "ناصر الدوسري",
+
+        "murad al hawsawi": "مراد الحوساوي",
+
+        "sabri abdu dahal": "صبري عبده دهل",
+
+        "nawaf al habashi": "نواف الحبشي",
+
+        "abdullah al anazi": "عبدالله العنزي",
+
+        "theo hernandez": "ثيو هيرنانديز",
+
+        "kalidou koulibaly": "كاليدو كوليبالي",
+
+        "yusuf akcicek": "يوسف أكجيشيك",
+        "yusuf akçiçek": "يوسف أكجيشيك",
+
+        "hassan tambakti": "حسان تمبكتي",
+        "hassan altambakti": "حسان تمبكتي",
+
+        "ali lajami": "علي لاجامي",
+
+        "moteb al harbi": "متعب الحربي",
+
+        "hamad al yami": "حمد اليامي",
+        "hamad al-yami": "حمد اليامي",
+
+        "meshal al dawood": "مشعل الداود",
+
+        "mohammed mahzari": "محمد مهزاري",
+
+        "saad al mutairy": "سعد المطيري",
+
+        "mohammed al sarnoukh": "محمد السرنوق",
+        "mohamed al sarnukh": "محمد السرنخ",
+
+        "yassine bounou": "ياسين بونو",
+        "bounou": "ياسين بونو",
+
+        "mohammed al owais": "محمد العويس",
+
+        "mohammed al yami": "محمد اليامي",
+
+        "rayan khalid al dossary": "ريان خالد الدوسري",
 
         "aleksandar mitrovic": "ألكسندر ميتروفيتش",
 
@@ -2398,95 +2271,29 @@
 
         "joao cancelo": "جواو كانسيلو",
 
-        "kalidou koulibaly": "كاليدو كوليبالي",
-
         "renan lodi": "رينان لودي",
 
         "ali al bulayhi": "علي البليهي",
-        "ali al-bulaihi": "علي البليهي",
-
-        "hassan tambakti": "حسان تمبكتي",
-        "hassan al tambakti": "حسان تمبكتي",
-        "hassan altambakti": "حسان تمبكتي",
-
-        "nasser al dawsari": "ناصر الدوسري",
-
-        "mohammed kanno": "محمد كنو",
-        "mohamed kanno": "محمد كنو",
+        "ali al bulaihi": "علي البليهي",
 
         "abdullah al hamdan": "عبدالله الحمدان",
 
         "mohammed al qahtani": "محمد القحطاني",
-        "mohammed al-qahtani": "محمد القحطاني",
 
         "hamad al yami": "حمد اليامي",
-
-        "moteb al harbi": "متعب الحربي",
 
         "khalid al ghanam": "خالد الغنام",
 
         "marcelo brozovic": "مارسيلو بروزوفيتش",
 
-        "darwin nunez": "داروين نونيز",
-        "darwin núñez": "داروين نونيز",
-
-        "gabriel martinelli": "غابرييل مارتينيلي",
-
-        "ollie watkins": "أولي واتكينز",
-
-        "crysencio summerville": "كريسينسيو سامرفيل",
-
-        "theo hernandez": "ثيو هيرنانديز",
-        "théo hernandez": "ثيو هيرنانديز",
-
-        "yusuf akcicek": "يوسف أتشيتشيك",
-
-        "ali lajami": "علي لاجامي",
-
-        "mohammed al owais": "محمد العويس",
-
-        "mohammed al yami": "محمد الربيعي",
-
-        "mohamed kader meite": "محمد قادر ميتي",
-
-        "sultan mandash": "سلطان مندش",
-
-        "saimon bouabre": "سايمون بوبري",
-
-        "murad al hawsawi": "مراد الهوساوي",
-
-        "sabri abdu dahal": "صبري عبده داهل",
-
-        "nawaf al habashi": "نواف الحبشي",
-
-        "abdullah al anazi": "عبدالله العنزي",
-
-        "mohammed mahzari": "محمد مهزاري",
-
-        "meshal al dawood": "مشعل الداود",
-
-        "saad al mutairy": "سعد المطيري",
-
-        "mohammed al sarnoukh": "محمد السرنّوخ",
-
-        "mohamed al sarnukh": "محمد السرنّوخ",
-
-        "rayan khalid al dossary": "ريان خالد الدوسري",
-
-        "pablo mari": "بابلو ماري",
-
-        "karim benzema": "كريم بنزيما"
+        "darwin nunez": "داروين نونيز"
 
       };
 
-      return translations[key] || raw;
+      return translations[key] || "لاعب";
 
     }
 
-
-    /* =========================================================
-       ترجمة البطولات
-    ========================================================= */
 
     function translateHilalCompetitionName(name) {
 
@@ -2504,12 +2311,7 @@
         return raw;
       }
 
-      const key =
-        raw
-          .toLowerCase()
-          .replace(/[-_.]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
+      const key = normalizeName(raw);
 
       const translations = {
 
@@ -2519,10 +2321,13 @@
         "roshan saudi league":
           "دوري روشن السعودي",
 
+        "saudi professional league":
+          "دوري روشن السعودي",
+
         "saudi king s cup":
           "كأس خادم الحرمين الشريفين",
 
-        "saudi king's cup":
+        "saudi kings cup":
           "كأس خادم الحرمين الشريفين",
 
         "king cup":
@@ -2549,15 +2354,52 @@
         "friendly international":
           "مباراة ودية",
 
+        "friendly":
+          "مباراة ودية",
+
         "gulf club champions league":
           "دوري أبطال الخليج",
 
         "afc":
-          "الاتحاد الآسيوي"
+          "الاتحاد الآسيوي",
+
+        "arab club champions cup":
+          "كأس الملك سلمان للأندية العربية",
+
+        "arab club championship":
+          "البطولة العربية للأندية"
 
       };
 
-      return translations[key] || raw;
+      if (translations[key]) {
+        return translations[key];
+      }
+
+      if (key.includes("saudi") && key.includes("league")) {
+        return "دوري روشن السعودي";
+      }
+
+      if (key.includes("champions league") && key.includes("elite")) {
+        return "دوري أبطال آسيا للنخبة";
+      }
+
+      if (key.includes("champions league")) {
+        return "دوري أبطال آسيا";
+      }
+
+      if (key.includes("king") && key.includes("cup")) {
+        return "كأس خادم الحرمين الشريفين";
+      }
+
+      if (key.includes("super cup")) {
+        return "كأس السوبر السعودي";
+      }
+
+      if (key.includes("world cup")) {
+        return "كأس العالم للأندية";
+      }
+
+      return "بطولة";
 
     }
 
@@ -2573,7 +2415,6 @@
 
         status.textContent =
           "جاري تحديث مباريات الهلال...";
-
 
         const requests =
           await Promise.allSettled([
@@ -2604,60 +2445,45 @@
 
           ]);
 
-
         const allEvents = [];
 
+        requests.forEach(result => {
 
-        requests.forEach(
-          result => {
+          if (
+            result.status === "fulfilled" &&
+            result.value &&
+            Array.isArray(result.value.events)
+          ) {
 
-            if (
-              result.status === "fulfilled" &&
-              result.value &&
-              Array.isArray(
-                result.value.events
-              )
-            ) {
-
-              allEvents.push(
-                ...result.value.events
-              );
-
-            }
+            allEvents.push(
+              ...result.value.events
+            );
 
           }
-        );
 
+        });
 
-        const unique =
-          new Map();
+        const unique = new Map();
 
+        allEvents.forEach(match => {
 
-        allEvents.forEach(
-          match => {
+          if (
+            match &&
+            match.id
+          ) {
 
-            if (
-              match &&
-              match.id
-            ) {
-
-              unique.set(
-                match.id,
-                match
-              );
-
-            }
+            unique.set(
+              match.id,
+              match
+            );
 
           }
-        );
 
+        });
 
         hilalMatches =
-          Array.from(
-            unique.values()
-          )
-          .filter(
-            match => {
+          Array.from(unique.values())
+            .filter(match => {
 
               const homeId =
                 match.homeTeam &&
@@ -2672,118 +2498,104 @@
                 awayId === HILAL_TEAM_ID
               );
 
-            }
-          )
-          .sort(
-            (a, b) =>
-              (a.startTimestamp || 0) -
-              (b.startTimestamp || 0)
-          );
-
+            })
+            .sort(
+              (a, b) =>
+                (a.startTimestamp || 0) -
+                (b.startTimestamp || 0)
+            );
 
         const completedMatches =
-          hilalMatches.filter(
-            match => {
+          hilalMatches.filter(match => {
 
-              const type =
-                match.status &&
-                match.status.type;
+            const type =
+              match.status &&
+              match.status.type;
 
-              return (
-                type === "inprogress" ||
-                type === "finished"
-              );
+            return (
+              type === "inprogress" ||
+              type === "finished"
+            );
 
-            }
-          );
-
+          });
 
         const details =
           await Promise.allSettled(
             completedMatches
               .slice(-12)
-              .map(
-                async match => {
+              .map(async match => {
 
-                  const [
-                    incidents,
-                    lineups
-                  ] =
-                    await Promise.allSettled([
+                const [
+                  incidents,
+                  lineups
+                ] =
+                  await Promise.allSettled([
 
-                      sofascoreFetch(
-                        `/event/${match.id}/incidents`
-                      ),
+                    sofascoreFetch(
+                      `/event/${match.id}/incidents`
+                    ),
 
-                      sofascoreFetch(
-                        `/event/${match.id}/lineups`
-                      )
+                    sofascoreFetch(
+                      `/event/${match.id}/lineups`
+                    )
 
-                    ]);
+                  ]);
 
+                return {
 
-                  return {
+                  id: match.id,
 
-                    id: match.id,
+                  incidents:
+                    incidents.status === "fulfilled"
+                      ? incidents.value
+                      : null,
 
-                    incidents:
-                      incidents.status === "fulfilled"
-                        ? incidents.value
-                        : null,
+                  lineups:
+                    lineups.status === "fulfilled"
+                      ? lineups.value
+                      : null
 
-                    lineups:
-                      lineups.status === "fulfilled"
-                        ? lineups.value
-                        : null
+                };
 
-                  };
-
-                }
-              )
+              })
           );
 
+        details.forEach(result => {
 
-        details.forEach(
-          result => {
-
-            if (
-              result.status !== "fulfilled"
-            ) {
-              return;
-            }
-
-            const detail =
-              result.value;
-
-            const match =
-              hilalMatches.find(
-                item =>
-                  item.id ===
-                  detail.id
-              );
-
-            if (!match) {
-              return;
-            }
-
-            match.liveDetails = {
-
-              incidents:
-                detail.incidents,
-
-              lineups:
-                detail.lineups
-
-            };
-
+          if (
+            result.status !== "fulfilled"
+          ) {
+            return;
           }
-        );
 
+          const detail =
+            result.value;
+
+          const match =
+            hilalMatches.find(
+              item =>
+                item.id === detail.id
+            );
+
+          if (!match) {
+            return;
+          }
+
+          match.liveDetails = {
+
+            incidents:
+              detail.incidents,
+
+            lineups:
+              detail.lineups
+
+          };
+
+        });
 
         renderHilalMatches();
 
         syncHilalCalendarEvents();
-
 
         status.textContent =
           `آخر تحديث ${new Date().toLocaleTimeString(
@@ -2794,7 +2606,6 @@
               hour12: true
             }
           )}`;
-
 
       } catch (error) {
 
@@ -2869,14 +2680,13 @@
         );
 
       return hilalMatches
-        .filter(
-          match =>
-            match &&
-            match.startTimestamp &&
-            match.startTimestamp > now &&
-            match.status &&
-            match.status.type !== "canceled" &&
-            match.status.type !== "finished"
+        .filter(match =>
+          match &&
+          match.startTimestamp &&
+          match.startTimestamp > now &&
+          match.status &&
+          match.status.type !== "canceled" &&
+          match.status.type !== "finished"
         )
         .sort(
           (a, b) =>
@@ -2897,11 +2707,9 @@
       const match =
         getNextHilalMatch();
 
-
       clearInterval(
         hilalCountdownTimer
       );
-
 
       if (!match) {
 
@@ -2919,13 +2727,11 @@
 
       }
 
-
       const home =
         translateHilalTeamName(
           match.homeTeam &&
           match.homeTeam.name
         );
-
 
       const away =
         translateHilalTeamName(
@@ -2933,13 +2739,14 @@
           match.awayTeam.name
         );
 
+      const competition =
+        getCompetitionName(match);
 
       function update() {
 
         const difference =
           match.startTimestamp * 1000 -
           Date.now();
-
 
         if (difference <= 0) {
 
@@ -2952,6 +2759,10 @@
               ${escapeHTML(home)}
               ×
               ${escapeHTML(away)}
+            </div>
+
+            <div class="next-match-date">
+              ${escapeHTML(competition)}
             </div>
 
             <div class="next-match-status">
@@ -2967,12 +2778,10 @@
 
         }
 
-
         const totalSeconds =
           Math.floor(
             difference / 1000
           );
-
 
         const days =
           Math.floor(
@@ -2990,12 +2799,9 @@
           );
 
         const seconds =
-          totalSeconds %
-          60;
-
+          totalSeconds % 60;
 
         let timerText;
-
 
         if (days > 0) {
 
@@ -3014,7 +2820,6 @@
 
         }
 
-
         container.innerHTML = `
           <div class="next-match-label">
             المباراة القادمة للهلال
@@ -3027,6 +2832,8 @@
           </div>
 
           <div class="next-match-date">
+            ${escapeHTML(competition)}
+            —
             ${escapeHTML(
               formatMatchDate(
                 match.startTimestamp
@@ -3051,7 +2858,6 @@
 
       }
 
-
       update();
 
       hilalCountdownTimer =
@@ -3069,47 +2875,31 @@
         return "";
       }
 
-
       const type =
         match.status.type;
 
-
       if (type === "inprogress") {
 
-        if (
-          match.status.description
-        ) {
+        if (match.status.description) {
 
           const description =
             String(
               match.status.description
             ).toLowerCase();
 
-
-          if (
-            description.includes("half")
-          ) {
+          if (description.includes("half")) {
             return "الشوط الأول";
           }
 
-
-          if (
-            description.includes("break")
-          ) {
+          if (description.includes("break")) {
             return "استراحة";
           }
 
-
-          if (
-            description.includes("second")
-          ) {
+          if (description.includes("second")) {
             return "الشوط الثاني";
           }
 
-
-          if (
-            description.includes("extra")
-          ) {
+          if (description.includes("extra")) {
             return "وقت إضافي";
           }
 
@@ -3119,21 +2909,21 @@
 
       }
 
-
       if (type === "finished") {
         return "انتهت";
       }
-
 
       if (type === "postponed") {
         return "مؤجلة";
       }
 
-
       if (type === "canceled") {
         return "ملغاة";
       }
 
+      if (type === "notstarted") {
+        return "قادمة";
+      }
 
       return "قادمة";
 
@@ -3153,8 +2943,30 @@
 
       }
 
-
       return "مباراة";
+
+    }
+
+
+    function getMatchRound(match) {
+
+      if (
+        match.roundInfo &&
+        match.roundInfo.name
+      ) {
+        return String(
+          match.roundInfo.name
+        );
+      }
+
+      if (
+        match.roundInfo &&
+        match.roundInfo.round
+      ) {
+        return `الجولة ${match.roundInfo.round}`;
+      }
+
+      return "";
 
     }
 
@@ -3166,11 +2978,9 @@
         match.liveDetails.incidents &&
         match.liveDetails.incidents.incidents;
 
-
       if (!Array.isArray(incidents)) {
         return [];
       }
-
 
       return incidents
         .filter(
@@ -3178,55 +2988,48 @@
             incident.incidentType === "goal" ||
             incident.incidentClass === "goal"
         )
-        .map(
-          goal => {
+        .map(goal => {
 
-            let scorer =
-              goal.player &&
-              (
-                goal.player.name ||
-                goal.player.shortName
-              );
+          let scorer =
+            goal.player &&
+            goal.player.name;
 
+          let assist =
+            goal.assist1 &&
+            goal.assist1.name;
 
-            let assist =
-              goal.assist1 &&
-              (
-                goal.assist1.name ||
-                goal.assist1.shortName
-              );
+          scorer =
+            translateHilalPlayerName(
+              scorer
+            );
 
+          assist =
+            assist
+              ? translateHilalPlayerName(
+                  assist
+                )
+              : "";
 
-            return {
+          return {
 
-              minute:
-                goal.time
-                  ? `${goal.time} دقيقة`
-                  : "",
+            minute:
+              goal.time
+                ? `${goal.time} دقيقة`
+                : "",
 
-              scorer:
-                translateHilalPlayerName(
-                  scorer || "هدف"
-                ),
+            scorer,
 
-              assist:
-                assist
-                  ? translateHilalPlayerName(
-                      assist
-                    )
-                  : "",
+            assist,
 
-              isOwnGoal:
-                goal.incidentClass ===
-                "ownGoal",
+            isOwnGoal:
+              goal.incidentClass === "ownGoal",
 
-              isHome:
-                goal.isHome === true
+            isHome:
+              goal.isHome === true
 
-            };
+          };
 
-          }
-        );
+        });
 
     }
 
@@ -3237,23 +3040,19 @@
         match.liveDetails &&
         match.liveDetails.lineups;
 
-
       if (!lineups) {
         return null;
       }
-
 
       const isHome =
         match.homeTeam &&
         match.homeTeam.id ===
         HILAL_TEAM_ID;
 
-
       const hilalLineup =
         isHome
           ? lineups.home
           : lineups.away;
-
 
       if (
         !hilalLineup ||
@@ -3261,11 +3060,8 @@
           hilalLineup.players
         )
       ) {
-
         return null;
-
       }
-
 
       const starters =
         hilalLineup.players
@@ -3276,10 +3072,7 @@
           .map(
             item =>
               item.player &&
-              (
-                item.player.name ||
-                item.player.shortName
-              )
+              item.player.name
           )
           .filter(Boolean)
           .map(
@@ -3289,11 +3082,9 @@
               )
           );
 
-
       if (!starters.length) {
         return null;
       }
-
 
       return {
 
@@ -3321,9 +3112,7 @@
           "moreMatches"
         );
 
-
       renderNextHilalCountdown();
-
 
       if (!hilalMatches.length) {
 
@@ -3339,12 +3128,10 @@
 
       }
 
-
       const now =
         Math.floor(
           Date.now() / 1000
         );
-
 
       let matches =
         [...hilalMatches]
@@ -3360,7 +3147,6 @@
               )
           );
 
-
       if (!showAllMatches) {
 
         matches =
@@ -3370,7 +3156,6 @@
           );
 
       }
-
 
       container.innerHTML =
         matches
@@ -3382,10 +3167,8 @@
           )
           .join("");
 
-
       const total =
         hilalMatches.length;
-
 
       if (total > 8) {
 
@@ -3401,7 +3184,6 @@
             }
           </button>
         `;
-
 
         document
           .getElementById(
@@ -3436,13 +3218,11 @@
           match.homeTeam.name
         );
 
-
       const away =
         translateHilalTeamName(
           match.awayTeam &&
           match.awayTeam.name
         );
-
 
       const status =
         match.status &&
@@ -3450,14 +3230,11 @@
           ? match.status.type
           : "notstarted";
 
-
       const isLive =
         status === "inprogress";
 
-
       const isFinished =
         status === "finished";
-
 
       const homeScore =
         match.homeScore &&
@@ -3467,7 +3244,6 @@
           match.homeScore.display
         );
 
-
       const awayScore =
         match.awayScore &&
         (
@@ -3476,49 +3252,61 @@
           match.awayScore.display
         );
 
-
       const scoreText =
         homeScore != null &&
         awayScore != null
           ? `${homeScore} - ${awayScore}`
           : "—";
 
-
       const statusText =
-        getStatusText(
-          match
-        );
-
+        getStatusText(match);
 
       const dateText =
         formatMatchDate(
           match.startTimestamp
         );
 
-
       const timeText =
         formatMatchTime(
           match.startTimestamp
         );
 
+      const competition =
+        getCompetitionName(match);
+
+      const round =
+        getMatchRound(match);
 
       const goals =
         getGoals(match);
 
-
       const lineup =
-        getStartingLineup(
-          match
-        );
+        getStartingLineup(match);
 
+      const winnerText =
+        isFinished
+          ? (
+              homeScore != null &&
+              awayScore != null
+                ? (
+                    Number(homeScore) > Number(awayScore)
+                      ? "فوز الهلال أو فوز المنافس حسب النتيجة"
+                      : Number(homeScore) === Number(awayScore)
+                        ? "تعادل"
+                        : "نتيجة المباراة"
+                  )
+                : ""
+            )
+          : "";
 
       const goalsHTML =
         goals.length
           ? `
             <div class="match-details">
 
-              <div class="match-details-title">
-                الأهداف
+              <div class="detail-line">
+                <span>⚽</span>
+                <strong>الأهداف</strong>
               </div>
 
               ${goals
@@ -3534,38 +3322,21 @@
                         ${escapeHTML(
                           goal.scorer
                         )}
-                      </span>
 
-                      ${
-                        goal.minute
-                          ? `
-                            <span class="goal-minute">
-                              ${escapeHTML(
-                                goal.minute
-                              )}
-                            </span>
-                          `
-                          : ""
-                      }
+                        ${
+                          goal.minute
+                            ? ` (${escapeHTML(goal.minute)})`
+                            : ""
+                        }
+                      </span>
 
                       ${
                         goal.assist
                           ? `
                             <span class="assist">
-                              صناعة:
-                              ${escapeHTML(
+                              ← ${escapeHTML(
                                 goal.assist
                               )}
-                            </span>
-                          `
-                          : ""
-                      }
-
-                      ${
-                        goal.isOwnGoal
-                          ? `
-                            <span class="assist">
-                              هدف عكسي
                             </span>
                           `
                           : ""
@@ -3579,7 +3350,6 @@
             </div>
           `
           : "";
-
 
       const lineupHTML =
         lineup
@@ -3601,9 +3371,7 @@
                 ${lineup.players
                   .map(
                     player =>
-                      escapeHTML(
-                        player
-                      )
+                      escapeHTML(player)
                   )
                   .join(" • ")}
               </div>
@@ -3612,6 +3380,16 @@
           `
           : "";
 
+      const roundHTML =
+        round
+          ? `
+            <div class="match-round">
+              ${escapeHTML(
+                translateHilalCompetitionName(round)
+              )}
+            </div>
+          `
+          : "";
 
       return `
         <div
@@ -3621,10 +3399,10 @@
         >
 
           <div class="match-competition">
-            ${escapeHTML(
-              getCompetitionName(match)
-            )}
+            ${escapeHTML(competition)}
           </div>
+
+          ${roundHTML}
 
           <div class="match-teams">
 
@@ -3670,6 +3448,30 @@
 
           </div>
 
+          <div class="match-details">
+
+            <div class="detail-line">
+              <span>📅</span>
+              <span>${escapeHTML(dateText)}</span>
+            </div>
+
+            <div class="detail-line">
+              <span>⏰</span>
+              <span>${escapeHTML(timeText)}</span>
+            </div>
+
+            <div class="detail-line">
+              <span>📋</span>
+              <span>${escapeHTML(competition)}</span>
+            </div>
+
+            <div class="detail-line">
+              <span>📊</span>
+              <span>${escapeHTML(statusText)}</span>
+            </div>
+
+          </div>
+
           ${goalsHTML}
 
           ${lineupHTML}
@@ -3680,141 +3482,208 @@
     }
 
 
+    function cleanOldHilalEnglishEvents() {
+
+      const before =
+        events.length;
+
+      events =
+        events.filter(event => {
+
+          if (
+            event.type !== "match"
+          ) {
+            return true;
+          }
+
+          const text =
+            `${event.title || ""} ${event.notes || ""}`;
+
+          if (
+            !/[A-Za-z]/.test(text)
+          ) {
+            return true;
+          }
+
+          const sameHilalMatch =
+            hilalMatches.some(match => {
+
+              if (!match.startTimestamp) {
+                return false;
+              }
+
+              if (
+                event.sofascoreEventId &&
+                String(
+                  event.sofascoreEventId
+                ) ===
+                String(match.id)
+              ) {
+                return true;
+              }
+
+              const matchDate =
+                formatDate(
+                  getSaudiDate(
+                    match.startTimestamp
+                  )
+                );
+
+              const matchTime =
+                new Intl.DateTimeFormat(
+                  "en-GB",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false
+                  }
+                ).format(
+                  getSaudiDate(
+                    match.startTimestamp
+                  )
+                );
+
+              return (
+                event.date === matchDate &&
+                event.time === matchTime
+              );
+
+            });
+
+          return !sameHilalMatch;
+
+        });
+
+      if (
+        events.length !== before
+      ) {
+        saveEvents();
+      }
+
+    }
+
+
     function syncHilalCalendarEvents() {
 
       let changed = false;
 
+      cleanOldHilalEnglishEvents();
 
-      hilalMatches.forEach(
-        match => {
+      hilalMatches.forEach(match => {
+
+        if (
+          !match.startTimestamp ||
+          !match.homeTeam ||
+          !match.awayTeam
+        ) {
+          return;
+        }
+
+        const date =
+          formatDate(
+            getSaudiDate(
+              match.startTimestamp
+            )
+          );
+
+        const title =
+          `${translateHilalTeamName(
+            match.homeTeam.name
+          )} × ${translateHilalTeamName(
+            match.awayTeam.name
+          )}`;
+
+        const existing =
+          events.find(
+            event =>
+              event.sofascoreEventId ===
+              match.id
+          );
+
+        const time =
+          new Intl.DateTimeFormat(
+            "en-GB",
+            {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false
+            }
+          ).format(
+            getSaudiDate(
+              match.startTimestamp
+            )
+          );
+
+        const notes =
+          getCompetitionName(match);
+
+        if (!existing) {
+
+          events.push({
+
+            date,
+
+            title,
+
+            type: "match",
+
+            time,
+
+            notes,
+
+            systemEvent: true,
+
+            sofascoreEventId:
+              match.id
+
+          });
+
+          changed = true;
+
+        } else {
+
+          let updated = false;
 
           if (
-            !match.startTimestamp ||
-            !match.homeTeam ||
-            !match.awayTeam
+            existing.title !== title
           ) {
-            return;
+
+            existing.title =
+              title;
+
+            updated = true;
+
           }
 
+          if (
+            existing.time !== time
+          ) {
 
-          const date =
-            formatDate(
-              getSaudiDate(
-                match.startTimestamp
-              )
-            );
+            existing.time =
+              time;
 
+            updated = true;
 
-          const title =
-            `${translateHilalTeamName(
-              match.homeTeam.name
-            )} × ${translateHilalTeamName(
-              match.awayTeam.name
-            )}`;
+          }
 
+          if (
+            existing.notes !== notes
+          ) {
 
-          const existing =
-            events.find(
-              event =>
-                event.sofascoreEventId ===
-                match.id
-            );
+            existing.notes =
+              notes;
 
+            updated = true;
 
-          const time =
-            new Intl.DateTimeFormat(
-              "en-GB",
-              {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false
-              }
-            ).format(
-              getSaudiDate(
-                match.startTimestamp
-              )
-            );
+          }
 
-
-          const notes =
-            getCompetitionName(
-              match
-            );
-
-
-          if (!existing) {
-
-            events.push({
-
-              date,
-
-              title,
-
-              type: "match",
-
-              time,
-
-              notes,
-
-              systemEvent: true,
-
-              sofascoreEventId:
-                match.id
-
-            });
-
+          if (updated) {
             changed = true;
-
-          } else {
-
-            let updated = false;
-
-
-            if (
-              existing.title !== title
-            ) {
-
-              existing.title =
-                title;
-
-              updated = true;
-
-            }
-
-
-            if (
-              existing.time !== time
-            ) {
-
-              existing.time =
-                time;
-
-              updated = true;
-
-            }
-
-
-            if (
-              existing.notes !== notes
-            ) {
-
-              existing.notes =
-                notes;
-
-              updated = true;
-
-            }
-
-
-            if (updated) {
-              changed = true;
-            }
-
           }
 
         }
-      );
 
+      });
 
       if (changed) {
 
@@ -3835,7 +3704,6 @@
       const month =
         calendarDate.getMonth();
 
-
       document.getElementById(
         "monthTitle"
       ).textContent =
@@ -3845,10 +3713,7 @@
             month: "long",
             year: "numeric"
           }
-        ).format(
-          calendarDate
-        );
-
+        ).format(calendarDate);
 
       const firstDay =
         new Date(
@@ -3857,14 +3722,12 @@
           1
         ).getDay();
 
-
       const daysInMonth =
         new Date(
           year,
           month + 1,
           0
         ).getDate();
-
 
       const previousMonthDays =
         new Date(
@@ -3873,15 +3736,12 @@
           0
         ).getDate();
 
-
       const calendar =
         document.getElementById(
           "calendarDays"
         );
 
-
       calendar.innerHTML = "";
-
 
       for (
         let i = firstDay - 1;
@@ -3890,9 +3750,7 @@
       ) {
 
         const day =
-          document.createElement(
-            "div"
-          );
+          document.createElement("div");
 
         day.className =
           "day muted";
@@ -3900,12 +3758,9 @@
         day.textContent =
           previousMonthDays - i;
 
-        calendar.appendChild(
-          day
-        );
+        calendar.appendChild(day);
 
       }
-
 
       for (
         let dayNumber = 1;
@@ -3920,16 +3775,11 @@
             dayNumber
           );
 
-
         const dateString =
           formatDate(date);
 
-
         const day =
-          document.createElement(
-            "div"
-          );
-
+          document.createElement("div");
 
         day.className =
           "day";
@@ -3940,10 +3790,8 @@
         day.dataset.date =
           dateString;
 
-
         const today =
           new Date();
-
 
         if (
           dayNumber === today.getDate() &&
@@ -3951,20 +3799,15 @@
           year === today.getFullYear()
         ) {
 
-          day.classList.add(
-            "today"
-          );
+          day.classList.add("today");
 
         }
-
 
         const dayEvents =
           events.filter(
             event =>
-              event.date ===
-              dateString
+              event.date === dateString
           );
-
 
         if (
           dayEvents.length > 0
@@ -3984,14 +3827,12 @@
 
         }
 
-
         const hasHilalMatch =
           dayEvents.some(
             event =>
               event.type === "match" &&
               event.sofascoreEventId
           );
-
 
         if (hasHilalMatch) {
 
@@ -4000,7 +3841,6 @@
           );
 
         }
-
 
         day.addEventListener(
           "click",
@@ -4026,13 +3866,9 @@
           }
         );
 
-
-        calendar.appendChild(
-          day
-        );
+        calendar.appendChild(day);
 
       }
-
 
       renderEvents();
 
@@ -4046,13 +3882,11 @@
           "eventsList"
         );
 
-
       const year =
         calendarDate.getFullYear();
 
       const month =
         calendarDate.getMonth();
-
 
       const monthEvents =
         events
@@ -4062,28 +3896,25 @@
               index
             })
           )
-          .filter(
-            event => {
+          .filter(event => {
 
-              const eventDate =
-                new Date(
-                  `${event.date}T12:00:00`
-                );
-
-              return (
-                eventDate.getFullYear() === year &&
-                eventDate.getMonth() === month
+            const eventDate =
+              new Date(
+                `${event.date}T12:00:00`
               );
 
-            }
-          )
+            return (
+              eventDate.getFullYear() === year &&
+              eventDate.getMonth() === month
+            );
+
+          })
           .sort(
             (a, b) =>
               a.date.localeCompare(
                 b.date
               )
           );
-
 
       if (!monthEvents.length) {
 
@@ -4097,17 +3928,14 @@
 
       }
 
-
       list.innerHTML =
         monthEvents
           .map(
             event => `
 
               <div
-                class="event
-                ${escapeHTML(
-                  event.type ||
-                  "personal"
+                class="event ${escapeHTML(
+                  event.type || "personal"
                 )}"
                 data-event-index="${event.index}"
               >
@@ -4168,11 +3996,8 @@
           )
           .join("");
 
-
       document
-        .querySelectorAll(
-          ".event"
-        )
+        .querySelectorAll(".event")
         .forEach(
           eventElement => {
 
@@ -4188,20 +4013,15 @@
                   return;
                 }
 
-
                 const index =
                   Number(
                     eventElement.dataset.eventIndex
                   );
 
-
                 const selectedEvent =
                   events[index];
 
-
-                if (
-                  selectedEvent
-                ) {
+                if (selectedEvent) {
 
                   openEventCountdown(
                     selectedEvent
@@ -4215,11 +4035,8 @@
           }
         );
 
-
       document
-        .querySelectorAll(
-          ".delete-event"
-        )
+        .querySelectorAll(".delete-event")
         .forEach(
           button => {
 
@@ -4256,107 +4073,81 @@
       selectedDayForEvents =
         date;
 
-
       const modal =
         document.getElementById(
           "dayEventsModal"
         );
-
 
       const dateElement =
         document.getElementById(
           "dayEventsDate"
         );
 
-
       const list =
         document.getElementById(
           "dayEventsList"
         );
 
-
       dateElement.textContent =
-        formatEventDate(
-          date
-        );
-
+        formatEventDate(date);
 
       list.innerHTML = "";
 
+      dayEvents.forEach(event => {
 
-      dayEvents.forEach(
-        event => {
+        const button =
+          document.createElement("button");
 
-          const button =
-            document.createElement(
-              "button"
-            );
+        button.type =
+          "button";
 
+        button.className =
+          "day-event-option";
 
-          button.type =
-            "button";
+        button.innerHTML = `
 
+          <div class="day-event-icon">
+            ${getEventEmoji(event.type)}
+          </div>
 
-          button.className =
-            "day-event-option";
+          <div class="day-event-info">
 
-
-          button.innerHTML = `
-
-            <div class="day-event-icon">
-              ${getEventEmoji(event.type)}
+            <div class="day-event-title">
+              ${escapeHTML(event.title)}
             </div>
 
-            <div class="day-event-info">
-
-              <div class="day-event-title">
-                ${escapeHTML(
-                  event.title
-                )}
-              </div>
-
-              <div class="day-event-time">
-                ${
-                  event.time
-                    ? escapeHTML(
-                        formatTimeArabic(
-                          event.time
-                        )
+            <div class="day-event-time">
+              ${
+                event.time
+                  ? escapeHTML(
+                      formatTimeArabic(
+                        event.time
                       )
-                    : "طوال اليوم"
-                }
-              </div>
-
+                    )
+                  : "طوال اليوم"
+              }
             </div>
 
-          `;
+          </div>
 
+        `;
 
-          button.addEventListener(
-            "click",
-            () => {
+        button.addEventListener(
+          "click",
+          () => {
 
-              closeDayEventsModal();
+            closeDayEventsModal();
 
-              openEventCountdown(
-                event
-              );
+            openEventCountdown(event);
 
-            }
-          );
+          }
+        );
 
+        list.appendChild(button);
 
-          list.appendChild(
-            button
-          );
+      });
 
-        }
-      );
-
-
-      modal.classList.add(
-        "show"
-      );
+      modal.classList.add("show");
 
     }
 
@@ -4364,35 +4155,24 @@
     function closeDayEventsModal() {
 
       document
-        .getElementById(
-          "dayEventsModal"
-        )
-        .classList.remove(
-          "show"
-        );
+        .getElementById("dayEventsModal")
+        .classList.remove("show");
 
     }
 
 
     function addEventToSelectedDay() {
 
-      if (
-        !selectedDayForEvents
-      ) {
+      if (!selectedDayForEvents) {
         return;
       }
-
 
       const date =
         selectedDayForEvents;
 
-
       closeDayEventsModal();
 
-
-      openEventModal(
-        date
-      );
+      openEventModal(date);
 
     }
 
@@ -4406,10 +4186,8 @@
         return null;
       }
 
-
       let hours = 0;
       let minutes = 0;
-
 
       if (
         event.time &&
@@ -4421,12 +4199,10 @@
             .split(":")
             .map(Number);
 
-
         hours =
           Number.isNaN(parts[0])
             ? 0
             : parts[0];
-
 
         minutes =
           Number.isNaN(parts[1])
@@ -4435,12 +4211,10 @@
 
       }
 
-
       const target =
         new Date(
           `${event.date}T00:00:00`
         );
-
 
       target.setHours(
         hours,
@@ -4448,7 +4222,6 @@
         0,
         0
       );
-
 
       return target;
 
@@ -4460,62 +4233,41 @@
       selectedCountdownEvent =
         event;
 
-
       const target =
-        getEventTargetDate(
-          event
-        );
-
+        getEventTargetDate(event);
 
       if (!target) {
         return;
       }
 
-
       document.getElementById(
         "countdownEventIcon"
       ).textContent =
-        getEventEmoji(
-          event.type
-        );
-
+        getEventEmoji(event.type);
 
       document.getElementById(
         "countdownEventTitle"
       ).textContent =
         event.title;
 
-
       document.getElementById(
         "countdownEventDate"
       ).textContent =
-        `${formatEventDate(
-          event.date
-        )}${
+        `${formatEventDate(event.date)}${
           event.time
-            ? ` — ${formatTimeArabic(
-                event.time
-              )}`
+            ? ` — ${formatTimeArabic(event.time)}`
             : ""
         }`;
 
-
       document
-        .getElementById(
-          "countdownModal"
-        )
-        .classList.add(
-          "show"
-        );
-
+        .getElementById("countdownModal")
+        .classList.add("show");
 
       updateEventCountdown();
-
 
       clearInterval(
         eventCountdownTimer
       );
-
 
       eventCountdownTimer =
         setInterval(
@@ -4528,44 +4280,34 @@
 
     function updateEventCountdown() {
 
-      if (
-        !selectedCountdownEvent
-      ) {
+      if (!selectedCountdownEvent) {
         return;
       }
-
 
       const target =
         getEventTargetDate(
           selectedCountdownEvent
         );
 
-
       if (!target) {
         return;
       }
 
-
       const difference =
         target.getTime() -
         Date.now();
-
 
       const countdownElement =
         document.getElementById(
           "eventCountdown"
         );
 
-
       const noteElement =
         document.getElementById(
           "eventCountdownNote"
         );
 
-
-      if (
-        difference <= 0
-      ) {
+      if (difference <= 0) {
 
         countdownElement.textContent =
           "انتهى / بدأ";
@@ -4585,40 +4327,32 @@
 
       }
 
-
       countdownElement.classList.remove(
         "finished"
       );
-
 
       const totalSeconds =
         Math.floor(
           difference / 1000
         );
 
-
       const days =
         Math.floor(
           totalSeconds / 86400
         );
-
 
       const hours =
         Math.floor(
           (totalSeconds % 86400) / 3600
         );
 
-
       const minutes =
         Math.floor(
           (totalSeconds % 3600) / 60
         );
 
-
       const seconds =
-        totalSeconds %
-        60;
-
+        totalSeconds % 60;
 
       if (days > 0) {
 
@@ -4637,7 +4371,6 @@
 
       }
 
-
       noteElement.textContent =
         selectedCountdownEvent.time
           ? "الوقت المتبقي حتى موعد الحدث"
@@ -4655,14 +4388,11 @@
       selectedCountdownEvent =
         null;
 
-
       document
         .getElementById(
           "countdownModal"
         )
-        .classList.remove(
-          "show"
-        );
+        .classList.remove("show");
 
     }
 
@@ -4674,7 +4404,6 @@
           `${dateString}T12:00:00`
         );
 
-
       return new Intl.DateTimeFormat(
         "ar-SA",
         {
@@ -4682,9 +4411,7 @@
           day: "numeric",
           month: "long"
         }
-      ).format(
-        date
-      );
+      ).format(date);
 
     }
 
@@ -4726,24 +4453,17 @@
         .getElementById(
           "eventModal"
         )
-        .classList.add(
-          "show"
-        );
-
+        .classList.add("show");
 
       document.getElementById(
         "eventDate"
       ).value =
         date;
 
-
       document.getElementById(
         "selectedDateText"
       ).textContent =
-        `إضافة حدث بتاريخ ${formatEventDate(
-          date
-        )}`;
-
+        `إضافة حدث بتاريخ ${formatEventDate(date)}`;
 
       document.getElementById(
         "eventTitle"
@@ -4758,17 +4478,13 @@
         .getElementById(
           "eventModal"
         )
-        .classList.remove(
-          "show"
-        );
-
+        .classList.remove("show");
 
       document
         .getElementById(
           "eventForm"
         )
         .reset();
-
 
       document.getElementById(
         "eventDate"
@@ -4782,7 +4498,6 @@
 
       event.stopPropagation();
 
-
       if (
         index < 0 ||
         index >= events.length
@@ -4790,10 +4505,8 @@
         return;
       }
 
-
       const selectedEvent =
         events[index];
-
 
       const confirmed =
         confirm(
@@ -4802,17 +4515,14 @@
             : "هل تريد حذف هذا الحدث؟"
         );
 
-
       if (!confirmed) {
         return;
       }
-
 
       events.splice(
         index,
         1
       );
-
 
       saveEvents();
 
@@ -4823,37 +4533,18 @@
 
     function escapeHTML(value) {
 
-      return String(
-        value ?? ""
-      )
-        .replaceAll(
-          "&",
-          "&amp;"
-        )
-        .replaceAll(
-          "<",
-          "&lt;"
-        )
-        .replaceAll(
-          ">",
-          "&gt;"
-        )
-        .replaceAll(
-          '"',
-          "&quot;"
-        )
-        .replaceAll(
-          "'",
-          "&#039;"
-        );
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 
     }
 
 
     document
-      .getElementById(
-        "citySelect"
-      )
+      .getElementById("citySelect")
       .addEventListener(
         "change",
         event => {
@@ -4868,9 +4559,7 @@
 
 
     document
-      .getElementById(
-        "refreshBtn"
-      )
+      .getElementById("refreshBtn")
       .addEventListener(
         "click",
         () => {
@@ -4882,9 +4571,7 @@
 
 
     document
-      .getElementById(
-        "prevMonth"
-      )
+      .getElementById("prevMonth")
       .addEventListener(
         "click",
         () => {
@@ -4900,9 +4587,7 @@
 
 
     document
-      .getElementById(
-        "nextMonth"
-      )
+      .getElementById("nextMonth")
       .addEventListener(
         "click",
         () => {
@@ -4918,9 +4603,7 @@
 
 
     document
-      .getElementById(
-        "closeModal"
-      )
+      .getElementById("closeModal")
       .addEventListener(
         "click",
         () => {
@@ -4932,9 +4615,7 @@
 
 
     document
-      .getElementById(
-        "eventModal"
-      )
+      .getElementById("eventModal")
       .addEventListener(
         "click",
         event => {
@@ -4953,9 +4634,7 @@
 
 
     document
-      .getElementById(
-        "closeCountdownModal"
-      )
+      .getElementById("closeCountdownModal")
       .addEventListener(
         "click",
         () => {
@@ -4967,9 +4646,7 @@
 
 
     document
-      .getElementById(
-        "closeCountdownButton"
-      )
+      .getElementById("closeCountdownButton")
       .addEventListener(
         "click",
         () => {
@@ -4981,9 +4658,7 @@
 
 
     document
-      .getElementById(
-        "countdownModal"
-      )
+      .getElementById("countdownModal")
       .addEventListener(
         "click",
         event => {
@@ -5002,9 +4677,7 @@
 
 
     document
-      .getElementById(
-        "closeDayEventsModal"
-      )
+      .getElementById("closeDayEventsModal")
       .addEventListener(
         "click",
         () => {
@@ -5016,9 +4689,7 @@
 
 
     document
-      .getElementById(
-        "addDayEventButton"
-      )
+      .getElementById("addDayEventButton")
       .addEventListener(
         "click",
         () => {
@@ -5030,9 +4701,7 @@
 
 
     document
-      .getElementById(
-        "dayEventsModal"
-      )
+      .getElementById("dayEventsModal")
       .addEventListener(
         "click",
         event => {
@@ -5060,9 +4729,7 @@
         ) {
 
           closeEventModal();
-
           closeEventCountdown();
-
           closeDayEventsModal();
 
         }
@@ -5072,15 +4739,12 @@
 
 
     document
-      .getElementById(
-        "eventForm"
-      )
+      .getElementById("eventForm")
       .addEventListener(
         "submit",
         event => {
 
           event.preventDefault();
-
 
           const newEvent = {
 
@@ -5114,7 +4778,6 @@
 
           };
 
-
           if (
             !newEvent.date ||
             !newEvent.title
@@ -5122,11 +4785,9 @@
             return;
           }
 
-
           events.push(
             newEvent
           );
-
 
           saveEvents();
 
@@ -5144,7 +4805,6 @@
       updateClock,
       1000
     );
-
 
     loadPrayerTimes();
 
