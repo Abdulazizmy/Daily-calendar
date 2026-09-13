@@ -1990,188 +1990,16 @@
     }
 
 
+    /*
+      لا يتم تعريب أي اسم خاص بمباريات الهلال.
+      يتم عرض الاسم القادم من SofaScore كما هو.
+    */
     function translateHilalTeamName(name) {
 
       const raw =
         String(name || "").trim();
 
-      if (!raw) {
-        return "الفريق";
-      }
-
-      if (
-        /[\u0600-\u06FF]/.test(raw) &&
-        !/[A-Za-z]/.test(raw)
-      ) {
-        return raw;
-      }
-
-      const key = normalizeName(raw);
-
-      const translations = {
-
-        "al hilal": "الهلال",
-        "al hilal sfc": "الهلال",
-        "al hilal fc": "الهلال",
-        "hilal": "الهلال",
-
-        "al taawoun": "التعاون",
-        "al taawon": "التعاون",
-        "al taawoun fc": "التعاون",
-
-        "al ittihad": "الاتحاد",
-        "al etihad": "الاتحاد",
-        "al ittihad jeddah": "الاتحاد",
-
-        "al nassr": "النصر",
-        "al nasr": "النصر",
-
-        "al ahli": "الأهلي",
-        "al ahly": "الأهلي",
-        "al ahli saudi": "الأهلي",
-
-        "al shabab": "الشباب",
-
-        "al ettifaq": "الاتفاق",
-        "al etiffaq": "الاتفاق",
-
-        "al fateh": "الفتح",
-
-        "al hazem": "الحزم",
-
-        "al qadsiah": "القادسية",
-
-        "al riyadh": "الرياض",
-
-        "al raed": "الرائد",
-
-        "al khaleej": "الخليج",
-
-        "al wehda": "الوحدة",
-        "al wahda": "الوحدة",
-
-        "al fayha": "الفيحاء",
-
-        "damac": "ضمك",
-        "damac fc": "ضمك",
-
-        "al okhdood": "الأخدود",
-        "al akhdoud": "الأخدود",
-
-        "al kholood": "الخلود",
-
-        "abha": "أبها",
-
-        "al faisaly": "الفيصلي",
-
-        "neom": "نيوم",
-        "neom sc": "نيوم",
-
-        "al diriyah": "الدرعية",
-
-        "al shamal": "الشمال القطري",
-        "al shamal sc": "الشمال القطري",
-
-        "al sadd": "السد القطري",
-        "al sadd sc": "السد القطري",
-
-        "al ain": "العين الإماراتي",
-        "al ain fc": "العين الإماراتي",
-
-        "shabab al ahli": "شباب الأهلي الإماراتي",
-        "shabab al ahli club": "شباب الأهلي الإماراتي",
-
-        "neftchi": "نيفتشي الأوزبكي",
-        "neftchi baku": "نيفتشي الأذربيجاني",
-
-        "pakhtakor": "باختاكور الأوزبكي",
-
-        "al wasl": "الوصل الإماراتي",
-        "al wasl uae": "الوصل الإماراتي",
-
-        "manchester city": "مانشستر سيتي",
-
-        "real madrid": "ريال مدريد",
-
-        "inter miami": "إنتر ميامي",
-
-        "pachuca": "باتشوكا",
-
-        "salzburg": "سالزبورغ",
-        "red bull salzburg": "سالزبورغ",
-
-        "flamengo": "فلامنغو",
-
-        "urawa red diamonds": "أوراوا ريد دايموندز",
-
-        "al juwair": "الجبلين",
-
-        "al jabalain": "الجبلين",
-
-        "al bukayriyah": "البكيرية",
-
-        "al batin": "الباطن",
-
-        "al arabi": "العربي",
-
-        "al qaisumah": "القيصومة",
-
-        "al safa": "الصفا",
-
-        "al jandal": "الجندل",
-
-        "al bukayriyah fc": "البكيرية",
-
-        "al rawdhah": "الروضة",
-
-        "al kharj": "الخرج",
-
-        "al najma": "النجمة",
-
-        "al jubail": "الجبيل",
-
-        "al anwar": "الأنوار",
-
-        "al ttaqdom": "التقدم",
-
-        "al sahel": "الساحل",
-
-        "al suqoor": "الصقور",
-
-        "al qous": "القوس",
-
-        "al khaleej club": "الخليج",
-
-        "al orubah": "العروبة",
-
-        "al okhdood club": "الأخدود",
-
-        "al raed club": "الرائد",
-
-        "al hazm": "الحزم",
-
-        "al fayha fc": "الفيحاء",
-
-        "al ettifaq fc": "الاتفاق",
-
-        "al fateh sc": "الفتح",
-
-        "al qadsiah fc": "القادسية"
-
-      };
-
-      if (translations[key]) {
-        return translations[key];
-      }
-
-      if (
-        key.includes("al hilal") ||
-        key === "hilal"
-      ) {
-        return "الهلال";
-      }
-
-      return "الفريق المنافس";
+      return raw || "Team";
 
     }
 
@@ -2181,116 +2009,7 @@
       const raw =
         String(name || "").trim();
 
-      if (!raw) {
-        return "";
-      }
-
-      if (
-        /[\u0600-\u06FF]/.test(raw) &&
-        !/[A-Za-z]/.test(raw)
-      ) {
-        return raw;
-      }
-
-      const key = normalizeName(raw);
-
-      const translations = {
-
-        "gabriel martinelli": "غابرييل مارتينيلي",
-        "ollie watkins": "أولي واتكينز",
-        "mohamed kader meite": "محمد قادر ميتي",
-        "sultan mandash": "سلطان مندش",
-
-        "ruben neves": "روبن نيفيز",
-        "ruben neves ": "روبن نيفيز",
-
-        "crysencio summerville": "كريسينسيو سامرفيل",
-
-        "sergej milinkovic savic": "سيرجي سافيتش",
-        "sergej milinkovic-savic": "سيرجي سافيتش",
-
-        "salem al dawsari": "سالم الدوسري",
-        "salem al-dawsari": "سالم الدوسري",
-
-        "mohamed kanno": "محمد كنو",
-        "mohammed kanno": "محمد كنو",
-
-        "saimon bouabre": "سايمون بوبري",
-
-        "nasser al dawsari": "ناصر الدوسري",
-        "nasser al-dawsari": "ناصر الدوسري",
-
-        "murad al hawsawi": "مراد الحوساوي",
-
-        "sabri abdu dahal": "صبري عبده دهل",
-
-        "nawaf al habashi": "نواف الحبشي",
-
-        "abdullah al anazi": "عبدالله العنزي",
-
-        "theo hernandez": "ثيو هيرنانديز",
-
-        "kalidou koulibaly": "كاليدو كوليبالي",
-
-        "yusuf akcicek": "يوسف أكجيشيك",
-        "yusuf akçiçek": "يوسف أكجيشيك",
-
-        "hassan tambakti": "حسان تمبكتي",
-        "hassan altambakti": "حسان تمبكتي",
-
-        "ali lajami": "علي لاجامي",
-
-        "moteb al harbi": "متعب الحربي",
-
-        "hamad al yami": "حمد اليامي",
-        "hamad al-yami": "حمد اليامي",
-
-        "meshal al dawood": "مشعل الداود",
-
-        "mohammed mahzari": "محمد مهزاري",
-
-        "saad al mutairy": "سعد المطيري",
-
-        "mohammed al sarnoukh": "محمد السرنوق",
-        "mohamed al sarnukh": "محمد السرنخ",
-
-        "yassine bounou": "ياسين بونو",
-        "bounou": "ياسين بونو",
-
-        "mohammed al owais": "محمد العويس",
-
-        "mohammed al yami": "محمد اليامي",
-
-        "rayan khalid al dossary": "ريان خالد الدوسري",
-
-        "aleksandar mitrovic": "ألكسندر ميتروفيتش",
-
-        "marcos leonardo": "ماركوس ليوناردو",
-
-        "malcom": "مالكوم",
-
-        "joao cancelo": "جواو كانسيلو",
-
-        "renan lodi": "رينان لودي",
-
-        "ali al bulayhi": "علي البليهي",
-        "ali al bulaihi": "علي البليهي",
-
-        "abdullah al hamdan": "عبدالله الحمدان",
-
-        "mohammed al qahtani": "محمد القحطاني",
-
-        "hamad al yami": "حمد اليامي",
-
-        "khalid al ghanam": "خالد الغنام",
-
-        "marcelo brozovic": "مارسيلو بروزوفيتش",
-
-        "darwin nunez": "داروين نونيز"
-
-      };
-
-      return translations[key] || "لاعب";
+      return raw || "Player";
 
     }
 
@@ -2300,106 +2019,7 @@
       const raw =
         String(name || "").trim();
 
-      if (!raw) {
-        return "مباراة";
-      }
-
-      if (
-        /[\u0600-\u06FF]/.test(raw) &&
-        !/[A-Za-z]/.test(raw)
-      ) {
-        return raw;
-      }
-
-      const key = normalizeName(raw);
-
-      const translations = {
-
-        "saudi pro league":
-          "دوري روشن السعودي",
-
-        "roshan saudi league":
-          "دوري روشن السعودي",
-
-        "saudi professional league":
-          "دوري روشن السعودي",
-
-        "saudi king s cup":
-          "كأس خادم الحرمين الشريفين",
-
-        "saudi kings cup":
-          "كأس خادم الحرمين الشريفين",
-
-        "king cup":
-          "كأس خادم الحرمين الشريفين",
-
-        "afc champions league elite":
-          "دوري أبطال آسيا للنخبة",
-
-        "afc champions league":
-          "دوري أبطال آسيا",
-
-        "afc champions league 2":
-          "دوري أبطال آسيا 2",
-
-        "saudi super cup":
-          "كأس السوبر السعودي",
-
-        "club world cup":
-          "كأس العالم للأندية",
-
-        "fifa club world cup":
-          "كأس العالم للأندية",
-
-        "friendly international":
-          "مباراة ودية",
-
-        "friendly":
-          "مباراة ودية",
-
-        "gulf club champions league":
-          "دوري أبطال الخليج",
-
-        "afc":
-          "الاتحاد الآسيوي",
-
-        "arab club champions cup":
-          "كأس الملك سلمان للأندية العربية",
-
-        "arab club championship":
-          "البطولة العربية للأندية"
-
-      };
-
-      if (translations[key]) {
-        return translations[key];
-      }
-
-      if (key.includes("saudi") && key.includes("league")) {
-        return "دوري روشن السعودي";
-      }
-
-      if (key.includes("champions league") && key.includes("elite")) {
-        return "دوري أبطال آسيا للنخبة";
-      }
-
-      if (key.includes("champions league")) {
-        return "دوري أبطال آسيا";
-      }
-
-      if (key.includes("king") && key.includes("cup")) {
-        return "كأس خادم الحرمين الشريفين";
-      }
-
-      if (key.includes("super cup")) {
-        return "كأس السوبر السعودي";
-      }
-
-      if (key.includes("world cup")) {
-        return "كأس العالم للأندية";
-      }
-
-      return "بطولة";
+      return raw || "Competition";
 
     }
 
@@ -2505,6 +2125,13 @@
                 (b.startTimestamp || 0)
             );
 
+        /*
+          جلب تفاصيل آخر المباريات:
+          - الأهداف
+          - التمريرات الحاسمة
+          - التشكيلة الأساسية
+          - التشكيل
+        */
         const completedMatches =
           hilalMatches.filter(match => {
 
@@ -2943,7 +2570,7 @@
 
       }
 
-      return "مباراة";
+      return "Match";
 
     }
 
@@ -2963,7 +2590,7 @@
         match.roundInfo &&
         match.roundInfo.round
       ) {
-        return `الجولة ${match.roundInfo.round}`;
+        return `Round ${match.roundInfo.round}`;
       }
 
       return "";
@@ -3133,6 +2760,10 @@
           Date.now() / 1000
         );
 
+      /*
+        ترتيب المباريات حسب قربها من الوقت الحالي،
+        مع إبقاء جميع المباريات القادمة والسابقة.
+      */
       let matches =
         [...hilalMatches]
           .sort(
@@ -3290,10 +2921,10 @@
               awayScore != null
                 ? (
                     Number(homeScore) > Number(awayScore)
-                      ? "فوز الهلال أو فوز المنافس حسب النتيجة"
+                      ? "Home Win"
                       : Number(homeScore) === Number(awayScore)
-                        ? "تعادل"
-                        : "نتيجة المباراة"
+                        ? "Draw"
+                        : "Away Win"
                   )
                 : ""
             )
@@ -3384,9 +3015,7 @@
         round
           ? `
             <div class="match-round">
-              ${escapeHTML(
-                translateHilalCompetitionName(round)
-              )}
+              ${escapeHTML(round)}
             </div>
           `
           : "";
@@ -3469,6 +3098,17 @@
               <span>📊</span>
               <span>${escapeHTML(statusText)}</span>
             </div>
+
+            ${
+              winnerText
+                ? `
+                  <div class="detail-line">
+                    <span>🏁</span>
+                    <span>${escapeHTML(winnerText)}</span>
+                  </div>
+                `
+                : ""
+            }
 
           </div>
 
