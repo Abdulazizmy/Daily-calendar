@@ -288,7 +288,6 @@
       color: var(--blue);
     }
 
-    /* شعار الهلال أوضح في أيام المباريات */
     .day.hilal-day::before {
       content: "";
       position: absolute;
@@ -874,36 +873,36 @@
       <span>الرياض</span>
     </div>
 
-    <div class="prayer-grid">
+    <div class="prayer-grid" id="prayerGrid">
 
       <div class="prayer-card">
         <div class="prayer-name">الفجر</div>
-        <div class="prayer-time">4:30 ص</div>
+        <div class="prayer-time">جاري التحميل...</div>
       </div>
 
       <div class="prayer-card">
         <div class="prayer-name">الشروق</div>
-        <div class="prayer-time">5:50 ص</div>
+        <div class="prayer-time">جاري التحميل...</div>
       </div>
 
       <div class="prayer-card">
         <div class="prayer-name">الظهر</div>
-        <div class="prayer-time">11:55 ص</div>
+        <div class="prayer-time">جاري التحميل...</div>
       </div>
 
       <div class="prayer-card">
         <div class="prayer-name">العصر</div>
-        <div class="prayer-time">3:20 م</div>
+        <div class="prayer-time">جاري التحميل...</div>
       </div>
 
       <div class="prayer-card">
         <div class="prayer-name">المغرب</div>
-        <div class="prayer-time">6:15 م</div>
+        <div class="prayer-time">جاري التحميل...</div>
       </div>
 
       <div class="prayer-card">
         <div class="prayer-name">العشاء</div>
-        <div class="prayer-time">7:45 م</div>
+        <div class="prayer-time">جاري التحميل...</div>
       </div>
 
     </div>
@@ -1341,14 +1340,7 @@
       dayNames[now.getDay()];
   }
 
-  const prayers = [
-    { name: "الفجر", time: "04:30" },
-    { name: "الشروق", time: "05:50" },
-    { name: "الظهر", time: "11:55" },
-    { name: "العصر", time: "15:20" },
-    { name: "المغرب", time: "18:15" },
-    { name: "العشاء", time: "19:45" }
-  ];
+  let prayers = [];
 
   function format12HourFromString(time) {
 
@@ -1356,8 +1348,11 @@
       return "";
     }
 
+    const cleanTime =
+      time.split(" ")[0];
+
     const [hour, minute] =
-      time.split(":").map(Number);
+      cleanTime.split(":").map(Number);
 
     const date =
       new Date(
@@ -1378,7 +1373,144 @@
     ).format(date);
   }
 
+  function renderPrayerCards() {
+
+    const prayerGrid =
+      document.getElementById("prayerGrid");
+
+    prayerGrid.innerHTML = "";
+
+    prayers.forEach(prayer => {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "prayer-card";
+
+      card.innerHTML = `
+        <div class="prayer-name">
+          ${escapeHTML(prayer.name)}
+        </div>
+
+        <div class="prayer-time">
+          ${format12HourFromString(prayer.time)}
+        </div>
+      `;
+
+      prayerGrid.appendChild(card);
+    });
+  }
+
+  async function loadPrayerTimes() {
+
+    try {
+
+      const now =
+        new Date();
+
+      const day =
+        String(now.getDate()).padStart(2, "0");
+
+      const month =
+        String(now.getMonth() + 1).padStart(2, "0");
+
+      const year =
+        now.getFullYear();
+
+      const url =
+        `https://api.aladhan.com/v1/timingsByCity/${day}-${month}-${year}` +
+        `?city=Riyadh&country=Saudi%20Arabia&method=4&school=0`;
+
+      const response =
+        await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(
+          "فشل الاتصال بخدمة مواقيت الصلاة"
+        );
+      }
+
+      const data =
+        await response.json();
+
+      if (
+        data.code !== 200 ||
+        !data.data ||
+        !data.data.timings
+      ) {
+        throw new Error(
+          "بيانات الصلاة غير متوفرة"
+        );
+      }
+
+      const timings =
+        data.data.timings;
+
+      prayers = [
+        {
+          name: "الفجر",
+          time: timings.Fajr
+        },
+        {
+          name: "الشروق",
+          time: timings.Sunrise
+        },
+        {
+          name: "الظهر",
+          time: timings.Dhuhr
+        },
+        {
+          name: "العصر",
+          time: timings.Asr
+        },
+        {
+          name: "المغرب",
+          time: timings.Maghrib
+        },
+        {
+          name: "العشاء",
+          time: timings.Isha
+        }
+      ];
+
+      renderPrayerCards();
+      renderPrayerCountdown();
+
+    } catch (error) {
+
+      console.error(
+        "Prayer times error:",
+        error
+      );
+
+      document.getElementById(
+        "prayerGrid"
+      ).innerHTML = `
+        <div
+          style="
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px;
+            color: #aaa;
+          "
+        >
+          تعذر تحميل مواقيت الصلاة
+        </div>
+      `;
+
+      document.getElementById(
+        "nextPrayer"
+      ).textContent =
+        "تعذر تحميل مواقيت الصلاة";
+    }
+  }
+
   function renderPrayerCountdown() {
+
+    if (!prayers.length) {
+      return;
+    }
 
     const now = new Date();
 
@@ -1386,8 +1518,11 @@
 
     for (const prayer of prayers) {
 
+      const cleanTime =
+        prayer.time.split(" ")[0];
+
       const [hours, minutes] =
-        prayer.time.split(":").map(Number);
+        cleanTime.split(":").map(Number);
 
       const prayerDate =
         new Date(
@@ -1412,8 +1547,11 @@
 
     if (!next) {
 
+      const cleanTime =
+        prayers[0].time.split(" ")[0];
+
       const [hours, minutes] =
-        prayers[0].time.split(":").map(Number);
+        cleanTime.split(":").map(Number);
 
       const tomorrow =
         new Date(
@@ -1432,7 +1570,8 @@
     }
 
     const diff =
-      next.date.getTime() - now.getTime();
+      next.date.getTime() -
+      now.getTime();
 
     const totalSeconds =
       Math.floor(diff / 1000);
@@ -1446,8 +1585,10 @@
     const seconds =
       totalSeconds % 60;
 
-    document.getElementById("nextPrayer").innerHTML =
-      `الصلاة القادمة: <strong>${next.name}</strong>
+    document.getElementById(
+      "nextPrayer"
+    ).innerHTML =
+      `الصلاة القادمة: <strong>${escapeHTML(next.name)}</strong>
        — بعد
        <strong>
        ${String(hours).padStart(2, "0")}:
@@ -2138,11 +2279,6 @@
 
               event.stopPropagation();
 
-              const homeInput =
-                element.querySelector(
-                  ".score-input"
-                );
-
               const inputs =
                 element.querySelectorAll(
                   ".score-input"
@@ -2601,6 +2737,7 @@
   renderPrayerCountdown();
   renderCalendar();
   renderMatches();
+  loadPrayerTimes();
 
   setInterval(
     function() {
@@ -2629,6 +2766,13 @@
 
     },
     60000
+  );
+
+  setInterval(
+    function() {
+      loadPrayerTimes();
+    },
+    6 * 60 * 60 * 1000
   );
 
 </script>
