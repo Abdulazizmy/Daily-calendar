@@ -783,10 +783,6 @@
       background: var(--green-light);
     }
 
-    /* =========================================================
-       نافذة العد التنازلي للحدث
-    ========================================================= */
-
     .countdown-modal {
       width: min(520px, 100%);
       text-align: center;
@@ -844,10 +840,6 @@
       width: 100%;
       margin-top: 18px;
     }
-
-    /* =========================================================
-       نافذة أحداث اليوم
-    ========================================================= */
 
     .day-events-modal {
       width: min(520px, 100%);
@@ -1002,15 +994,11 @@
         </div>
 
         <div>
-
-          <h1>
-            Calendar
-          </h1>
+          <h1>Calendar</h1>
 
           <div class="subtitle">
             مواقيت الصلاة والمناسبات والمواعيد
           </div>
-
         </div>
 
       </div>
@@ -1168,33 +1156,13 @@
 
         <div class="weekdays">
 
-          <div>
-            الأحد
-          </div>
-
-          <div>
-            الإثنين
-          </div>
-
-          <div>
-            الثلاثاء
-          </div>
-
-          <div>
-            الأربعاء
-          </div>
-
-          <div>
-            الخميس
-          </div>
-
-          <div>
-            الجمعة
-          </div>
-
-          <div>
-            السبت
-          </div>
+          <div>الأحد</div>
+          <div>الإثنين</div>
+          <div>الثلاثاء</div>
+          <div>الأربعاء</div>
+          <div>الخميس</div>
+          <div>الجمعة</div>
+          <div>السبت</div>
 
         </div>
 
@@ -1239,9 +1207,7 @@
 
           <div class="live-title">
 
-            <span>
-              ⚽
-            </span>
+            <span>⚽</span>
 
             <h2>
               مباريات الهلال
@@ -1254,7 +1220,7 @@
             <span class="live-dot"></span>
 
             <span id="footballUpdateStatus">
-              جاري تحديث المباريات...
+              جاري تحديث مباريات الهلال...
             </span>
 
           </div>
@@ -1290,10 +1256,6 @@
 
   </div>
 
-
-  <!-- =========================================================
-       نافذة إضافة حدث
-  ========================================================= -->
 
   <div
     class="modal-overlay"
@@ -1401,10 +1363,6 @@
   </div>
 
 
-  <!-- =========================================================
-       نافذة العد التنازلي للحدث
-  ========================================================= -->
-
   <div
     class="modal-overlay"
     id="countdownModal"
@@ -1475,10 +1433,6 @@
   </div>
 
 
-  <!-- =========================================================
-       نافذة أحداث اليوم
-  ========================================================= -->
-
   <div
     class="modal-overlay"
     id="dayEventsModal"
@@ -1528,10 +1482,6 @@
 
   <script>
 
-    /* =========================================================
-       مواقيت الصلاة
-    ========================================================= */
-
     const prayerNames = {
       Fajr: "الفجر",
       Sunrise: "الشروق",
@@ -1564,32 +1514,16 @@
     let countdownTimer = null;
     let calendarDate = new Date();
 
-
-    /* =========================================================
-       عداد الأحداث
-    ========================================================= */
-
     let eventCountdownTimer = null;
     let selectedCountdownEvent = null;
 
-
-    /* =========================================================
-       أحداث اليوم المحدد
-    ========================================================= */
-
     let selectedDayForEvents = null;
 
+    const HILAL_TEAM_ID = 21895;
 
-    /* =========================================================
-       عداد مباراة الهلال
-    ========================================================= */
-
+    let hilalMatches = [];
+    let showAllMatches = false;
     let hilalCountdownTimer = null;
-
-
-    /* =========================================================
-       الأحداث الرسمية السعودية
-    ========================================================= */
 
     const officialEvents = [
 
@@ -1635,10 +1569,6 @@
 
     ];
 
-
-    /* =========================================================
-       الأحداث المحلية
-    ========================================================= */
 
     let events = [];
 
@@ -1719,10 +1649,6 @@
     addOfficialEvents();
 
 
-    /* =========================================================
-       أدوات التاريخ
-    ========================================================= */
-
     function formatDate(date) {
 
       const year =
@@ -1778,10 +1704,6 @@
     }
 
 
-    /* =========================================================
-       تحويل الوقت إلى 12 ساعة
-    ========================================================= */
-
     function formatTimeArabic(time) {
 
       if (
@@ -1828,10 +1750,6 @@
     }
 
 
-    /* =========================================================
-       الساعة
-    ========================================================= */
-
     function updateClock() {
 
       const now = new Date();
@@ -1866,10 +1784,6 @@
 
     }
 
-
-    /* =========================================================
-       مواقيت الصلاة
-    ========================================================= */
 
     async function loadPrayerTimes() {
 
@@ -1939,7 +1853,6 @@
         }
 
         renderPrayerCards();
-
         startCountdown();
 
         document.getElementById(
@@ -2099,7 +2012,6 @@
             ([key, name]) => ({
 
               key,
-
               name,
 
               date:
@@ -2244,28 +2156,15 @@
 
 
     /* =========================================================
-       الهلال — Sofascore
+       مباريات الهلال
     ========================================================= */
 
-    const HILAL_TEAM_ID = 21895;
-
-    let hilalMatches = [];
-
-    let showAllMatches = false;
-
-    let footballTimer = null;
-
-    const SOFASCORE_BASE =
-      "https://www.sofascore.com/api/v1";
-
-
-    async function sofascoreFetch(
-      endpoint
-    ) {
+    async function sofascoreFetch(endpoint) {
 
       const response =
         await fetch(
-          SOFASCORE_BASE + endpoint,
+          "https://www.sofascore.com/api/v1" +
+          endpoint,
           {
             cache: "no-store"
           }
@@ -2274,12 +2173,337 @@
       if (!response.ok) {
 
         throw new Error(
-          `Sofascore HTTP ${response.status}`
+          `HTTP ${response.status}`
         );
 
       }
 
       return await response.json();
+
+    }
+
+
+    /* =========================================================
+       ترجمة أسماء الهلال والخصوم للعربي فقط
+    ========================================================= */
+
+    function translateHilalTeamName(name) {
+
+      const raw =
+        String(name || "").trim();
+
+      if (!raw) {
+        return "الفريق";
+      }
+
+      if (
+        /[\u0600-\u06FF]/.test(raw) &&
+        !/[A-Za-z]/.test(raw)
+      ) {
+        return raw;
+      }
+
+      const key =
+        raw
+          .toLowerCase()
+          .replace(/[-_.]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+      const translations = {
+
+        "al hilal": "الهلال",
+        "al hilal sfc": "الهلال",
+        "al hilal fc": "الهلال",
+        "hilal": "الهلال",
+
+        "al taawoun": "التعاون",
+        "al taawon": "التعاون",
+
+        "al ittihad": "الاتحاد",
+        "al etihad": "الاتحاد",
+
+        "al nassr": "النصر",
+        "al nasr": "النصر",
+
+        "al ahli": "الأهلي",
+        "al ahly": "الأهلي",
+
+        "al shabab": "الشباب",
+
+        "al ettifaq": "الاتفاق",
+        "al etiffaq": "الاتفاق",
+
+        "al fateh": "الفتح",
+
+        "al hazem": "الحزم",
+
+        "al qadsiah": "القادسية",
+
+        "al riyadh": "الرياض",
+
+        "al raed": "الرائد",
+
+        "al khaleej": "الخليج",
+
+        "al wehda": "الوحدة",
+        "al wahda": "الوحدة",
+
+        "al fayha": "الفيحاء",
+
+        "damac": "ضمك",
+
+        "al okhdood": "الأخدود",
+        "al akhdoud": "الأخدود",
+
+        "al kholood": "الخلود",
+
+        "abha": "أبها",
+
+        "al faisaly": "الفيصلي",
+
+        "neom": "نيوم",
+
+        "neom sc": "نيوم",
+
+        "al diriyah": "الدرعية",
+
+        "al shamal": "الشمال القطري",
+
+        "al sadd": "السد القطري",
+        "al sadd sc": "السد القطري",
+
+        "al ain": "العين الإماراتي",
+
+        "shabab al ahli": "شباب الأهلي الإماراتي",
+
+        "shabab al ahli club": "شباب الأهلي الإماراتي",
+
+        "neftchi": "نيفتشي الأوزبكي",
+
+        "pakhtakor": "باختاكور الأوزبكي",
+
+        "al wasl": "الوصل الإماراتي",
+
+        "al wasl uae": "الوصل الإماراتي",
+
+        "manchester city": "مانشستر سيتي",
+
+        "real madrid": "ريال مدريد",
+
+        "inter miami": "إنتر ميامي",
+
+        "pachuca": "باتشوكا",
+
+        "salzburg": "سالزبورغ",
+
+        "red bull salzburg": "سالزبورغ",
+
+        "flamengo": "فلامنغو",
+
+        "urawa red diamonds": "أوراوا ريد دايموندز",
+
+        "al juwair": "الجبلين"
+
+      };
+
+      if (translations[key]) {
+        return translations[key];
+      }
+
+      if (
+        key.includes("al hilal") ||
+        key === "hilal"
+      ) {
+        return "الهلال";
+      }
+
+      return "الفريق المنافس";
+
+    }
+
+
+    function translateHilalPlayerName(name) {
+
+      const raw =
+        String(name || "").trim();
+
+      if (!raw) {
+        return "";
+      }
+
+      if (
+        /[\u0600-\u06FF]/.test(raw) &&
+        !/[A-Za-z]/.test(raw)
+      ) {
+        return raw;
+      }
+
+      const key =
+        raw
+          .toLowerCase()
+          .replace(/[-_.]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+      const translations = {
+
+        "yassine bounou": "ياسين بونو",
+        "bounou": "ياسين بونو",
+
+        "salem al dawsari": "سالم الدوسري",
+        "salem al-dawsari": "سالم الدوسري",
+
+        "ruben neves": "روبن نيفيز",
+
+        "sergej milinkovic savic":
+          "سيرجي سافيتش",
+
+        "sergej milinkovic-savic":
+          "سيرجي سافيتش",
+
+        "aleksandar mitrovic":
+          "ألكسندر ميتروفيتش",
+
+        "marcos leonardo":
+          "ماركوس ليوناردو",
+
+        "malcom": "مالكوم",
+
+        "joao cancelo":
+          "جواو كانسيلو",
+
+        "kalidou koulibaly":
+          "كاليدو كوليبالي",
+
+        "renan lodi":
+          "رينان لودي",
+
+        "ali al bulayhi":
+          "علي البليهي",
+
+        "ali al-bulaihi":
+          "علي البليهي",
+
+        "hassan tambakti":
+          "حسان تمبكتي",
+
+        "hassan altambakti":
+          "حسان تمبكتي",
+
+        "nasser al dawsari":
+          "ناصر الدوسري",
+
+        "mohammed kanno":
+          "محمد كنو",
+
+        "mohamed kanno":
+          "محمد كنو",
+
+        "abdullah al hamdan":
+          "عبدالله الحمدان",
+
+        "mohammed al qahtani":
+          "محمد القحطاني",
+
+        "mohammed al-qahtani":
+          "محمد القحطاني",
+
+        "hamad al yami":
+          "حمد اليامي",
+
+        "moteb al harbi":
+          "متعب الحربي",
+
+        "khalid al ghanam":
+          "خالد الغنام",
+
+        "marcelo brozovic":
+          "مارسيلو بروزوفيتش",
+
+        "darwin nunez":
+          "داروين نونيز",
+
+        "gabriel martinelli":
+          "غابرييل مارتينيلي"
+
+      };
+
+      return translations[key] || "لاعب";
+
+    }
+
+
+    function translateHilalCompetitionName(name) {
+
+      const raw =
+        String(name || "").trim();
+
+      if (!raw) {
+        return "مباراة";
+      }
+
+      if (
+        /[\u0600-\u06FF]/.test(raw) &&
+        !/[A-Za-z]/.test(raw)
+      ) {
+        return raw;
+      }
+
+      const key =
+        raw
+          .toLowerCase()
+          .replace(/[-_.]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+      const translations = {
+
+        "saudi pro league":
+          "دوري روشن السعودي",
+
+        "roshan saudi league":
+          "دوري روشن السعودي",
+
+        "saudi king s cup":
+          "كأس خادم الحرمين الشريفين",
+
+        "saudi king's cup":
+          "كأس خادم الحرمين الشريفين",
+
+        "king cup":
+          "كأس خادم الحرمين الشريفين",
+
+        "afc champions league elite":
+          "دوري أبطال آسيا للنخبة",
+
+        "afc champions league":
+          "دوري أبطال آسيا",
+
+        "afc champions league 2":
+          "دوري أبطال آسيا 2",
+
+        "saudi super cup":
+          "كأس السوبر السعودي",
+
+        "club world cup":
+          "كأس العالم للأندية",
+
+        "fifa club world cup":
+          "كأس العالم للأندية",
+
+        "friendly international":
+          "مباراة ودية",
+
+        "gulf club champions league":
+          "دوري أبطال الخليج",
+
+        "afc":
+          "الاتحاد الآسيوي"
+
+      };
+
+      return translations[key] || "بطولة";
 
     }
 
@@ -2296,7 +2520,8 @@
         status.textContent =
           "جاري تحديث مباريات الهلال...";
 
-        const nextRequests =
+
+        const requests =
           await Promise.allSettled([
 
             sofascoreFetch(
@@ -2328,12 +2553,12 @@
 
         const allEvents = [];
 
-        nextRequests.forEach(
+
+        requests.forEach(
           result => {
 
             if (
-              result.status ===
-              "fulfilled" &&
+              result.status === "fulfilled" &&
               result.value &&
               Array.isArray(
                 result.value.events
@@ -2352,6 +2577,7 @@
 
         const unique =
           new Map();
+
 
         allEvents.forEach(
           match => {
@@ -2401,7 +2627,7 @@
           );
 
 
-        const importantMatches =
+        const completedMatches =
           hilalMatches.filter(
             match => {
 
@@ -2420,7 +2646,7 @@
 
         const details =
           await Promise.allSettled(
-            importantMatches
+            completedMatches
               .slice(-8)
               .map(
                 async match => {
@@ -2441,19 +2667,18 @@
 
                     ]);
 
+
                   return {
 
                     id: match.id,
 
                     incidents:
-                      incidents.status ===
-                      "fulfilled"
+                      incidents.status === "fulfilled"
                         ? incidents.value
                         : null,
 
                     lineups:
-                      lineups.status ===
-                      "fulfilled"
+                      lineups.status === "fulfilled"
                         ? lineups.value
                         : null
 
@@ -2468,8 +2693,7 @@
           result => {
 
             if (
-              result.status !==
-              "fulfilled"
+              result.status !== "fulfilled"
             ) {
               return;
             }
@@ -2506,6 +2730,7 @@
 
         syncHilalCalendarEvents();
 
+
         status.textContent =
           `آخر تحديث ${new Date().toLocaleTimeString(
             "ar-SA",
@@ -2515,6 +2740,7 @@
               hour12: true
             }
           )}`;
+
 
       } catch (error) {
 
@@ -2531,9 +2757,7 @@
     }
 
 
-    function getSaudiDate(
-      timestamp
-    ) {
+    function getSaudiDate(timestamp) {
 
       return new Date(
         timestamp * 1000
@@ -2542,9 +2766,7 @@
     }
 
 
-    function formatMatchDate(
-      timestamp
-    ) {
+    function formatMatchDate(timestamp) {
 
       if (!timestamp) {
         return "--";
@@ -2553,9 +2775,10 @@
       return new Intl.DateTimeFormat(
         "ar-SA",
         {
-          weekday: "short",
+          weekday: "long",
           day: "numeric",
-          month: "short"
+          month: "long",
+          year: "numeric"
         }
       ).format(
         getSaudiDate(timestamp)
@@ -2564,9 +2787,7 @@
     }
 
 
-    function formatMatchTime(
-      timestamp
-    ) {
+    function formatMatchTime(timestamp) {
 
       if (!timestamp) {
         return "--";
@@ -2585,10 +2806,6 @@
 
     }
 
-
-    /* =========================================================
-       عد تنازلي لمباراة الهلال القادمة
-    ========================================================= */
 
     function getNextHilalMatch() {
 
@@ -2626,9 +2843,11 @@
       const match =
         getNextHilalMatch();
 
+
       clearInterval(
         hilalCountdownTimer
       );
+
 
       if (!match) {
 
@@ -2648,107 +2867,31 @@
 
 
       const home =
-        match.homeTeam &&
-        match.homeTeam.name
-          ? match.homeTeam.name
-          : "الفريق المضيف";
+        translateHilalTeamName(
+          match.homeTeam &&
+          match.homeTeam.name
+        );
+
 
       const away =
-        match.awayTeam &&
-        match.awayTeam.name
-          ? match.awayTeam.name
-          : "الفريق الضيف";
+        translateHilalTeamName(
+          match.awayTeam &&
+          match.awayTeam.name
+        );
 
 
-      const update =
-        () => {
+      function update() {
 
-          const now =
-            Date.now();
-
-          const target =
-            match.startTimestamp *
-            1000;
-
-          const difference =
-            target -
-            now;
+        const difference =
+          match.startTimestamp * 1000 -
+          Date.now();
 
 
-          if (difference <= 0) {
-
-            container.innerHTML = `
-              <div class="next-match-label">
-                المباراة القادمة
-              </div>
-
-              <div class="next-match-teams">
-                ${escapeHTML(home)}
-                ×
-                ${escapeHTML(away)}
-              </div>
-
-              <div class="next-match-status">
-                بدأت المباراة أو أصبحت قريبة جدًا
-              </div>
-            `;
-
-            clearInterval(
-              hilalCountdownTimer
-            );
-
-            return;
-
-          }
-
-
-          const totalSeconds =
-            Math.floor(
-              difference / 1000
-            );
-
-          const days =
-            Math.floor(
-              totalSeconds / 86400
-            );
-
-          const hours =
-            Math.floor(
-              (totalSeconds % 86400) / 3600
-            );
-
-          const minutes =
-            Math.floor(
-              (totalSeconds % 3600) / 60
-            );
-
-          const seconds =
-            totalSeconds % 60;
-
-
-          let timerText;
-
-          if (days > 0) {
-
-            timerText =
-              `${days} يوم ` +
-              `${String(hours).padStart(2, "0")}:` +
-              `${String(minutes).padStart(2, "0")}:` +
-              `${String(seconds).padStart(2, "0")}`;
-
-          } else {
-
-            timerText =
-              `${String(hours).padStart(2, "0")}:` +
-              `${String(minutes).padStart(2, "0")}:` +
-              `${String(seconds).padStart(2, "0")}`;
-
-          }
-
+        if (difference <= 0) {
 
           container.innerHTML = `
             <div class="next-match-label">
-              المباراة القادمة للهلال
+              المباراة القادمة
             </div>
 
             <div class="next-match-teams">
@@ -2757,30 +2900,101 @@
               ${escapeHTML(away)}
             </div>
 
-            <div class="next-match-date">
-              ${escapeHTML(
-                formatMatchDate(
-                  match.startTimestamp
-                )
-              )}
-              —
-              ${escapeHTML(
-                formatMatchTime(
-                  match.startTimestamp
-                )
-              )}
-            </div>
-
-            <div class="next-match-timer">
-              ${escapeHTML(timerText)}
-            </div>
-
             <div class="next-match-status">
-              الوقت المتبقي
+              بدأت المباراة أو أصبحت قريبة جدًا
             </div>
           `;
 
-        };
+          clearInterval(
+            hilalCountdownTimer
+          );
+
+          return;
+
+        }
+
+
+        const totalSeconds =
+          Math.floor(
+            difference / 1000
+          );
+
+
+        const days =
+          Math.floor(
+            totalSeconds / 86400
+          );
+
+        const hours =
+          Math.floor(
+            (totalSeconds % 86400) / 3600
+          );
+
+        const minutes =
+          Math.floor(
+            (totalSeconds % 3600) / 60
+          );
+
+        const seconds =
+          totalSeconds % 60;
+
+
+        let timerText;
+
+
+        if (days > 0) {
+
+          timerText =
+            `${days} يوم ` +
+            `${String(hours).padStart(2, "0")}:` +
+            `${String(minutes).padStart(2, "0")}:` +
+            `${String(seconds).padStart(2, "0")}`;
+
+        } else {
+
+          timerText =
+            `${String(hours).padStart(2, "0")}:` +
+            `${String(minutes).padStart(2, "0")}:` +
+            `${String(seconds).padStart(2, "0")}`;
+
+        }
+
+
+        container.innerHTML = `
+          <div class="next-match-label">
+            المباراة القادمة للهلال
+          </div>
+
+          <div class="next-match-teams">
+            ${escapeHTML(home)}
+            ×
+            ${escapeHTML(away)}
+          </div>
+
+          <div class="next-match-date">
+            ${escapeHTML(
+              formatMatchDate(
+                match.startTimestamp
+              )
+            )}
+            —
+            ${escapeHTML(
+              formatMatchTime(
+                match.startTimestamp
+              )
+            )}
+          </div>
+
+          <div class="next-match-timer">
+            ${escapeHTML(timerText)}
+          </div>
+
+          <div class="next-match-status">
+            الوقت المتبقي
+          </div>
+        `;
+
+      }
 
 
       update();
@@ -2794,98 +3008,120 @@
     }
 
 
-    function getStatusText(
-      match
-    ) {
+    function getStatusText(match) {
 
-      if (
-        !match.status
-      ) {
+      if (!match.status) {
         return "";
       }
+
 
       const type =
         match.status.type;
 
-      if (
-        type === "inprogress"
-      ) {
+
+      if (type === "inprogress") {
 
         if (
           match.status.description
         ) {
-          return match.status.description;
+
+          const description =
+            String(
+              match.status.description
+            ).toLowerCase();
+
+
+          if (
+            description.includes("half")
+          ) {
+            return "الشوط الأول";
+          }
+
+
+          if (
+            description.includes("break")
+          ) {
+            return "استراحة";
+          }
+
+
+          if (
+            description.includes("second")
+          ) {
+            return "الشوط الثاني";
+          }
+
+
+          if (
+            description.includes("extra")
+          ) {
+            return "وقت إضافي";
+          }
+
         }
 
         return "مباشر";
 
       }
 
-      if (
-        type === "finished"
-      ) {
+
+      if (type === "finished") {
         return "انتهت";
       }
 
-      if (
-        type === "postponed"
-      ) {
+
+      if (type === "postponed") {
         return "مؤجلة";
       }
 
-      if (
-        type === "canceled"
-      ) {
+
+      if (type === "canceled") {
         return "ملغاة";
       }
+
 
       return "قادمة";
 
     }
 
 
-    function getCompetitionName(
-      match
-    ) {
+    function getCompetitionName(match) {
 
       if (
         match.tournament &&
         match.tournament.name
       ) {
 
-        return match.tournament.name;
+        return translateHilalCompetitionName(
+          match.tournament.name
+        );
 
       }
+
 
       return "مباراة";
 
     }
 
 
-    function getGoals(
-      match
-    ) {
+    function getGoals(match) {
 
       const incidents =
         match.liveDetails &&
         match.liveDetails.incidents &&
         match.liveDetails.incidents.incidents;
 
-      if (
-        !Array.isArray(incidents)
-      ) {
 
+      if (!Array.isArray(incidents)) {
         return [];
-
       }
+
 
       return incidents
         .filter(
           incident =>
-            incident.incidentType ===
-            "goal" ||
-            incident.incidentClass ===
-            "goal"
+            incident.incidentType === "goal" ||
+            incident.incidentClass === "goal"
         )
         .map(
           goal => {
@@ -2894,19 +3130,31 @@
               goal.player &&
               goal.player.name;
 
+
             let assist =
               goal.assist1 &&
               goal.assist1.name;
 
-            if (!scorer) {
-              scorer = "هدف";
-            }
+
+            scorer =
+              translateHilalPlayerName(
+                scorer
+              );
+
+
+            assist =
+              assist
+                ? translateHilalPlayerName(
+                    assist
+                  )
+                : "";
+
 
             return {
 
               minute:
                 goal.time
-                  ? `${goal.time}'`
+                  ? `${goal.time} دقيقة`
                   : "",
 
               scorer,
@@ -2928,27 +3176,29 @@
     }
 
 
-    function getStartingLineup(
-      match
-    ) {
+    function getStartingLineup(match) {
 
       const lineups =
         match.liveDetails &&
         match.liveDetails.lineups;
 
+
       if (!lineups) {
         return null;
       }
+
 
       const isHome =
         match.homeTeam &&
         match.homeTeam.id ===
         HILAL_TEAM_ID;
 
+
       const hilalLineup =
         isHome
           ? lineups.home
           : lineups.away;
+
 
       if (
         !hilalLineup ||
@@ -2961,6 +3211,7 @@
 
       }
 
+
       const starters =
         hilalLineup.players
           .filter(
@@ -2968,26 +3219,23 @@
               item.substitute !== true
           )
           .map(
-            item => {
-
-              if (
-                item.player &&
-                item.player.name
-              ) {
-
-                return item.player.name;
-
-              }
-
-              return null;
-
-            }
+            item =>
+              item.player &&
+              item.player.name
           )
-          .filter(Boolean);
+          .filter(Boolean)
+          .map(
+            player =>
+              translateHilalPlayerName(
+                player
+              )
+          );
+
 
       if (!starters.length) {
         return null;
       }
+
 
       return {
 
@@ -3014,6 +3262,7 @@
         document.getElementById(
           "moreMatches"
         );
+
 
       renderNextHilalCountdown();
 
@@ -3079,6 +3328,7 @@
       const total =
         hilalMatches.length;
 
+
       if (total > 8) {
 
         more.innerHTML = `
@@ -3093,6 +3343,7 @@
             }
           </button>
         `;
+
 
         document
           .getElementById(
@@ -3119,21 +3370,20 @@
     }
 
 
-    function renderMatchCard(
-      match
-    ) {
+    function renderMatchCard(match) {
 
       const home =
-        match.homeTeam &&
-        match.homeTeam.name
-          ? match.homeTeam.name
-          : "الفريق المضيف";
+        translateHilalTeamName(
+          match.homeTeam &&
+          match.homeTeam.name
+        );
+
 
       const away =
-        match.awayTeam &&
-        match.awayTeam.name
-          ? match.awayTeam.name
-          : "الفريق الضيف";
+        translateHilalTeamName(
+          match.awayTeam &&
+          match.awayTeam.name
+        );
 
 
       const status =
@@ -3144,12 +3394,11 @@
 
 
       const isLive =
-        status ===
-        "inprogress";
+        status === "inprogress";
+
 
       const isFinished =
-        status ===
-        "finished";
+        status === "finished";
 
 
       const homeScore =
@@ -3159,6 +3408,7 @@
           match.homeScore.current ??
           match.homeScore.display
         );
+
 
       const awayScore =
         match.awayScore &&
@@ -3186,6 +3436,7 @@
         formatMatchDate(
           match.startTimestamp
         );
+
 
       const timeText =
         formatMatchTime(
@@ -3350,12 +3601,117 @@
 
 
     /* =========================================================
-       مزامنة مباريات الهلال مع التقويم
+       حذف النسخ الإنجليزية القديمة لمباريات الهلال فقط
+       بدون حذف أي أحداث أخرى
     ========================================================= */
+
+    function cleanOldHilalEnglishEvents() {
+
+      const before =
+        events.length;
+
+
+      events =
+        events.filter(
+          event => {
+
+            if (
+              event.type !== "match"
+            ) {
+              return true;
+            }
+
+
+            const text =
+              `${event.title || ""} ${event.notes || ""}`;
+
+
+            if (
+              !/[A-Za-z]/.test(text)
+            ) {
+              return true;
+            }
+
+
+            const sameHilalMatch =
+              hilalMatches.some(
+                match => {
+
+                  if (
+                    !match.startTimestamp
+                  ) {
+                    return false;
+                  }
+
+
+                  if (
+                    event.sofascoreEventId &&
+                    String(
+                      event.sofascoreEventId
+                    ) ===
+                    String(match.id)
+                  ) {
+                    return true;
+                  }
+
+
+                  const matchDate =
+                    formatDate(
+                      getSaudiDate(
+                        match.startTimestamp
+                      )
+                    );
+
+
+                  const matchTime =
+                    new Intl.DateTimeFormat(
+                      "en-GB",
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false
+                      }
+                    ).format(
+                      getSaudiDate(
+                        match.startTimestamp
+                      )
+                    );
+
+
+                  return (
+                    event.date === matchDate &&
+                    event.time === matchTime
+                  );
+
+                }
+              );
+
+
+            return !sameHilalMatch;
+
+          }
+        );
+
+
+      if (
+        events.length !== before
+      ) {
+        saveEvents();
+      }
+
+    }
+
 
     function syncHilalCalendarEvents() {
 
       let changed = false;
+
+
+      /*
+       * إزالة النسخ الإنجليزية القديمة
+       * لمباريات الهلال فقط
+       */
+      cleanOldHilalEnglishEvents();
 
 
       hilalMatches.forEach(
@@ -3379,7 +3735,11 @@
 
 
           const title =
-            `${match.homeTeam.name} × ${match.awayTeam.name}`;
+            `${translateHilalTeamName(
+              match.homeTeam.name
+            )} × ${translateHilalTeamName(
+              match.awayTeam.name
+            )}`;
 
 
           const existing =
@@ -3438,6 +3798,7 @@
 
             let updated = false;
 
+
             if (
               existing.title !== title
             ) {
@@ -3448,6 +3809,7 @@
               updated = true;
 
             }
+
 
             if (
               existing.time !== time
@@ -3460,6 +3822,7 @@
 
             }
 
+
             if (
               existing.notes !== notes
             ) {
@@ -3470,6 +3833,7 @@
               updated = true;
 
             }
+
 
             if (updated) {
               changed = true;
@@ -3491,10 +3855,6 @@
 
     }
 
-
-    /* =========================================================
-       التقويم
-    ========================================================= */
 
     function renderCalendar() {
 
@@ -3553,8 +3913,7 @@
 
 
       for (
-        let i =
-          firstDay - 1;
+        let i = firstDay - 1;
         i >= 0;
         i--
       ) {
@@ -3616,12 +3975,9 @@
 
 
         if (
-          dayNumber ===
-            today.getDate() &&
-          month ===
-            today.getMonth() &&
-          year ===
-            today.getFullYear()
+          dayNumber === today.getDate() &&
+          month === today.getMonth() &&
+          year === today.getFullYear()
         ) {
 
           day.classList.add(
@@ -3675,10 +4031,6 @@
         }
 
 
-        /* =====================================================
-           الضغط على اليوم
-        ===================================================== */
-
         day.addEventListener(
           "click",
           () => {
@@ -3716,10 +4068,6 @@
     }
 
 
-    /* =========================================================
-       أحداث الشهر
-    ========================================================= */
-
     function renderEvents() {
 
       const list =
@@ -3752,10 +4100,8 @@
                 );
 
               return (
-                eventDate.getFullYear() ===
-                  year &&
-                eventDate.getMonth() ===
-                  month
+                eventDate.getFullYear() === year &&
+                eventDate.getMonth() === month
               );
 
             }
@@ -3871,13 +4217,16 @@
                   return;
                 }
 
+
                 const index =
                   Number(
                     eventElement.dataset.eventIndex
                   );
 
+
                 const selectedEvent =
                   events[index];
+
 
                 if (
                   selectedEvent
@@ -3927,10 +4276,6 @@
 
     }
 
-
-    /* =========================================================
-       نافذة أحداث اليوم
-    ========================================================= */
 
     function openDayEventsModal(
       date,
@@ -4081,13 +4426,7 @@
     }
 
 
-    /* =========================================================
-       فتح عداد الحدث
-    ========================================================= */
-
-    function getEventTargetDate(
-      event
-    ) {
+    function getEventTargetDate(event) {
 
       if (
         !event ||
@@ -4111,10 +4450,12 @@
             .split(":")
             .map(Number);
 
+
         hours =
           Number.isNaN(parts[0])
             ? 0
             : parts[0];
+
 
         minutes =
           Number.isNaN(parts[1])
@@ -4143,9 +4484,7 @@
     }
 
 
-    function openEventCountdown(
-      event
-    ) {
+    function openEventCountdown(event) {
 
       selectedCountdownEvent =
         event;
@@ -4236,13 +4575,9 @@
       }
 
 
-      const now =
-        new Date();
-
-
       const difference =
         target.getTime() -
-        now.getTime();
+        Date.now();
 
 
       const countdownElement =
@@ -4296,15 +4631,18 @@
           totalSeconds / 86400
         );
 
+
       const hours =
         Math.floor(
           (totalSeconds % 86400) / 3600
         );
 
+
       const minutes =
         Math.floor(
           (totalSeconds % 3600) / 60
         );
+
 
       const seconds =
         totalSeconds % 60;
@@ -4345,6 +4683,7 @@
       selectedCountdownEvent =
         null;
 
+
       document
         .getElementById(
           "countdownModal"
@@ -4356,9 +4695,7 @@
     }
 
 
-    function formatEventDate(
-      dateString
-    ) {
+    function formatEventDate(dateString) {
 
       const date =
         new Date(
@@ -4380,43 +4717,29 @@
     }
 
 
-    function getEventEmoji(
-      type
-    ) {
+    function getEventEmoji(type) {
 
-      if (
-        type === "match"
-      ) {
+      if (type === "match") {
         return "⚽";
       }
 
-      if (
-        type === "holiday"
-      ) {
+      if (type === "holiday") {
         return "🇸🇦";
       }
 
-      if (
-        type === "islamic"
-      ) {
+      if (type === "islamic") {
         return "🌙";
       }
 
-      if (
-        type === "national"
-      ) {
+      if (type === "national") {
         return "🇸🇦";
       }
 
-      if (
-        type === "reminder"
-      ) {
+      if (type === "reminder") {
         return "🔔";
       }
 
-      if (
-        type === "personal"
-      ) {
+      if (type === "personal") {
         return "📌";
       }
 
@@ -4425,13 +4748,7 @@
     }
 
 
-    /* =========================================================
-       إضافة حدث
-    ========================================================= */
-
-    function openEventModal(
-      date
-    ) {
+    function openEventModal(date) {
 
       document
         .getElementById(
@@ -4489,10 +4806,7 @@
     }
 
 
-    function deleteEvent(
-      index,
-      event
-    ) {
+    function deleteEvent(index, event) {
 
       event.stopPropagation();
 
@@ -4509,32 +4823,16 @@
         events[index];
 
 
-      if (
-        selectedEvent.systemEvent
-      ) {
-
-        const confirmed =
-          confirm(
-            "هذا حدث رسمي أو مباراة مضافة تلقائيًا. هل تريد حذفه؟"
-          );
+      const confirmed =
+        confirm(
+          selectedEvent.systemEvent
+            ? "هذا حدث رسمي أو مباراة مضافة تلقائيًا. هل تريد حذفه؟"
+            : "هل تريد حذف هذا الحدث؟"
+        );
 
 
-        if (!confirmed) {
-          return;
-        }
-
-      } else {
-
-        const confirmed =
-          confirm(
-            "هل تريد حذف هذا الحدث؟"
-          );
-
-
-        if (!confirmed) {
-          return;
-        }
-
+      if (!confirmed) {
+        return;
       }
 
 
@@ -4551,13 +4849,7 @@
     }
 
 
-    /* =========================================================
-       حماية HTML
-    ========================================================= */
-
-    function escapeHTML(
-      value
-    ) {
+    function escapeHTML(value) {
 
       return String(
         value ?? ""
@@ -4586,10 +4878,6 @@
     }
 
 
-    /* =========================================================
-       تغيير المدينة
-    ========================================================= */
-
     document
       .getElementById(
         "citySelect"
@@ -4607,10 +4895,6 @@
       );
 
 
-    /* =========================================================
-       تحديث المواقيت
-    ========================================================= */
-
     document
       .getElementById(
         "refreshBtn"
@@ -4624,10 +4908,6 @@
         }
       );
 
-
-    /* =========================================================
-       الشهر السابق
-    ========================================================= */
 
     document
       .getElementById(
@@ -4647,10 +4927,6 @@
       );
 
 
-    /* =========================================================
-       الشهر التالي
-    ========================================================= */
-
     document
       .getElementById(
         "nextMonth"
@@ -4668,10 +4944,6 @@
         }
       );
 
-
-    /* =========================================================
-       إغلاق نافذة إضافة الحدث
-    ========================================================= */
 
     document
       .getElementById(
@@ -4707,10 +4979,6 @@
         }
       );
 
-
-    /* =========================================================
-       إغلاق نافذة العد التنازلي
-    ========================================================= */
 
     document
       .getElementById(
@@ -4761,10 +5029,6 @@
       );
 
 
-    /* =========================================================
-       نافذة أحداث اليوم
-    ========================================================= */
-
     document
       .getElementById(
         "closeDayEventsModal"
@@ -4814,10 +5078,6 @@
       );
 
 
-    /* =========================================================
-       ESC
-    ========================================================= */
-
     document.addEventListener(
       "keydown",
       event => {
@@ -4838,10 +5098,6 @@
       }
     );
 
-
-    /* =========================================================
-       حفظ الحدث
-    ========================================================= */
 
     document
       .getElementById(
@@ -4888,13 +5144,7 @@
 
 
           if (
-            !newEvent.date
-          ) {
-            return;
-          }
-
-
-          if (
+            !newEvent.date ||
             !newEvent.title
           ) {
             return;
@@ -4916,10 +5166,6 @@
       );
 
 
-    /* =========================================================
-       تشغيل الساعة
-    ========================================================= */
-
     updateClock();
 
     setInterval(
@@ -4928,32 +5174,16 @@
     );
 
 
-    /* =========================================================
-       تحميل مواقيت الصلاة
-    ========================================================= */
-
     loadPrayerTimes();
-
-
-    /* =========================================================
-       تشغيل التقويم
-    ========================================================= */
 
     renderCalendar();
 
-
-    /* =========================================================
-       تحميل مباريات الهلال
-    ========================================================= */
-
     loadHilalMatches();
 
-
-    footballTimer =
-      setInterval(
-        loadHilalMatches,
-        30000
-      );
+    setInterval(
+      loadHilalMatches,
+      30000
+    );
 
   </script>
 
