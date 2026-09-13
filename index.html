@@ -4,27 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Calendar</title>
+  <title>التقويم</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #080b12;
-      --card: rgba(20, 27, 40, .84);
-      --card-dark: #111827;
-      --border: rgba(255, 255, 255, .09);
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --green: #22c55e;
-      --green-light: #4ade80;
-      --blue: #38bdf8;
-      --gold: #f59e0b;
-      --red: #fb7185;
-      --purple: #a78bfa;
-      --shadow: 0 20px 60px rgba(0, 0, 0, .28);
+      --background: #07111f;
+      --card: #101e31;
+      --card-light: #172a43;
+      --text: #f4f8ff;
+      --muted: #9aacc3;
+      --blue: #1689ff;
+      --blue-dark: #075bb7;
+      --green: #23d889;
+      --yellow: #ffc857;
+      --red: #ff5e79;
+      --border: rgba(255,255,255,0.1);
     }
 
     * {
@@ -34,13 +32,13 @@
     }
 
     body {
-      min-height: 100vh;
-      color: var(--text);
       font-family: "Cairo", sans-serif;
       background:
-        radial-gradient(circle at 10% 10%, rgba(34, 197, 94, .14), transparent 30%),
-        radial-gradient(circle at 90% 0%, rgba(56, 189, 248, .13), transparent 28%),
-        var(--bg);
+        radial-gradient(circle at top right, rgba(22,137,255,0.10), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(35,216,137,0.05), transparent 25%),
+        var(--background);
+      color: var(--text);
+      min-height: 100vh;
     }
 
     button,
@@ -50,683 +48,428 @@
       font-family: inherit;
     }
 
-    button,
-    select {
+    button {
       cursor: pointer;
     }
 
     .container {
-      width: min(1400px, 94%);
+      width: min(1500px, 94%);
       margin: auto;
+      padding: 25px 0 50px;
     }
 
-    header {
+    .header {
+      text-align: center;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 28px 0 18px;
-      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 28px;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .brand-icon {
-      width: 56px;
-      height: 56px;
-      display: grid;
-      place-items: center;
+    .header-icon {
+      width: 52px;
+      height: 52px;
       border-radius: 18px;
-      font-size: 29px;
-      background: linear-gradient(135deg, var(--green), #0ea5e9);
-      box-shadow: 0 10px 30px rgba(34, 197, 94, .25);
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      margin-bottom: 10px;
+      box-shadow: 0 10px 30px rgba(22,137,255,0.2);
     }
 
-    h1 {
-      font-size: clamp(23px, 4vw, 35px);
+    .header h1 {
+      font-size: 32px;
       font-weight: 800;
+      line-height: 1.2;
     }
 
-    .subtitle {
+    .header p {
       color: var(--muted);
       font-size: 13px;
+      margin-top: 6px;
     }
 
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      flex-wrap: wrap;
-    }
-
-    button,
-    select {
-      padding: 11px 14px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text);
-      background: var(--card-dark);
-      transition: .2s;
-    }
-
-    button:hover,
-    select:hover {
-      border-color: var(--green);
-      transform: translateY(-2px);
-    }
-
-    .hero {
+    .top-info {
       display: grid;
-      grid-template-columns: 1.4fr .8fr;
-      gap: 18px;
-      margin: 12px 0 18px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
     }
 
-    .card {
+    .info-card {
+      background: rgba(16,30,49,0.9);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      background: var(--card);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-    }
-
-    .hero-main {
-      min-height: 270px;
-      position: relative;
-      overflow: hidden;
-      padding: 28px;
-    }
-
-    .hero-main::after {
-      content: "☪";
-      position: absolute;
-      left: 40px;
-      bottom: -55px;
-      color: rgba(255, 255, 255, .035);
-      font-size: 200px;
-      pointer-events: none;
-    }
-
-    .location {
-      margin-bottom: 7px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .today {
-      margin-bottom: 3px;
-      font-size: clamp(21px, 4vw, 36px);
-      font-weight: 800;
-    }
-
-    .hijri {
-      margin-bottom: 30px;
-      color: var(--gold);
-    }
-
-    .next-label {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .next-prayer {
+      border-radius: 18px;
+      padding: 18px;
+      min-height: 105px;
       display: flex;
-      align-items: end;
-      gap: 17px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    .next-prayer-name {
-      color: var(--green);
-      font-size: 31px;
-      font-weight: 800;
-    }
-
-    .countdown {
-      direction: ltr;
-      font-size: 35px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-
-    .date-box {
-      display: grid;
-      place-items: center;
-      padding: 28px;
-      text-align: center;
-    }
-
-    .clock {
-      direction: ltr;
-      color: var(--blue);
-      font-size: 45px;
-      font-weight: 800;
-    }
-
-    .date-box p {
-      margin-top: 5px;
+    .info-label {
       color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .prayer-section {
+      background: rgba(16,30,49,0.9);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 18px;
     }
 
     .section-title {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin: 27px 0 13px;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
     }
 
     .section-title h2 {
-      font-size: 20px;
+      font-size: 18px;
+      font-weight: 800;
     }
 
     .section-title span {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 11px;
     }
 
     .prayer-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 12px;
+      gap: 10px;
     }
 
     .prayer-card {
-      padding: 18px 12px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: var(--card);
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 15px;
+      padding: 12px;
       text-align: center;
-      transition: .25s;
-    }
-
-    .prayer-card.active {
-      border-color: var(--green);
-      background: linear-gradient(145deg, rgba(34, 197, 94, .22), var(--card));
-      transform: translateY(-5px);
-    }
-
-    .prayer-icon {
-      margin-bottom: 5px;
-      font-size: 25px;
     }
 
     .prayer-name {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 11px;
+      margin-bottom: 5px;
     }
 
     .prayer-time {
-      direction: ltr;
-      margin-top: 4px;
-      font-size: 21px;
+      font-size: 16px;
       font-weight: 800;
     }
 
-    .dashboard {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 18px;
-      align-items: start;
-      margin-top: 26px;
-    }
-
-    .calendar-card,
-    .events-card {
-      padding: 22px;
-    }
-
-    .calendar-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
-
-    .calendar-head h2 {
-      font-size: 20px;
-    }
-
-    .calendar-head button {
-      padding: 7px 14px;
-      font-size: 22px;
-    }
-
-    .weekdays,
-    .days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 7px;
+    .next-prayer {
+      margin-top: 13px;
+      background: rgba(22,137,255,0.08);
+      border: 1px solid rgba(22,137,255,0.15);
+      border-radius: 14px;
+      padding: 12px;
       text-align: center;
-    }
-
-    .weekdays {
-      margin-bottom: 8px;
       color: var(--muted);
       font-size: 12px;
     }
 
-    .day {
-      min-height: 67px;
-      position: relative;
-      padding: 9px 4px;
-      border: 1px solid transparent;
-      border-radius: 13px;
-      background: rgba(255, 255, 255, .035);
-      cursor: pointer;
-      transition: .2s;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .next-prayer strong {
+      color: var(--text);
     }
 
-    .day:hover {
-      border-color: var(--green);
-      transform: translateY(-3px);
-    }
-
-    .day.muted {
-      color: #475569;
-      opacity: .6;
-    }
-
-    .day.today {
-      color: #06130b;
-      background: var(--green);
-      font-weight: 800;
-    }
-
-    .day.hilal-match-day {
-      color: #ffffff;
-      border-color: rgba(0, 40, 240, .55);
-      background-image:
-        linear-gradient(
-          rgba(8, 11, 18, .68),
-          rgba(8, 11, 18, .68)
-        ),
-        url("https://assets.footylogos.com/logos/al-hilal/al-hilal-logo-footylogos.svg");
-      background-size: cover, 43px 43px;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    .day.hilal-match-day:hover {
-      border-color: #0028f0;
-      box-shadow: 0 0 18px rgba(0, 40, 240, .18);
-    }
-
-    .day.today.hilal-match-day {
-      color: #ffffff;
-      background-image:
-        linear-gradient(
-          rgba(34, 197, 94, .62),
-          rgba(8, 11, 18, .72)
-        ),
-        url("https://assets.footylogos.com/logos/al-hilal/al-hilal-logo-footylogos.svg");
-      background-size: cover, 43px 43px;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    .day.has-event::after {
-      content: "";
-      width: 6px;
-      height: 6px;
-      position: absolute;
-      right: 50%;
-      bottom: 8px;
-      border-radius: 50%;
-      background: var(--gold);
-      transform: translateX(50%);
-    }
-
-    .day.hilal-match-day.has-event::after {
-      background: #38bdf8;
-    }
-
-    .event {
-      position: relative;
-      margin-bottom: 10px;
-      padding: 14px 14px 14px 70px;
-      border-right: 4px solid var(--green);
-      border-radius: 15px;
-      background: rgba(255, 255, 255, .045);
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .event:hover {
-      transform: translateX(-3px);
-      background: rgba(255, 255, 255, .07);
-    }
-
-    .event.match {
-      border-right-color: var(--blue);
-    }
-
-    .event.holiday {
-      border-right-color: var(--gold);
-    }
-
-    .event.islamic {
-      border-right-color: var(--purple);
-    }
-
-    .event.reminder {
-      border-right-color: var(--red);
-    }
-
-    .event.national {
-      border-right-color: var(--green);
-    }
-
-    .event-title {
-      margin-bottom: 4px;
-      font-weight: 700;
-    }
-
-    .event-date,
-    .event-notes {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .event-notes {
-      margin-top: 5px;
-    }
-
-    .delete-event {
-      position: absolute;
-      top: 50%;
-      left: 10px;
-      padding: 5px 8px;
-      border: 0;
-      color: #fecdd3;
-      background: rgba(251, 113, 133, .15);
-      transform: translateY(-50%);
-    }
-
-    .delete-event:hover {
-      color: white;
-      background: var(--red);
-    }
-
-    .empty {
-      padding: 20px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .live-section {
-      margin-top: 26px;
-    }
-
-    .live-card {
-      padding: 22px;
-    }
-
-    .live-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
-
-    .live-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .live-title h2 {
-      font-size: 20px;
-    }
-
-    .live-status {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px var(--green);
-    }
-
-    .next-match-countdown {
-      margin-bottom: 18px;
-      padding: 18px;
-      border: 1px solid rgba(56, 189, 248, .22);
-      border-radius: 18px;
-      background:
-        linear-gradient(
-          135deg,
-          rgba(0, 40, 240, .12),
-          rgba(56, 189, 248, .05)
-        );
-      text-align: center;
-    }
-
-    .next-match-label {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 6px;
-    }
-
-    .next-match-teams {
-      margin-bottom: 5px;
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .next-match-date {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-
-    .next-match-timer {
-      direction: ltr;
-      color: var(--blue);
-      font-size: clamp(25px, 4vw, 38px);
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-
-    .next-match-status {
-      margin-top: 5px;
-      color: var(--green);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .matches-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .match-card {
-      position: relative;
-      padding: 17px;
+    .calendar-section {
+      background: rgba(16,30,49,0.9);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, .035);
-      transition: .2s;
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 18px;
     }
 
-    .match-card:hover {
-      border-color: rgba(56, 189, 248, .45);
-      transform: translateY(-2px);
-    }
-
-    .match-card.live {
-      border-color: rgba(34, 197, 94, .55);
-      box-shadow: 0 0 25px rgba(34, 197, 94, .08);
-    }
-
-    .match-card.finished {
-      opacity: .92;
-    }
-
-    .match-competition {
-      color: var(--muted);
-      font-size: 11px;
-      margin-bottom: 10px;
-    }
-
-    .match-teams {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
+    .calendar-header {
+      display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .month-title {
       text-align: center;
+      flex: 1;
     }
 
-    .team {
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .team.home {
-      text-align: right;
-    }
-
-    .team.away {
-      text-align: left;
-    }
-
-    .score-box {
-      min-width: 70px;
-    }
-
-    .score {
-      direction: ltr;
+    .month-title h2 {
       font-size: 25px;
       font-weight: 800;
     }
 
-    .match-time {
+    .month-title p {
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
       margin-top: 2px;
     }
 
-    .match-live-label {
-      color: var(--green);
-      font-weight: 800;
-      font-size: 11px;
-    }
-
-    .match-details {
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-
-    .goal-line {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin-bottom: 5px;
-      color: #e2e8f0;
-      font-size: 12px;
-    }
-
-    .goal-line .assist {
-      color: var(--muted);
-    }
-
-    .lineup-box {
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border);
-    }
-
-    .lineup-toggle {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 10px 12px;
+    .month-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
       border: 1px solid var(--border);
-      border-radius: 11px;
-      color: var(--gold);
-      background: rgba(255, 255, 255, .035);
-      font-size: 12px;
-      font-weight: 700;
-      text-align: right;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 18px;
+      transition: 0.2s;
     }
 
-    .lineup-toggle:hover {
-      border-color: var(--gold);
-      transform: none;
+    .month-btn:hover {
+      background: var(--blue);
     }
 
-    .lineup-arrow {
-      transition: .2s;
+    .weekdays,
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
     }
 
-    .lineup-toggle.open .lineup-arrow {
-      transform: rotate(180deg);
-    }
-
-    .lineup-content {
-      display: none;
-      margin-top: 8px;
-      padding: 10px;
-      border-radius: 11px;
-      background: rgba(255, 255, 255, .025);
-    }
-
-    .lineup-content.show {
-      display: block;
-    }
-
-    .lineup {
+    .weekday {
+      text-align: center;
       color: var(--muted);
       font-size: 11px;
-      line-height: 1.8;
+      padding: 6px 0;
+      font-weight: 700;
     }
 
-    .more-matches {
-      margin-top: 15px;
-      text-align: center;
+    .day {
+      position: relative;
+      min-height: 105px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.055);
+      border-radius: 15px;
+      padding: 10px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: 0.2s;
     }
 
-    .more-matches button {
-      font-size: 12px;
+    .day:hover {
+      transform: translateY(-2px);
+      border-color: rgba(22,137,255,0.45);
+      background: rgba(22,137,255,0.07);
     }
 
-    footer {
-      padding: 30px 0;
+    .day.empty {
+      background: transparent;
+      border-color: transparent;
+      cursor: default;
+    }
+
+    .day-number {
+      font-size: 15px;
+      font-weight: 800;
+      position: relative;
+      z-index: 2;
+    }
+
+    .day.today {
+      border: 2px solid var(--blue);
+      background: rgba(22,137,255,0.08);
+    }
+
+    .day.today .day-number {
+      color: var(--blue);
+    }
+
+    /* شعار الهلال أوضح في أيام المباريات */
+    .day.hilal-day::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(
+          to bottom,
+          rgba(7,17,31,0.55),
+          rgba(7,17,31,0.72)
+        ),
+        url("https://commons.wikimedia.org/wiki/Special:FilePath/Al_Hilal_SFC_Logo.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 95px;
+      opacity: 0.58;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .day.hilal-day {
+      border-color: rgba(22,137,255,0.45);
+    }
+
+    .day-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .day-events {
+      margin-top: 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .event-dot {
+      display: flex;
+      align-items: center;
+      gap: 5px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 9px;
+      line-height: 1.3;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-blue {
+      background: var(--blue);
+    }
+
+    .dot-green {
+      background: var(--green);
+    }
+
+    .dot-yellow {
+      background: var(--yellow);
+    }
+
+    .dot-red {
+      background: var(--red);
+    }
+
+    .more-events {
+      color: var(--blue);
+      font-size: 9px;
+      margin-top: 2px;
+    }
+
+    .matches-section {
+      background: rgba(16,30,49,0.9);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .matches {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .match {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 13px;
+      min-width: 0;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .match:hover {
+      border-color: rgba(22,137,255,0.45);
+      background: rgba(22,137,255,0.07);
+      transform: translateY(-2px);
+    }
+
+    .match-date {
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
       text-align: center;
+    }
+
+    .match-teams {
+      display: grid;
+      grid-template-columns: 1fr 30px 1fr;
+      align-items: center;
+      gap: 5px;
+      text-align: center;
+    }
+
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .team img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
+
+    .vs {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .competition {
+      text-align: center;
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 8px;
+    }
+
+    .match-time {
+      text-align: center;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .match-result {
+      text-align: center;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 800;
+      margin-top: 5px;
+    }
+
+    .match-status {
+      text-align: center;
+      color: var(--yellow);
+      font-size: 10px;
+      font-weight: 700;
+      margin-top: 4px;
     }
 
     .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(7px);
       display: none;
       align-items: center;
       justify-content: center;
-      position: fixed;
-      inset: 0;
-      z-index: 999;
       padding: 20px;
-      background: rgba(0, 0, 0, .75);
-      backdrop-filter: blur(8px);
+      z-index: 1000;
     }
 
     .modal-overlay.show {
@@ -734,282 +477,362 @@
     }
 
     .modal {
-      width: min(470px, 100%);
-      position: relative;
-      padding: 26px;
+      width: min(650px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #0d1a2b;
       border: 1px solid var(--border);
-      border-radius: 24px;
-      background: #111827;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, .5);
-      animation: modalIn .25s ease;
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.4);
     }
 
-    @keyframes modalIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px) scale(.96);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    .modal h2 {
-      margin-bottom: 5px;
-    }
-
-    .selected-date {
-      margin-bottom: 20px;
-      color: var(--gold);
-      font-size: 14px;
-    }
-
-    .close-modal {
-      width: 35px;
-      height: 35px;
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      padding: 0;
-      border-radius: 50%;
-      font-size: 24px;
-      line-height: 1;
-    }
-
-    .modal label {
-      display: block;
-      margin: 13px 0 6px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .modal input,
-    .modal select,
-    .modal textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      outline: none;
-      border-radius: 12px;
-      color: var(--text);
-      background: #0b1220;
-      font-family: inherit;
-    }
-
-    .modal input:focus,
-    .modal select:focus,
-    .modal textarea:focus {
-      border-color: var(--green);
-    }
-
-    .save-event {
-      width: 100%;
-      margin-top: 20px;
-      border: 0;
-      color: #04130a;
-      background: var(--green);
-      font-weight: 800;
-    }
-
-    .save-event:hover {
-      background: var(--green-light);
-    }
-
-    .countdown-modal {
-      width: min(520px, 100%);
-      text-align: center;
-    }
-
-    .countdown-event-icon {
-      margin-bottom: 8px;
-      font-size: 38px;
-    }
-
-    .countdown-event-title {
-      margin-bottom: 8px;
-      font-size: 24px;
-      font-weight: 800;
-    }
-
-    .countdown-event-date {
-      margin-bottom: 22px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .event-countdown-box {
-      padding: 22px 12px;
-      border: 1px solid rgba(34, 197, 94, .25);
-      border-radius: 18px;
-      background: rgba(34, 197, 94, .07);
-    }
-
-    .event-countdown-label {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 7px;
-    }
-
-    .event-countdown {
-      direction: ltr;
-      color: var(--green-light);
-      font-size: clamp(30px, 7vw, 50px);
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-
-    .event-countdown.finished {
-      color: var(--gold);
-    }
-
-    .event-countdown-note {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .close-countdown {
-      width: 100%;
-      margin-top: 18px;
-    }
-
-    .day-events-modal {
-      width: min(520px, 100%);
-    }
-
-    .day-events-header {
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 18px;
     }
 
-    .day-events-header h2 {
-      margin-bottom: 5px;
+    .modal-header h2 {
+      font-size: 20px;
     }
 
-    .day-events-date {
-      color: var(--gold);
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section-title {
       font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
     }
 
-    .day-events-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 360px;
-      overflow-y: auto;
+    .modal-match {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 15px;
+      padding: 14px;
+      margin-bottom: 8px;
+      cursor: pointer;
     }
 
-    .day-event-option {
-      width: 100%;
+    .modal-match-main {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      background: rgba(255, 255, 255, .045);
-      text-align: right;
-      transition: .2s;
     }
 
-    .day-event-option:hover {
-      border-color: var(--green);
-      background: rgba(34, 197, 94, .08);
-      transform: translateY(-2px);
-    }
-
-    .day-event-icon {
-      width: 42px;
-      height: 42px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, .07);
-      font-size: 21px;
-    }
-
-    .day-event-info {
-      min-width: 0;
+    .modal-team {
       flex: 1;
-    }
-
-    .day-event-title {
-      margin-bottom: 3px;
+      text-align: center;
+      font-size: 12px;
       font-weight: 700;
     }
 
-    .day-event-time {
-      color: var(--muted);
-      font-size: 12px;
+    .modal-team img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 6px;
     }
 
-    .add-day-event {
+    .modal-vs {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .modal-match-info {
+      text-align: center;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .match-countdown {
+      text-align: center;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    .score-editor {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .score-title {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+
+    .score-inputs {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .score-input {
       width: 100%;
-      margin-top: 15px;
-      border: 0;
-      color: #04130a;
-      background: var(--green);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+      outline: none;
+      font-size: 16px;
       font-weight: 800;
     }
 
-    .add-day-event:hover {
-      background: var(--green-light);
+    .score-input:focus {
+      border-color: var(--blue);
     }
 
-    @media (max-width: 900px) {
-      .hero,
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
+    .score-separator {
+      text-align: center;
+      color: var(--muted);
+      font-weight: 800;
+    }
 
+    .save-score {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 11px;
+      background: var(--green);
+      color: #04150e;
+      font-weight: 800;
+      font-size: 11px;
+      margin-top: 9px;
+    }
+
+    .custom-event {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .custom-event-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .custom-event-title {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .custom-event-type {
+      color: var(--blue);
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    .custom-event-time {
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .custom-event-description {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .delete-event {
+      margin-top: 8px;
+      border: none;
+      background: transparent;
+      color: var(--red);
+      font-size: 10px;
+      padding: 0;
+    }
+
+    .empty-state {
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+      padding: 12px;
+    }
+
+    .add-event-btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: white;
+      font-weight: 800;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .event-form {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .event-form.show {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 11px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 11px;
+      outline: none;
+      font-size: 11px;
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--blue);
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .form-buttons button {
+      flex: 1;
+      padding: 11px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .save-event {
+      background: var(--green);
+      color: #04150e;
+      border: none;
+    }
+
+    .cancel-event {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    @media (max-width: 1000px) {
       .prayer-grid {
         grid-template-columns: repeat(3, 1fr);
       }
 
-      .matches-grid {
-        grid-template-columns: 1fr;
+      .matches {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .day {
+        min-height: 90px;
       }
     }
 
-    @media (max-width: 520px) {
-      header {
-        align-items: flex-start;
+    @media (max-width: 700px) {
+      .container {
+        width: 96%;
+        padding-top: 15px;
       }
 
-      .controls {
-        width: 100%;
+      .header h1 {
+        font-size: 27px;
       }
 
-      .controls select,
-      .controls button {
-        flex: 1;
-      }
-
-      .hero-main,
-      .date-box,
-      .calendar-card,
-      .events-card,
-      .live-card {
-        padding: 18px;
+      .top-info {
+        grid-template-columns: 1fr;
       }
 
       .prayer-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
+      .matches {
+        grid-template-columns: 1fr;
+      }
+
+      .weekdays,
+      .calendar-grid {
+        gap: 4px;
+      }
+
       .day {
-        min-height: 55px;
+        min-height: 75px;
+        padding: 7px;
+        border-radius: 10px;
+      }
+
+      .day-number {
         font-size: 13px;
       }
 
-      .countdown {
-        font-size: 27px;
+      .event-dot {
+        font-size: 8px;
       }
 
-      .event {
-        padding-left: 62px;
+      .month-title h2 {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .prayer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .day {
+        min-height: 65px;
+      }
+
+      .event-dot span {
+        display: none;
       }
     }
   </style>
@@ -1017,1119 +840,1390 @@
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <header>
+  <header class="header">
+    <div class="header-icon">🌙</div>
+    <h1>التقويم</h1>
+    <p>التاريخ، مواقيت الصلاة، المناسبات، ومباريات الهلال</p>
+  </header>
 
-      <div class="brand">
+  <section class="top-info">
 
-        <div class="brand-icon">
-          📅
-        </div>
+    <div class="info-card">
+      <div class="info-label">التاريخ الميلادي</div>
+      <div class="info-value" id="gregorianDate">--</div>
+    </div>
 
-        <div>
+    <div class="info-card">
+      <div class="info-label">التاريخ الهجري</div>
+      <div class="info-value" id="hijriDate">--</div>
+    </div>
 
-          <h1>
-            Calendar
-          </h1>
+    <div class="info-card">
+      <div class="info-label">اليوم</div>
+      <div class="info-value" id="dayName">--</div>
+    </div>
 
-          <div class="subtitle">
-            مواقيت الصلاة والمناسبات والمواعيد
-          </div>
+  </section>
 
-        </div>
-
-      </div>
-
-      <div class="controls">
-
-        <select id="citySelect">
-
-          <option value="Riyadh">
-            الرياض
-          </option>
-
-          <option value="Makkah">
-            مكة المكرمة
-          </option>
-
-          <option value="Madinah">
-            المدينة المنورة
-          </option>
-
-          <option value="Jeddah">
-            جدة
-          </option>
-
-          <option value="Dammam">
-            الدمام
-          </option>
-
-          <option value="Abha">
-            أبها
-          </option>
-
-        </select>
-
-        <button id="refreshBtn">
-          تحديث المواقيت
-        </button>
-
-      </div>
-
-    </header>
-
-
-    <section class="hero">
-
-      <div class="card hero-main">
-
-        <div
-          class="location"
-          id="locationText"
-        >
-          مواقيت الصلاة في الرياض
-        </div>
-
-        <div
-          class="today"
-          id="gregorianDate"
-        >
-          جاري التحميل...
-        </div>
-
-        <div
-          class="hijri"
-          id="hijriDate"
-        >
-          جاري تحميل التاريخ الهجري...
-        </div>
-
-        <div class="next-label">
-          الصلاة القادمة
-        </div>
-
-        <div class="next-prayer">
-
-          <div
-            class="next-prayer-name"
-            id="nextPrayerName"
-          >
-            --
-          </div>
-
-          <div
-            class="countdown"
-            id="countdown"
-          >
-            --:--:--
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="card date-box">
-
-        <div
-          class="clock"
-          id="clock"
-        >
-          --:--:--
-        </div>
-
-        <p>
-          الوقت الحالي
-        </p>
-
-        <p id="weekday">
-          --
-        </p>
-
-      </div>
-
-    </section>
-
+  <section class="prayer-section">
 
     <div class="section-title">
+      <h2>مواقيت الصلاة</h2>
+      <span>الرياض</span>
+    </div>
 
-      <h2>
-        مواقيت اليوم
-      </h2>
+    <div class="prayer-grid">
 
-      <span id="lastUpdated">
-        جاري التحميل...
-      </span>
+      <div class="prayer-card">
+        <div class="prayer-name">الفجر</div>
+        <div class="prayer-time">4:30 ص</div>
+      </div>
+
+      <div class="prayer-card">
+        <div class="prayer-name">الشروق</div>
+        <div class="prayer-time">5:50 ص</div>
+      </div>
+
+      <div class="prayer-card">
+        <div class="prayer-name">الظهر</div>
+        <div class="prayer-time">11:55 ص</div>
+      </div>
+
+      <div class="prayer-card">
+        <div class="prayer-name">العصر</div>
+        <div class="prayer-time">3:20 م</div>
+      </div>
+
+      <div class="prayer-card">
+        <div class="prayer-name">المغرب</div>
+        <div class="prayer-time">6:15 م</div>
+      </div>
+
+      <div class="prayer-card">
+        <div class="prayer-name">العشاء</div>
+        <div class="prayer-time">7:45 م</div>
+      </div>
 
     </div>
 
+    <div class="next-prayer" id="nextPrayer">
+      جاري حساب الصلاة القادمة...
+    </div>
 
-    <section
-      class="prayer-grid"
-      id="prayerGrid"
-    ></section>
+  </section>
 
+  <section class="calendar-section">
 
-    <section class="dashboard">
+    <div class="calendar-header">
 
-      <div class="card calendar-card">
+      <button class="month-btn" id="prevMonth">‹</button>
 
-        <div class="calendar-head">
-
-          <button id="prevMonth">
-            ‹
-          </button>
-
-          <h2 id="monthTitle">
-            --
-          </h2>
-
-          <button id="nextMonth">
-            ›
-          </button>
-
-        </div>
-
-
-        <div class="weekdays">
-
-          <div>الأحد</div>
-          <div>الإثنين</div>
-          <div>الثلاثاء</div>
-          <div>الأربعاء</div>
-          <div>الخميس</div>
-          <div>الجمعة</div>
-          <div>السبت</div>
-
-        </div>
-
-
-        <div
-          class="days"
-          id="calendarDays"
-        ></div>
-
+      <div class="month-title">
+        <h2 id="monthTitle">--</h2>
+        <p id="monthHijri">--</p>
       </div>
 
+      <button class="month-btn" id="nextMonth">›</button>
 
-      <div class="card events-card">
+    </div>
 
-        <div
-          class="section-title"
-          style="margin-top: 0;"
-        >
+    <div class="weekdays">
+      <div class="weekday">الأحد</div>
+      <div class="weekday">الإثنين</div>
+      <div class="weekday">الثلاثاء</div>
+      <div class="weekday">الأربعاء</div>
+      <div class="weekday">الخميس</div>
+      <div class="weekday">الجمعة</div>
+      <div class="weekday">السبت</div>
+    </div>
 
-          <h2>
-            أحداث الشهر
-          </h2>
+    <div class="calendar-grid" id="calendarGrid"></div>
 
-          <span>
-            اضغط على الحدث للعد التنازلي
-          </span>
+  </section>
 
-        </div>
+  <section class="matches-section">
 
-        <div id="eventsList"></div>
+    <div class="section-title">
+      <h2>المباريات القادمة للهلال</h2>
+      <span>6 مباريات</span>
+    </div>
 
+    <div class="matches" id="matchesContainer"></div>
+
+  </section>
+
+</div>
+
+<div class="modal-overlay" id="dayModal">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <h2 id="modalDateTitle">تفاصيل اليوم</h2>
+      <button class="close-btn" id="closeModal">×</button>
+    </div>
+
+    <div class="modal-section">
+
+      <div class="modal-section-title">
+        مباريات الهلال
       </div>
 
-    </section>
+      <div id="modalMatches"></div>
 
+    </div>
 
-    <section class="live-section">
+    <div class="modal-section">
 
-      <div class="card live-card">
-
-        <div class="live-header">
-
-          <div class="live-title">
-
-            <span>⚽</span>
-
-            <h2>
-              مباريات الهلال
-            </h2>
-
-          </div>
-
-          <div class="live-status">
-
-            <span class="live-dot"></span>
-
-            <span id="footballUpdateStatus">
-              جاري تحديث المباريات...
-            </span>
-
-          </div>
-
-        </div>
-
-
-        <div
-          id="nextMatchCountdown"
-          class="next-match-countdown"
-        ></div>
-
-
-        <div
-          id="matchesGrid"
-          class="matches-grid"
-        ></div>
-
-
-        <div
-          id="moreMatches"
-          class="more-matches"
-        ></div>
-
+      <div class="modal-section-title">
+        مواعيدك وفعالياتك
       </div>
 
-    </section>
+      <div id="modalEvents"></div>
 
+    </div>
 
-    <footer>
-      Calendar
-    </footer>
+    <button class="add-event-btn" id="showEventForm">
+      + إضافة حدث أو موعد
+    </button>
 
-  </div>
+    <form class="event-form" id="eventForm">
 
-
-  <div
-    class="modal-overlay"
-    id="eventModal"
-  >
-
-    <div class="modal">
-
-      <button
-        class="close-modal"
-        id="closeModal"
-      >
-        ×
-      </button>
-
-      <h2>
-        إضافة حدث
-      </h2>
-
-      <p
-        class="selected-date"
-        id="selectedDateText"
-      ></p>
-
-      <form id="eventForm">
-
-        <input
-          type="hidden"
-          id="eventDate"
-        >
-
-        <label for="eventTitle">
-          اسم الحدث
-        </label>
-
+      <div class="form-group">
+        <label>العنوان</label>
         <input
           type="text"
           id="eventTitle"
-          placeholder="مثال: اجتماع، موعد، مباراة..."
+          placeholder="مثال: اجتماع"
           required
         >
+      </div>
 
-        <label for="eventType">
-          نوع الحدث
-        </label>
+      <div class="form-group">
+        <label>النوع</label>
 
         <select id="eventType">
-
-          <option value="personal">
-            موعد شخصي
-          </option>
-
-          <option value="match">
-            مباراة
-          </option>
-
-          <option value="holiday">
-            إجازة
-          </option>
-
-          <option value="islamic">
-            مناسبة إسلامية
-          </option>
-
-          <option value="national">
-            مناسبة وطنية
-          </option>
-
-          <option value="reminder">
-            تذكير
-          </option>
-
+          <option value="حدث">حدث</option>
+          <option value="فعالية">فعالية</option>
+          <option value="موعد">موعد</option>
         </select>
 
-        <label for="eventTime">
-          الوقت
-        </label>
+      </div>
+
+      <div class="form-group">
+        <label>الوقت</label>
 
         <input
           type="time"
           id="eventTime"
         >
 
-        <label for="eventNotes">
-          ملاحظات
-        </label>
+      </div>
+
+      <div class="form-group">
+        <label>الوصف</label>
 
         <textarea
-          id="eventNotes"
-          rows="3"
-          placeholder="اكتب أي ملاحظات..."
+          id="eventDescription"
+          placeholder="وصف اختياري..."
         ></textarea>
+
+      </div>
+
+      <div class="form-buttons">
 
         <button
           type="submit"
           class="save-event"
         >
-          حفظ الحدث
+          حفظ
         </button>
 
-      </form>
+        <button
+          type="button"
+          class="cancel-event"
+          id="cancelEvent"
+        >
+          إلغاء
+        </button>
 
-    </div>
+      </div>
+
+    </form>
 
   </div>
 
+</div>
 
-  <div
-    class="modal-overlay"
-    id="countdownModal"
-  >
+<script>
 
-    <div class="modal countdown-modal">
+  const today = new Date();
 
-      <button
-        class="close-modal"
-        id="closeCountdownModal"
-      >
-        ×
-      </button>
+  let currentCalendarDate = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    1
+  );
 
-      <div
-        class="countdown-event-icon"
-        id="countdownEventIcon"
-      >
-        📅
-      </div>
+  let selectedDateKey = null;
 
-      <div
-        class="countdown-event-title"
-        id="countdownEventTitle"
-      >
-        --
-      </div>
+  const monthNames = [
+    "يناير",
+    "فبراير",
+    "مارس",
+    "أبريل",
+    "مايو",
+    "يونيو",
+    "يوليو",
+    "أغسطس",
+    "سبتمبر",
+    "أكتوبر",
+    "نوفمبر",
+    "ديسمبر"
+  ];
 
-      <div
-        class="countdown-event-date"
-        id="countdownEventDate"
-      >
-        --
-      </div>
+  const dayNames = [
+    "الأحد",
+    "الإثنين",
+    "الثلاثاء",
+    "الأربعاء",
+    "الخميس",
+    "الجمعة",
+    "السبت"
+  ];
 
-      <div class="event-countdown-box">
+  const logos = {
 
-        <div class="event-countdown-label">
-          الوقت المتبقي
-        </div>
+    hilal:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Al_Hilal_SFC_Logo.svg",
 
-        <div
-          class="event-countdown"
-          id="eventCountdown"
-        >
-          --:--:--
-        </div>
+    ittihad:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Al-Ittihad_logo.png",
 
-        <div
-          class="event-countdown-note"
-          id="eventCountdownNote"
-        >
-          --
-        </div>
+    sadd:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20Al-Sadd%20Sports%20Club.png",
 
-      </div>
+    qadsiah:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Al-Qadsiah%20Logo.svg",
 
-      <button
-        type="button"
-        class="close-countdown"
-        id="closeCountdownButton"
-      >
-        إغلاق
-      </button>
+    fateh:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Al_Fateh_SC_Logo.svg",
 
-    </div>
+    hazem:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Al-Hazem%20SC%20logo.png"
+  };
 
-  </div>
+  const hilalMatches = [
+    { start:"2026-09-15T21:15:00+03:00", home:"الهلال", away:"الغرافة", competition:"دوري أبطال آسيا للنخبة", homeLogo:logos.hilal, awayLogo:"", venue:"المملكة أرينا" },
+    { start:"2026-10-10T21:00:00+03:00", home:"الهلال", away:"الاتحاد", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:logos.ittihad, venue:"المملكة أرينا" },
+    { start:"2026-10-13T19:00:00+03:00", home:"السد", away:"الهلال", competition:"دوري أبطال آسيا للنخبة", homeLogo:logos.sadd, awayLogo:logos.hilal, venue:"استاد جاسم بن حمد" },
+    { start:"2026-10-16T18:00:00+03:00", home:"الرياض", away:"الهلال", competition:"الدوري السعودي", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2026-10-19T21:00:00+03:00", home:"الهلال", away:"الحزم", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:logos.hazem, venue:"" },
+    { start:"2026-10-23T21:00:00+03:00", home:"القادسية", away:"الهلال", competition:"الدوري السعودي", homeLogo:logos.qadsiah, awayLogo:logos.hilal, venue:"" },
+    { start:"2026-10-27T21:15:00+03:00", home:"الشمال", away:"الهلال", competition:"دوري أبطال آسيا للنخبة", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2026-10-31T21:00:00+03:00", home:"الهلال", away:"الفتح", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:logos.fateh, venue:"" },
+    { start:"2026-11-03T21:15:00+03:00", home:"الهلال", away:"شباب الأهلي", competition:"دوري أبطال آسيا للنخبة", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2026-11-05T20:00:00+03:00", home:"الاتفاق", away:"الهلال", competition:"الدوري السعودي", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2026-11-20T20:00:00+03:00", home:"الهلال", away:"الدرعية", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2026-11-23T16:45:00+03:00", home:"نفطتشي فرغانة", away:"الهلال", competition:"دوري أبطال آسيا للنخبة", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2026-11-26T20:00:00+03:00", home:"الخلود", away:"الهلال", competition:"الدوري السعودي", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2026-11-30T20:00:00+03:00", home:"الهلال", away:"الحزم", competition:"كأس الملك", homeLogo:logos.hilal, awayLogo:logos.hazem, venue:"" },
+    { start:"2026-12-03T20:00:00+03:00", home:"الهلال", away:"أبها", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2026-12-07T21:15:00+03:00", home:"الهلال", away:"العين", competition:"دوري أبطال آسيا للنخبة", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2026-12-10T20:00:00+03:00", home:"النصر", away:"الهلال", competition:"الدوري السعودي", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2026-12-14T20:00:00+03:00", home:"الفيصلي", away:"الهلال", competition:"الدوري السعودي", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2027-02-09T19:00:00+03:00", home:"الوصل", away:"الهلال", competition:"دوري أبطال آسيا للنخبة", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2027-02-11T22:00:00+03:00", home:"الهلال", away:"الفيحاء", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2027-02-15T21:15:00+03:00", home:"الهلال", away:"باختاكور", competition:"دوري أبطال آسيا للنخبة", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2027-02-18T22:00:00+03:00", home:"الأهلي", away:"الهلال", competition:"الدوري السعودي", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2027-02-25T22:00:00+03:00", home:"الهلال", away:"الخليج", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2027-03-11T21:00:00+03:00", home:"الهلال", away:"الشباب", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2027-03-18T21:00:00+03:00", home:"نيوم", away:"الهلال", competition:"الدوري السعودي", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2027-04-02T21:00:00+03:00", home:"الهلال", away:"التعاون", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2027-04-08T21:00:00+03:00", home:"الاتحاد", away:"الهلال", competition:"الدوري السعودي", homeLogo:logos.ittihad, awayLogo:logos.hilal, venue:"" },
+    { start:"2027-04-15T21:00:00+03:00", home:"الهلال", away:"الرياض", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2027-04-18T21:00:00+03:00", home:"الحزم", away:"الهلال", competition:"الدوري السعودي", homeLogo:logos.hazem, awayLogo:logos.hilal, venue:"" },
+    { start:"2027-04-22T21:00:00+03:00", home:"الهلال", away:"القادسية", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:logos.qadsiah, venue:"" },
+    { start:"2027-04-29T21:00:00+03:00", home:"الفتح", away:"الهلال", competition:"الدوري السعودي", homeLogo:logos.fateh, awayLogo:logos.hilal, venue:"" },
+    { start:"2027-05-06T21:00:00+03:00", home:"الهلال", away:"الاتفاق", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2027-05-12T21:00:00+03:00", home:"الدرعية", away:"الهلال", competition:"الدوري السعودي", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2027-05-20T21:00:00+03:00", home:"الهلال", away:"الخلود", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:"", venue:"" },
+    { start:"2027-05-24T21:00:00+03:00", home:"أبها", away:"الهلال", competition:"الدوري السعودي", homeLogo:"", awayLogo:logos.hilal, venue:"" },
+    { start:"2027-05-29T21:00:00+03:00", home:"الهلال", away:"النصر", competition:"الدوري السعودي", homeLogo:logos.hilal, awayLogo:"", venue:"" }
+  ];
 
+  function getUniqueMatches() {
+    const seen = new Set();
 
-  <div
-    class="modal-overlay"
-    id="dayEventsModal"
-  >
+    return hilalMatches.filter(match => {
 
-    <div class="modal day-events-modal">
+      const start = new Date(match.start);
 
-      <button
-        class="close-modal"
-        id="closeDayEventsModal"
-      >
-        ×
-      </button>
+      const key = [
+        start.getTime(),
+        match.home.trim().toLowerCase(),
+        match.away.trim().toLowerCase(),
+        match.competition.trim().toLowerCase()
+      ].join("|");
 
-      <div class="day-events-header">
-
-        <h2>
-          أحداث اليوم
-        </h2>
-
-        <div
-          class="day-events-date"
-          id="dayEventsDate"
-        >
-          --
-        </div>
-
-      </div>
-
-      <div
-        class="day-events-list"
-        id="dayEventsList"
-      ></div>
-
-      <button
-        type="button"
-        class="add-day-event"
-        id="addDayEventButton"
-      >
-        ＋ إضافة حدث جديد
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <script>
-
-    /* =========================================================
-       مواقيت الصلاة
-    ========================================================= */
-
-    const prayerNames = {
-      Fajr: "الفجر",
-      Sunrise: "الشروق",
-      Dhuhr: "الظهر",
-      Asr: "العصر",
-      Maghrib: "المغرب",
-      Isha: "العشاء"
-    };
-
-    const prayerIcons = {
-      Fajr: "🌌",
-      Sunrise: "🌅",
-      Dhuhr: "☀️",
-      Asr: "🌤️",
-      Maghrib: "🌇",
-      Isha: "🌙"
-    };
-
-    const cityArabic = {
-      Riyadh: "الرياض",
-      Makkah: "مكة المكرمة",
-      Madinah: "المدينة المنورة",
-      Jeddah: "جدة",
-      Dammam: "الدمام",
-      Abha: "أبها"
-    };
-
-    let currentCity = "Riyadh";
-    let prayerTimes = {};
-    let countdownTimer = null;
-    let calendarDate = new Date();
-
-    let eventCountdownTimer = null;
-    let selectedCountdownEvent = null;
-
-    let selectedDayForEvents = null;
-
-    let hilalCountdownTimer = null;
-
-    const officialEvents = [
-
-      {
-        date: "2026-02-22",
-        title: "يوم التأسيس السعودي",
-        type: "holiday",
-        time: "",
-        notes: "إجازة رسمية في المملكة العربية السعودية"
-      },
-
-      {
-        date: "2026-03-20",
-        title: "عيد الفطر المبارك",
-        type: "holiday",
-        time: "",
-        notes: "أول أيام عيد الفطر المبارك"
-      },
-
-      {
-        date: "2026-05-27",
-        title: "عيد الأضحى المبارك",
-        type: "holiday",
-        time: "",
-        notes: "أول أيام عيد الأضحى المبارك"
-      },
-
-      {
-        date: "2026-09-23",
-        title: "اليوم الوطني السعودي",
-        type: "holiday",
-        time: "",
-        notes: "اليوم الوطني للمملكة العربية السعودية"
-      },
-
-      {
-        date: "2026-03-11",
-        title: "يوم العلم السعودي",
-        type: "national",
-        time: "",
-        notes: "مناسبة وطنية — ليست إجازة رسمية"
+      if (seen.has(key)) {
+        return false;
       }
 
-    ];
+      seen.add(key);
 
-    let events = [];
+      return true;
+    });
+  }
 
+  const events = [
+    {
+      date: "2026-02-22",
+      title: "يوم التأسيس",
+      type: "حدث"
+    },
+    {
+      date: "2026-09-23",
+      title: "اليوم الوطني السعودي",
+      type: "حدث"
+    },
+    {
+      date: "2027-02-22",
+      title: "يوم التأسيس",
+      type: "حدث"
+    },
+    {
+      date: "2027-09-23",
+      title: "اليوم الوطني السعودي",
+      type: "حدث"
+    }
+  ];
+
+  function getUniqueEvents(eventList) {
+    const seen = new Set();
+
+    return eventList.filter(event => {
+
+      const key =
+        `${event.date}|${event.title.trim().toLowerCase()}`;
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+
+      return true;
+    });
+  }
+
+  function getCustomEvents() {
     try {
 
-      events = JSON.parse(
-        localStorage.getItem(
-          "myCalendarEvents"
-        ) || "[]"
-      );
+      const saved =
+        JSON.parse(
+          localStorage.getItem("myCalendarEvents") || "[]"
+        );
+
+      if (!Array.isArray(saved)) {
+        return [];
+      }
+
+      return saved;
 
     } catch (error) {
-
-      events = [];
-
+      return [];
     }
+  }
 
-    if (!Array.isArray(events)) {
-      events = [];
-    }
+  function saveCustomEvents(eventsList) {
+    localStorage.setItem(
+      "myCalendarEvents",
+      JSON.stringify(eventsList)
+    );
+  }
 
-    function saveEvents() {
+  function getMatchResults() {
+    try {
 
-      try {
-
-        localStorage.setItem(
-          "myCalendarEvents",
-          JSON.stringify(events)
+      const saved =
+        JSON.parse(
+          localStorage.getItem("hilalMatchResults") || "{}"
         );
 
-      } catch (error) {
-
-        console.error(
-          "تعذر حفظ الأحداث:",
-          error
-        );
-
+      if (!saved || typeof saved !== "object") {
+        return {};
       }
 
+      return saved;
+
+    } catch (error) {
+      return {};
     }
+  }
 
-    function addOfficialEvents() {
+  function saveMatchResults(results) {
+    localStorage.setItem(
+      "hilalMatchResults",
+      JSON.stringify(results)
+    );
+  }
 
-      let changed = false;
+  function getMatchKey(match) {
+    return [
+      match.start,
+      match.home,
+      match.away
+    ].join("|");
+  }
 
-      officialEvents.forEach(
-        newEvent => {
+  function getMatchResult(match) {
+    const results = getMatchResults();
 
-          const exists =
-            events.some(
-              event =>
-                event.date === newEvent.date &&
-                event.title === newEvent.title
-            );
+    return results[getMatchKey(match)] || null;
+  }
 
-          if (!exists) {
+  function dateKey(year, month, day) {
+    return [
+      year,
+      String(month + 1).padStart(2, "0"),
+      String(day).padStart(2, "0")
+    ].join("-");
+  }
 
-            events.push({
-              ...newEvent,
-              systemEvent: true
-            });
+  function matchDateKey(match) {
+    const date = new Date(match.start);
 
-            changed = true;
+    return dateKey(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+  }
 
-          }
-
-        }
-      );
-
-      if (changed) {
-        saveEvents();
-      }
-
-    }
-
-    addOfficialEvents();
-
-    function formatDate(date) {
-
-      const year =
-        date.getFullYear();
-
-      const month =
-        String(
-          date.getMonth() + 1
-        ).padStart(2, "0");
-
-      const day =
-        String(
-          date.getDate()
-        ).padStart(2, "0");
-
-      return `${year}-${month}-${day}`;
-
-    }
-
-    function formatArabicDate(date) {
+  function getHijriDate(date) {
+    try {
 
       return new Intl.DateTimeFormat(
-        "ar-SA",
+        "ar-SA-u-ca-islamic-umalqura",
         {
-          weekday: "long",
-          year: "numeric",
+          day: "numeric",
           month: "long",
-          day: "numeric"
+          year: "numeric"
         }
       ).format(date);
 
+    } catch (error) {
+      return "";
     }
+  }
 
-    function formatApiDate(date) {
+  function renderTopDate() {
 
-      const day =
-        String(
-          date.getDate()
-        ).padStart(2, "0");
+    const now = new Date();
 
-      const month =
-        String(
-          date.getMonth() + 1
-        ).padStart(2, "0");
-
-      const year =
-        date.getFullYear();
-
-      return `${day}-${month}-${year}`;
-
-    }
-
-    function formatTimeArabic(time) {
-
-      if (
-        !time ||
-        !String(time).includes(":")
-      ) {
-        return time || "--:--";
-      }
-
-      const [
-        hours,
-        minutes
-      ] =
-        String(time)
-          .split(":")
-          .map(Number);
-
-      if (
-        Number.isNaN(hours) ||
-        Number.isNaN(minutes)
-      ) {
-        return time;
-      }
-
-      const suffix =
-        hours >= 12
-          ? "م"
-          : "ص";
-
-      let hour =
-        hours % 12;
-
-      if (hour === 0) {
-        hour = 12;
-      }
-
-      return `${hour}:${String(
-        minutes
-      ).padStart(
-        2,
-        "0"
-      )} ${suffix}`;
-
-    }
-
-    function updateClock() {
-
-      const now = new Date();
-
-      document.getElementById(
-        "clock"
-      ).textContent =
-        now.toLocaleTimeString(
-          "ar-SA",
-          {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true
-          }
-        );
-
-      document.getElementById(
-        "gregorianDate"
-      ).textContent =
-        formatArabicDate(now);
-
-      document.getElementById(
-        "weekday"
-      ).textContent =
-        new Intl.DateTimeFormat(
-          "ar-SA",
-          {
-            weekday: "long"
-          }
-        ).format(now);
-
-    }
-
-    async function loadPrayerTimes() {
-
-      const date =
-        formatApiDate(
-          new Date()
-        );
-
-      const url =
-        `https://api.aladhan.com/v1/timingsByCity/${date}` +
-        `?city=${encodeURIComponent(currentCity)}` +
-        `&country=Saudi%20Arabia&method=4`;
-
-      try {
-
-        document.getElementById(
-          "lastUpdated"
-        ).textContent =
-          "جاري التحديث...";
-
-        const response =
-          await fetch(url);
-
-        if (!response.ok) {
-
-          throw new Error(
-            `HTTP Error: ${response.status}`
-          );
-
+    document.getElementById("gregorianDate").textContent =
+      new Intl.DateTimeFormat(
+        "ar-SA",
+        {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
         }
+      ).format(now);
+
+    document.getElementById("hijriDate").textContent =
+      getHijriDate(now);
+
+    document.getElementById("dayName").textContent =
+      dayNames[now.getDay()];
+  }
+
+  const prayers = [
+    { name: "الفجر", time: "04:30" },
+    { name: "الشروق", time: "05:50" },
+    { name: "الظهر", time: "11:55" },
+    { name: "العصر", time: "15:20" },
+    { name: "المغرب", time: "18:15" },
+    { name: "العشاء", time: "19:45" }
+  ];
+
+  function format12HourFromString(time) {
+
+    if (!time) {
+      return "";
+    }
+
+    const [hour, minute] =
+      time.split(":").map(Number);
+
+    const date =
+      new Date(
+        2000,
+        0,
+        1,
+        hour,
+        minute
+      );
+
+    return new Intl.DateTimeFormat(
+      "ar-SA",
+      {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      }
+    ).format(date);
+  }
+
+  function renderPrayerCountdown() {
+
+    const now = new Date();
+
+    let next = null;
+
+    for (const prayer of prayers) {
+
+      const [hours, minutes] =
+        prayer.time.split(":").map(Number);
+
+      const prayerDate =
+        new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          hours,
+          minutes,
+          0
+        );
+
+      if (prayerDate > now) {
+
+        next = {
+          ...prayer,
+          date: prayerDate
+        };
+
+        break;
+      }
+    }
+
+    if (!next) {
+
+      const [hours, minutes] =
+        prayers[0].time.split(":").map(Number);
+
+      const tomorrow =
+        new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate() + 1,
+          hours,
+          minutes,
+          0
+        );
+
+      next = {
+        ...prayers[0],
+        date: tomorrow
+      };
+    }
+
+    const diff =
+      next.date.getTime() - now.getTime();
+
+    const totalSeconds =
+      Math.floor(diff / 1000);
+
+    const hours =
+      Math.floor(totalSeconds / 3600);
+
+    const minutes =
+      Math.floor((totalSeconds % 3600) / 60);
+
+    const seconds =
+      totalSeconds % 60;
+
+    document.getElementById("nextPrayer").innerHTML =
+      `الصلاة القادمة: <strong>${next.name}</strong>
+       — بعد
+       <strong>
+       ${String(hours).padStart(2, "0")}:
+       ${String(minutes).padStart(2, "0")}:
+       ${String(seconds).padStart(2, "0")}
+       </strong>`;
+  }
+
+  function hilalMatchesForDate(key) {
+
+    const uniqueMatches =
+      getUniqueMatches();
+
+    return uniqueMatches.filter(
+      match => matchDateKey(match) === key
+    );
+  }
+
+  function getAllUniqueEvents() {
+
+    const builtInEvents =
+      getUniqueEvents(events);
+
+    const customEvents =
+      getCustomEvents();
+
+    const combined = [
+      ...builtInEvents,
+      ...customEvents
+    ];
+
+    const seen = new Set();
+
+    return combined.filter(event => {
+
+      const key =
+        `${event.date}|${event.title.trim().toLowerCase()}`;
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+
+      return true;
+    });
+  }
+
+  function renderCalendar() {
+
+    const grid =
+      document.getElementById("calendarGrid");
+
+    grid.innerHTML = "";
+
+    const year =
+      currentCalendarDate.getFullYear();
+
+    const month =
+      currentCalendarDate.getMonth();
+
+    document.getElementById("monthTitle").textContent =
+      `${monthNames[month]} ${year}`;
+
+    document.getElementById("monthHijri").textContent =
+      getHijriDate(
+        new Date(year, month, 1)
+      );
+
+    const firstDay =
+      new Date(year, month, 1).getDay();
+
+    const daysInMonth =
+      new Date(year, month + 1, 0).getDate();
+
+    const uniqueMatches =
+      getUniqueMatches();
+
+    const allUniqueEvents =
+      getAllUniqueEvents();
+
+    for (let i = 0; i < firstDay; i++) {
+
+      const empty =
+        document.createElement("div");
+
+      empty.className = "day empty";
+
+      grid.appendChild(empty);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+
+      const key =
+        dateKey(year, month, day);
+
+      const dayElement =
+        document.createElement("div");
+
+      dayElement.className = "day";
+
+      const isToday =
+        key === dateKey(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate()
+        );
+
+      if (isToday) {
+        dayElement.classList.add("today");
+      }
+
+      const dayMatches =
+        uniqueMatches.filter(
+          match => matchDateKey(match) === key
+        );
+
+      if (dayMatches.length > 0) {
+        dayElement.classList.add("hilal-day");
+      }
+
+      const dayEvents =
+        allUniqueEvents.filter(
+          event => event.date === key
+        );
+
+      const content =
+        document.createElement("div");
+
+      content.className = "day-content";
+
+      const number =
+        document.createElement("div");
+
+      number.className = "day-number";
+      number.textContent = day;
+
+      content.appendChild(number);
+
+      const eventContainer =
+        document.createElement("div");
+
+      eventContainer.className =
+        "day-events";
+
+      let displayedEvents = 0;
+
+      if (dayMatches.length > 0) {
+
+        const matchEvent =
+          document.createElement("div");
+
+        matchEvent.className =
+          "event-dot";
+
+        matchEvent.innerHTML =
+          `<span class="dot dot-blue"></span>
+           <span>مباراة الهلال</span>`;
+
+        eventContainer.appendChild(matchEvent);
+
+        displayedEvents++;
+      }
+
+      for (const event of dayEvents) {
+
+        if (displayedEvents >= 3) {
+          break;
+        }
+
+        const eventElement =
+          document.createElement("div");
+
+        eventElement.className =
+          "event-dot";
+
+        let dotClass = "dot-yellow";
+
+        if (event.type === "فعالية") {
+          dotClass = "dot-green";
+        }
+
+        if (event.type === "موعد") {
+          dotClass = "dot-red";
+        }
+
+        eventElement.innerHTML =
+          `<span class="dot ${dotClass}"></span>
+           <span>${escapeHTML(event.title)}</span>`;
+
+        eventContainer.appendChild(eventElement);
+
+        displayedEvents++;
+      }
+
+      const totalItems =
+        (dayMatches.length > 0 ? 1 : 0) +
+        dayEvents.length;
+
+      if (totalItems > displayedEvents) {
+
+        const more =
+          document.createElement("div");
+
+        more.className =
+          "more-events";
+
+        more.textContent =
+          `+${totalItems - displayedEvents} المزيد`;
+
+        eventContainer.appendChild(more);
+      }
+
+      content.appendChild(eventContainer);
+      dayElement.appendChild(content);
+
+      dayElement.addEventListener(
+        "click",
+        function() {
+          openDayModal(key);
+        }
+      );
+
+      grid.appendChild(dayElement);
+    }
+  }
+
+  function getCurrentMatchIndex() {
+
+    const uniqueMatches =
+      getUniqueMatches();
+
+    const now =
+      new Date();
+
+    for (
+      let i = 0;
+      i < uniqueMatches.length;
+      i++
+    ) {
+
+      const matchDate =
+        new Date(
+          uniqueMatches[i].start
+        );
+
+      const matchEnd =
+        new Date(
+          matchDate.getTime() +
+          3 * 60 * 60 * 1000
+        );
+
+      if (now < matchEnd) {
+        return i;
+      }
+    }
+
+    return uniqueMatches.length;
+  }
+
+  function formatMatchDate(date) {
+
+    return new Intl.DateTimeFormat(
+      "ar-SA",
+      {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      }
+    ).format(date);
+  }
+
+  function formatMatchTime(date) {
+
+    return new Intl.DateTimeFormat(
+      "ar-SA",
+      {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      }
+    ).format(date);
+  }
+
+  function logoHTML(src, teamName) {
+
+    if (src) {
+
+      return `
+        <img
+          src="${src}"
+          alt="${escapeHTML(teamName)}"
+          onerror="this.style.display='none'"
+        >
+      `;
+    }
+
+    return `
+      <div
+        style="
+          width:34px;
+          height:34px;
+          border-radius:50%;
+          background:rgba(255,255,255,0.06);
+        "
+      ></div>
+    `;
+  }
+
+  function getMatchStatus(match) {
+
+    const now =
+      new Date();
+
+    const start =
+      new Date(match.start);
+
+    const end =
+      new Date(
+        start.getTime() +
+        3 * 60 * 60 * 1000
+      );
+
+    if (now < start) {
+
+      return {
+        type: "upcoming",
+        text: ""
+      };
+    }
+
+    if (now < end) {
+
+      return {
+        type: "live",
+        text: "المباراة بدأت"
+      };
+    }
+
+    return {
+      type: "finished",
+      text: "انتهت المباراة"
+    };
+  }
+
+  function renderMatches() {
+
+    const container =
+      document.getElementById(
+        "matchesContainer"
+      );
+
+    container.innerHTML = "";
+
+    const uniqueMatches =
+      getUniqueMatches();
+
+    const currentIndex =
+      getCurrentMatchIndex();
+
+    const upcomingMatches =
+      uniqueMatches.slice(
+        currentIndex,
+        currentIndex + 6
+      );
+
+    if (upcomingMatches.length === 0) {
+
+      container.innerHTML =
+        `<div class="empty-state">
+          لا توجد مباريات قادمة حاليًا
+        </div>`;
+
+      return;
+    }
+
+    upcomingMatches.forEach(
+      match => {
+
+        const date =
+          new Date(match.start);
 
         const result =
-          await response.json();
+          getMatchResult(match);
+
+        const status =
+          getMatchStatus(match);
+
+        const card =
+          document.createElement("div");
+
+        card.className = "match";
+
+        let resultHTML = "";
 
         if (
-          !result ||
-          !result.data ||
-          !result.data.timings
+          result &&
+          result.home !== "" &&
+          result.away !== ""
         ) {
 
-          throw new Error(
-            "لم تصل بيانات المواقيت"
-          );
-
+          resultHTML =
+            `
+              <div class="match-result">
+                ${result.home} - ${result.away}
+              </div>
+            `;
         }
 
-        prayerTimes =
-          result.data.timings;
+        let statusHTML = "";
 
-        document.getElementById(
-          "locationText"
-        ).textContent =
-          `مواقيت الصلاة في ${cityArabic[currentCity]}`;
+        if (status.text) {
 
-        if (
-          result.data.date &&
-          result.data.date.hijri
-        ) {
-
-          document.getElementById(
-            "hijriDate"
-          ).textContent =
-            `${result.data.date.hijri.day} ` +
-            `${result.data.date.hijri.month.ar} ` +
-            `${result.data.date.hijri.year} هـ`;
-
+          statusHTML =
+            `
+              <div class="match-status">
+                ${status.text}
+              </div>
+            `;
         }
 
-        renderPrayerCards();
+        card.innerHTML = `
+          <div class="match-date">
+            ${formatMatchDate(date)}
+          </div>
 
-        startCountdown();
+          <div class="match-teams">
 
-        document.getElementById(
-          "lastUpdated"
-        ).textContent =
-          "تم التحديث الآن";
+            <div class="team">
+              ${logoHTML(
+                match.homeLogo,
+                match.home
+              )}
 
-      } catch (error) {
+              <span>
+                ${escapeHTML(match.home)}
+              </span>
+            </div>
 
-        console.error(
-          "خطأ في تحميل المواقيت:",
-          error
+            <div class="vs">
+              VS
+            </div>
+
+            <div class="team">
+              ${logoHTML(
+                match.awayLogo,
+                match.away
+              )}
+
+              <span>
+                ${escapeHTML(match.away)}
+              </span>
+            </div>
+
+          </div>
+
+          <div class="match-time">
+            ${formatMatchTime(date)}
+          </div>
+
+          ${resultHTML}
+
+          ${statusHTML}
+
+          <div class="competition">
+            ${escapeHTML(match.competition)}
+          </div>
+        `;
+
+        card.addEventListener(
+          "click",
+          function() {
+            openMatchModal(match);
+          }
         );
 
-        document.getElementById(
-          "lastUpdated"
-        ).textContent =
-          "تعذر تحميل المواقيت";
-
-        document.getElementById(
-          "hijriDate"
-        ).textContent =
-          "تعذر تحميل التاريخ الهجري";
-
+        container.appendChild(card);
       }
+    );
+  }
 
+  function openDayModal(key) {
+
+    selectedDateKey = key;
+
+    const [
+      year,
+      month,
+      day
+    ] = key.split("-").map(Number);
+
+    const date =
+      new Date(
+        year,
+        month - 1,
+        day
+      );
+
+    document.getElementById(
+      "modalDateTitle"
+    ).textContent =
+      new Intl.DateTimeFormat(
+        "ar-SA",
+        {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        }
+      ).format(date);
+
+    renderModalMatches();
+    renderModalEvents();
+
+    document.getElementById(
+      "eventForm"
+    ).classList.remove("show");
+
+    document.getElementById(
+      "dayModal"
+    ).classList.add("show");
+  }
+
+  function renderModalMatches() {
+
+    const container =
+      document.getElementById(
+        "modalMatches"
+      );
+
+    container.innerHTML = "";
+
+    const dayMatches =
+      hilalMatchesForDate(
+        selectedDateKey
+      );
+
+    if (dayMatches.length === 0) {
+
+      container.innerHTML =
+        `<div class="empty-state">
+          لا توجد مباراة للهلال في هذا اليوم
+        </div>`;
+
+      return;
     }
 
-    function cleanTime(time) {
+    dayMatches.forEach(
+      match => {
 
-      if (!time) {
-        return "--:--";
-      }
+        const date =
+          new Date(match.start);
 
-      return String(time)
-        .split(" ")[0]
-        .substring(0, 5);
+        const result =
+          getMatchResult(match);
 
-    }
+        const status =
+          getMatchStatus(match);
 
-    function renderPrayerCards() {
+        const element =
+          document.createElement("div");
 
-      const grid =
-        document.getElementById(
-          "prayerGrid"
-        );
+        element.className =
+          "modal-match";
 
-      grid.innerHTML = "";
+        let countdownText = "";
 
-      Object.entries(
-        prayerNames
-      ).forEach(
-        ([key, name]) => {
+        if (status.type === "upcoming") {
 
-          const rawTime =
-            cleanTime(
-              prayerTimes[key] ||
-              "--:--"
-            );
-
-          const time =
-            formatTimeArabic(
-              rawTime
-            );
-
-          grid.innerHTML += `
-            <div
-              class="prayer-card"
-              data-prayer="${key}"
+          countdownText =
+            `<div
+              class="match-countdown"
+              data-match-start="${match.start}"
             >
+              جاري حساب العد التنازلي...
+            </div>`;
 
-              <div class="prayer-icon">
-                ${prayerIcons[key]}
+        } else if (status.type === "live") {
+
+          countdownText =
+            `<div class="match-countdown">
+              المباراة بدأت
+            </div>`;
+
+        } else {
+
+          countdownText =
+            `<div class="match-countdown">
+              انتهت المباراة
+            </div>`;
+        }
+
+        const homeScore =
+          result ? result.home : "";
+
+        const awayScore =
+          result ? result.away : "";
+
+        element.innerHTML = `
+          <div class="modal-match-main">
+
+            <div class="modal-team">
+              ${logoHTML(
+                match.homeLogo,
+                match.home
+              )}
+
+              ${escapeHTML(match.home)}
+            </div>
+
+            <div class="modal-vs">
+              VS
+            </div>
+
+            <div class="modal-team">
+              ${logoHTML(
+                match.awayLogo,
+                match.away
+              )}
+
+              ${escapeHTML(match.away)}
+            </div>
+
+          </div>
+
+          <div class="modal-match-info">
+            ${formatMatchTime(date)}
+            ·
+            ${escapeHTML(match.competition)}
+            ${
+              match.venue
+              ?
+              ` · ${escapeHTML(match.venue)}`
+              :
+              ""
+            }
+          </div>
+
+          ${countdownText}
+
+          <div class="score-editor">
+
+            <div class="score-title">
+              النتيجة
+            </div>
+
+            <div class="score-inputs">
+
+              <input
+                class="score-input"
+                type="number"
+                min="0"
+                id="homeScore_${encodeURIComponent(match.start)}"
+                value="${homeScore}"
+                placeholder="0"
+              >
+
+              <div class="score-separator">
+                -
               </div>
 
-              <div class="prayer-name">
-                ${name}
-              </div>
-
-              <div class="prayer-time">
-                ${time}
-              </div>
+              <input
+                class="score-input"
+                type="number"
+                min="0"
+                id="awayScore_${encodeURIComponent(match.start)}"
+                value="${awayScore}"
+                placeholder="0"
+              >
 
             </div>
-          `;
 
-        }
-      );
+            <button
+              class="save-score"
+              type="button"
+            >
+              حفظ النتيجة
+            </button>
 
-    }
+          </div>
+        `;
 
-    function getPrayerDate(time) {
+        element
+          .querySelector(".save-score")
+          .addEventListener(
+            "click",
+            function(event) {
 
-      const now =
-        new Date();
+              event.stopPropagation();
 
-      if (
-        !time ||
-        !time.includes(":")
-      ) {
-        return null;
+              const homeInput =
+                element.querySelector(
+                  ".score-input"
+                );
+
+              const inputs =
+                element.querySelectorAll(
+                  ".score-input"
+                );
+
+              const homeScore =
+                inputs[0].value;
+
+              const awayScore =
+                inputs[1].value;
+
+              if (
+                homeScore === "" ||
+                awayScore === ""
+              ) {
+                return;
+              }
+
+              const results =
+                getMatchResults();
+
+              results[getMatchKey(match)] = {
+                home: homeScore,
+                away: awayScore
+              };
+
+              saveMatchResults(results);
+
+              renderModalMatches();
+              renderMatches();
+            }
+          );
+
+        container.appendChild(element);
       }
+    );
 
-      const [
-        hours,
-        minutes
-      ] =
-        time
-          .split(":")
-          .map(Number);
+    updateMatchCountdowns();
+  }
 
-      if (
-        Number.isNaN(hours) ||
-        Number.isNaN(minutes)
-      ) {
-        return null;
-      }
+  function updateMatchCountdowns() {
 
-      const date =
-        new Date(now);
-
-      date.setHours(
-        hours,
-        minutes,
-        0,
-        0
+    const countdownElements =
+      document.querySelectorAll(
+        "[data-match-start]"
       );
 
-      return date;
+    const now =
+      new Date();
 
-    }
+    countdownElements.forEach(
+      element => {
 
-    function startCountdown() {
-
-      clearInterval(
-        countdownTimer
-      );
-
-      function updateCountdown() {
-
-        const now =
-          new Date();
-
-        const prayers =
-          Object.entries(
-            prayerNames
-          )
-          .filter(
-            ([key]) =>
-              prayerTimes[key]
-          )
-          .map(
-            ([key, name]) => ({
-
-              key,
-
-              name,
-
-              date:
-                getPrayerDate(
-                  cleanTime(
-                    prayerTimes[key]
-                  )
-                )
-
-            })
-          )
-          .filter(
-            prayer =>
-              prayer.date
+        const start =
+          new Date(
+            element.dataset.matchStart
           );
 
-        if (!prayers.length) {
-
-          document.getElementById(
-            "nextPrayerName"
-          ).textContent =
-            "--";
-
-          document.getElementById(
-            "countdown"
-          ).textContent =
-            "--:--:--";
-
-          return;
-
-        }
-
-        let next =
-          prayers.find(
-            prayer =>
-              prayer.date > now
-          );
-
-        if (!next) {
-
-          const tomorrow =
-            new Date(now);
-
-          tomorrow.setDate(
-            tomorrow.getDate() + 1
-          );
-
-          const fajr =
-            prayers.find(
-              prayer =>
-                prayer.key === "Fajr"
-            );
-
-          if (!fajr) {
-            return;
-          }
-
-          next = {
-
-            ...fajr,
-
-            date:
-              new Date(
-                tomorrow.getFullYear(),
-                tomorrow.getMonth(),
-                tomorrow.getDate(),
-                fajr.date.getHours(),
-                fajr.date.getMinutes(),
-                0,
-                0
-              )
-
-          };
-
-        }
-
-        const remaining =
-          next.date.getTime() -
+        const diff =
+          start.getTime() -
           now.getTime();
 
+        if (diff <= 0) {
+
+          element.textContent =
+            "المباراة بدأت";
+
+          return;
+        }
+
         const totalSeconds =
-          Math.max(
-            0,
-            Math.floor(
-              remaining / 1000
-            )
+          Math.floor(diff / 1000);
+
+        const days =
+          Math.floor(
+            totalSeconds / 86400
           );
 
         const hours =
           Math.floor(
-            totalSeconds / 3600
+            (totalSeconds % 86400) / 3600
           );
 
         const minutes =
@@ -2138,3716 +2232,406 @@
           );
 
         const seconds =
-          totalSeconds %
-          60;
+          totalSeconds % 60;
 
-        document.getElementById(
-          "nextPrayerName"
-        ).textContent =
-          next.name;
+        if (days > 0) {
 
-        document.getElementById(
-          "countdown"
-        ).textContent =
-          `${String(hours).padStart(2, "0")}:` +
-          `${String(minutes).padStart(2, "0")}:` +
-          `${String(seconds).padStart(2, "0")}`;
-
-        document
-          .querySelectorAll(
-            ".prayer-card"
-          )
-          .forEach(
-            card => {
-
-              card.classList.toggle(
-                "active",
-                card.dataset.prayer ===
-                next.key
-              );
-
-            }
-          );
-
-      }
-
-      updateCountdown();
-
-      countdownTimer =
-        setInterval(
-          updateCountdown,
-          1000
-        );
-
-    }
-
-
-    /* =========================================================
-       الهلال — FotMob
-    ========================================================= */
-
-    const HILAL_TEAM_ID = 2529;
-    const FOTMOB_BASE = "https://www.fotmob.com/api";
-
-    let hilalMatches = [];
-    let showAllMatches = false;
-
-    const HILAL_MATCH_CACHE_KEY =
-      "hilalMatchesCacheFotMob";
-
-    const HILAL_LINEUP_OPEN_KEY =
-      "hilalOpenLineupsFotMob";
-
-    let openedHilalLineups = new Set();
-
-
-    /* =========================================================
-       أسماء الهلال والفرق بالعربي
-    ========================================================= */
-
-    const hilalTeamNames = {
-
-      "Al Hilal": "الهلال",
-      "Al-Hilal": "الهلال",
-      "Al Hilal Riyadh": "الهلال",
-      "Hilal": "الهلال",
-
-      "Al Taawoun": "التعاون",
-      "Al-Taawoun": "التعاون",
-      "Al Taawon": "التعاون",
-
-      "Al Ittihad": "الاتحاد",
-      "Al-Ittihad": "الاتحاد",
-
-      "Al Ahli": "الأهلي",
-      "Al-Ahli": "الأهلي",
-      "Al Ahli Saudi": "الأهلي",
-
-      "Al Shabab": "الشباب",
-      "Al-Shabab": "الشباب",
-
-      "Al Ettifaq": "الاتفاق",
-      "Al-Ettifaq": "الاتفاق",
-
-      "Al Fateh": "الفتح",
-      "Al-Fateh": "الفتح",
-
-      "Al Fayha": "الفيحاء",
-      "Al-Fayha": "الفيحاء",
-
-      "Al Khaleej": "الخليج",
-      "Al-Khaleej": "الخليج",
-
-      "Al Riyadh": "الرياض",
-      "Al-Riyadh": "الرياض",
-
-      "Al Qadsiah": "القادسية",
-      "Al-Qadsiah": "القادسية",
-
-      "Al Hazem": "الحزم",
-      "Al-Hazem": "الحزم",
-
-      "Al Raed": "الرائد",
-      "Al-Raed": "الرائد",
-
-      "Al Okhdood": "الأخدود",
-      "Al-Okhdood": "الأخدود",
-
-      "Al Kholood": "الخلود",
-      "Al-Kholood": "الخلود",
-
-      "Al Najma": "النجمة",
-      "Al-Najma": "النجمة",
-      "Al Najmah": "النجمة",
-      "Al-Najmah": "النجمة",
-
-      "Damac": "ضمك",
-
-      "Al Batin": "الباطن",
-      "Al-Batin": "الباطن",
-
-      "Al Ain": "العين",
-      "Al-Ain": "العين",
-
-      "Al Wasl": "الوصل",
-      "Al-Wasl": "الوصل",
-
-      "Neom SC": "نيوم",
-      "NEOM": "نيوم",
-      "Neom": "نيوم",
-
-      "Al Jabalain": "الجبلين",
-      "Al-Jabalain": "الجبلين",
-
-      "Al Arabi": "العربي",
-      "Al-Arabi": "العربي",
-
-      "Al Bukayriyah": "البكيرية",
-      "Al-Bukayriyah": "البكيرية",
-
-      "Al Safa": "الصفا",
-      "Al-Safa": "الصفا",
-
-      "Al Diriyah": "الدرعية",
-      "Al-Diriyah": "الدرعية",
-
-      "Al Suqoor": "الصقور",
-      "Al-Suqoor": "الصقور",
-
-      "Al Zulfi": "الزلفي",
-      "Al-Zulfi": "الزلفي",
-
-      "Al Adalah": "العدالة",
-      "Al-Adalah": "العدالة",
-
-      "Al Jandal": "الجندل",
-      "Al-Jandal": "الجندل",
-
-      "Al Gharafa": "الغرافة",
-      "Al-Gharafa": "الغرافة",
-      "Al Gharafa SC": "الغرافة",
-
-      "Al Sadd": "السد",
-      "Al-Sadd": "السد",
-      "Al Sadd SC": "السد",
-
-      "Al Faisaly": "الفيصلي",
-      "Al-Faisaly": "الفيصلي",
-
-      "Al Raed FC": "الرائد",
-      "Al Taawoun FC": "التعاون",
-      "Al Ittihad Club": "الاتحاد"
-
-    };
-
-
-    const competitionNames = {
-
-      "Saudi Pro League": "الدوري السعودي",
-      "Saudi Professional League": "الدوري السعودي",
-
-      "Saudi King's Cup": "كأس خادم الحرمين الشريفين",
-      "King's Cup": "كأس خادم الحرمين الشريفين",
-
-      "Saudi Super Cup": "كأس السوبر السعودي",
-
-      "AFC Champions League": "دوري أبطال آسيا",
-      "AFC Champions League Elite": "دوري أبطال آسيا للنخبة",
-      "AFC Champions League Elite West": "دوري أبطال آسيا للنخبة",
-
-      "AFC Champions League Two": "دوري أبطال آسيا 2",
-      "AFC Champions League 2": "دوري أبطال آسيا 2",
-
-      "Club World Cup": "كأس العالم للأندية",
-      "FIFA Club World Cup": "كأس العالم للأندية",
-
-      "Arab Club Champions Cup": "كأس الملك سلمان للأندية",
-
-      "Friendly International": "مباراة ودية",
-      "Friendlies": "مباراة ودية"
-
-    };
-
-
-    const hilalPlayerNames = {
-
-      "Salem Al-Dawsari": "سالم الدوسري",
-      "Salem Al Dawsari": "سالم الدوسري",
-
-      "Aleksandar Mitrovic": "ألكسندر ميتروفيتش",
-      "Aleksandar Mitrović": "ألكسندر ميتروفيتش",
-
-      "Malcom": "مالكوم",
-      "Malcom Filipe Silva de Oliveira": "مالكوم",
-
-      "Ruben Neves": "روبن نيفيز",
-      "Rúben Neves": "روبن نيفيز",
-
-      "Sergej Milinkovic-Savic": "سيرجي سافيتش",
-      "Sergej Milinković-Savić": "سيرجي سافيتش",
-
-      "Joao Cancelo": "جواو كانسيلو",
-      "João Cancelo": "جواو كانسيلو",
-
-      "Kalidou Koulibaly": "كاليدو كوليبالي",
-
-      "Yassine Bounou": "ياسين بونو",
-      "Bono": "ياسين بونو",
-
-      "Mohammed Kanno": "محمد كنو",
-      "Mohamed Kanno": "محمد كنو",
-
-      "Nasser Al-Dawsari": "ناصر الدوسري",
-      "Nasser Al Dawsari": "ناصر الدوسري",
-
-      "Renan Lodi": "رينان لودي",
-
-      "Marcos Leonardo": "ماركوس ليوناردو",
-
-      "Hamad Al-Yami": "حمد اليامي",
-      "Hamad Al Yami": "حمد اليامي",
-
-      "Ali Al-Bulaihi": "علي البليهي",
-      "Ali Al Bulayhi": "علي البليهي",
-
-      "Mohammed Al-Breik": "محمد البريك",
-      "Mohammed Al Burayk": "محمد البريك",
-
-      "Abdulelah Al-Malki": "عبدالإله المالكي",
-
-      "Abdullah Al-Hamdan": "عبدالله الحمدان",
-
-      "Khalid Al-Ghannam": "خالد الغنام",
-
-      "Musab Al-Juwayr": "مصعب الجوير",
-      "Musab Al Juwayr": "مصعب الجوير",
-
-      "Gabriel Martinelli": "غابرييل مارتينيلي",
-      "Ollie Watkins": "أولي واتكينز",
-      "Mohamed Kader Meite": "محمد كادير ميتي",
-      "Sultan Mandash": "سلطان مندش",
-      "Crysencio Summerville": "كريسينسيو سومرفيل",
-      "Saimon Bouabre": "سايمون بوبري",
-      "Murad Al Hawsawi": "مراد الحوساوي",
-      "Sabri Abdu Dahal": "صبري عبدو دهال",
-      "Nawaf Al-Habashi": "نواف الحبشي",
-      "Abdullah Al-Anazi": "عبدالله العنزي",
-      "Theo Hernández": "ثيو هيرنانديز",
-      "Theo Hernandez": "ثيو هيرنانديز",
-      "Yusuf Akçiçek": "يوسف أكتشيك",
-      "Yusuf Akcicek": "يوسف أكتشيك",
-      "Hassan Tambakti": "حسان تمبكتي",
-      "Hassan Al-Tambakti": "حسان تمبكتي",
-      "Ali Lajami": "علي لاجامي",
-      "Moteb Al-Harbi": "متعب الحربي",
-      "Mohammed Mahzari": "محمد مهزاري",
-      "Meshal Al Dawood": "مشعل الداوود",
-      "Saad Al Mutairy": "سعد المطيري",
-      "Mohammed Al-Sarnoukh": "محمد السرنّوخ",
-      "Mohamed Al-Sarnukh": "محمد السرنّوخ",
-      "Mohammed Al-Owais": "محمد العويس",
-      "Mohammed Al-Yami": "محمد اليامي",
-      "Rayan Khalid Al-Dossary": "ريان خالد الدوسري"
-
-    };
-
-
-    function translateHilalName(
-      name,
-      isPlayer = false
-    ) {
-
-      if (!name) {
-        return "";
-      }
-
-      const clean =
-        String(name).trim();
-
-      if (hilalTeamNames[clean]) {
-        return hilalTeamNames[clean];
-      }
-
-      if (competitionNames[clean]) {
-        return competitionNames[clean];
-      }
-
-      if (
-        isPlayer &&
-        hilalPlayerNames[clean]
-      ) {
-        return hilalPlayerNames[clean];
-      }
-
-      const lower =
-        clean.toLowerCase();
-
-      for (
-        const [english, arabic]
-        of Object.entries(hilalTeamNames)
-      ) {
-
-        if (
-          english.toLowerCase() === lower
-        ) {
-          return arabic;
-        }
-
-      }
-
-      for (
-        const [english, arabic]
-        of Object.entries(competitionNames)
-      ) {
-
-        if (
-          english.toLowerCase() === lower
-        ) {
-          return arabic;
-        }
-
-      }
-
-      if (isPlayer) {
-
-        for (
-          const [english, arabic]
-          of Object.entries(hilalPlayerNames)
-        ) {
-
-          if (
-            english.toLowerCase() === lower
-          ) {
-            return arabic;
-          }
-
-        }
-
-        return "لاعب";
-      }
-
-      return "الفريق المنافس";
-
-    }
-
-
-    async function fotmobFetch(endpoint) {
-
-      const response =
-        await fetch(
-          FOTMOB_BASE + endpoint,
-          {
-            cache: "no-store"
-          }
-        );
-
-      if (!response.ok) {
-
-        throw new Error(
-          "تعذر تحميل بيانات الهلال"
-        );
-
-      }
-
-      return response.json();
-
-    }
-
-
-    function loadCachedHilalMatches() {
-
-      try {
-
-        const cached =
-          JSON.parse(
-            localStorage.getItem(
-              HILAL_MATCH_CACHE_KEY
-            ) || "[]"
-          );
-
-        if (!Array.isArray(cached)) {
-          return [];
-        }
-
-        return cached.filter(
-          match =>
-            match &&
-            match.id
-        );
-
-      } catch (error) {
-
-        return [];
-
-      }
-
-    }
-
-
-    function saveCachedHilalMatches(matches) {
-
-      try {
-
-        localStorage.setItem(
-          HILAL_MATCH_CACHE_KEY,
-          JSON.stringify(matches)
-        );
-
-      } catch (error) {
-
-        console.error(
-          "تعذر حفظ مباريات الهلال:",
-          error
-        );
-
-      }
-
-    }
-
-
-    function mergeHilalMatches(
-      existing,
-      incoming
-    ) {
-
-      const map = new Map();
-
-      [
-        ...existing,
-        ...incoming
-      ].forEach(
-        match => {
-
-          if (
-            !match ||
-            !match.id
-          ) {
-            return;
-          }
-
-          const old =
-            map.get(
-              String(match.id)
-            );
-
-          if (old) {
-
-            map.set(
-              String(match.id),
-              {
-                ...old,
-                ...match,
-                liveDetails:
-                  match.liveDetails ||
-                  old.liveDetails ||
-                  null
-              }
-            );
-
-          } else {
-
-            map.set(
-              String(match.id),
-              match
-            );
-
-          }
-
-        }
-      );
-
-      return Array.from(
-        map.values()
-      ).sort(
-        (a, b) =>
-          (a.startTimestamp || 0) -
-          (b.startTimestamp || 0)
-      );
-
-    }
-
-
-    function normalizeFotMobMatch(
-      match
-    ) {
-
-      if (!match) {
-        return null;
-      }
-
-      const home =
-        match.home ||
-        match.homeTeam ||
-        {};
-
-      const away =
-        match.away ||
-        match.awayTeam ||
-        {};
-
-      const homeId =
-        Number(
-          home.id ??
-          home.teamId ??
-          0
-        );
-
-      const awayId =
-        Number(
-          away.id ??
-          away.teamId ??
-          0
-        );
-
-      if (
-        homeId !== HILAL_TEAM_ID &&
-        awayId !== HILAL_TEAM_ID
-      ) {
-        return null;
-      }
-
-      const timestamp =
-        Number(
-          match.startTimestamp ??
-          match.time ??
-          match.utcTime ??
-          0
-        );
-
-      let statusType =
-        "notstarted";
-
-      const status =
-        match.status ||
-        match.matchStatus ||
-        {};
-
-      const statusText =
-        String(
-          status.finished ??
-          status.type ??
-          status.name ??
-          ""
-        ).toLowerCase();
-
-      if (
-        match.finished === true ||
-        status.finished === true ||
-        statusText.includes("finished")
-      ) {
-
-        statusType = "finished";
-
-      } else if (
-        match.started === true ||
-        statusText.includes("live") ||
-        statusText.includes("in progress")
-      ) {
-
-        statusType = "inprogress";
-
-      } else if (
-        statusText.includes("postpon")
-      ) {
-
-        statusType = "postponed";
-
-      } else if (
-        statusText.includes("cancel")
-      ) {
-
-        statusType = "canceled";
-
-      }
-
-      const homeScore =
-        Number(
-          match.homeScore ??
-          match.home?.score ??
-          match.homeTeam?.score ??
-          match.homeGoals ??
-          0
-        );
-
-      const awayScore =
-        Number(
-          match.awayScore ??
-          match.away?.score ??
-          match.awayTeam?.score ??
-          match.awayGoals ??
-          0
-        );
-
-      const tournament =
-        match.tournament ||
-        match.league ||
-        match.competition ||
-        {};
-
-      return {
-
-        id:
-          String(
-            match.id ??
-            match.matchId ??
-            match.match_id
-          ),
-
-        fotmobMatchId:
-          String(
-            match.id ??
-            match.matchId ??
-            match.match_id
-          ),
-
-        startTimestamp:
-          timestamp,
-
-        homeTeam: {
-          id: homeId,
-          name:
-            home.name ||
-            home.teamName ||
-            ""
-        },
-
-        awayTeam: {
-          id: awayId,
-          name:
-            away.name ||
-            away.teamName ||
-            ""
-        },
-
-        homeScore: {
-          current:
-            Number.isFinite(homeScore)
-              ? homeScore
-              : null
-        },
-
-        awayScore: {
-          current:
-            Number.isFinite(awayScore)
-              ? awayScore
-              : null
-        },
-
-        status: {
-          type: statusType
-        },
-
-        tournament: {
-          name:
-            tournament.name ||
-            tournament.leagueName ||
-            ""
-        },
-
-        liveDetails:
-          match.liveDetails ||
-          null
-
-      };
-
-    }
-
-
-    function extractFotMobMatches(
-      data
-    ) {
-
-      const possibleArrays = [
-
-        data?.fixtures,
-
-        data?.matches,
-
-        data?.allMatches,
-
-        data?.matchesAllData,
-
-        data?.content?.fixtures,
-
-        data?.content?.matches,
-
-        data?.content?.matchesAllData,
-
-        data?.content?.allMatches,
-
-        data?.fixtures?.allMatches,
-
-        data?.fixtures?.matches
-
-      ];
-
-      for (
-        const list of possibleArrays
-      ) {
-
-        if (Array.isArray(list)) {
-
-          const normalized =
-            list
-              .map(
-                normalizeFotMobMatch
-              )
-              .filter(Boolean);
-
-          if (normalized.length) {
-            return normalized;
-          }
-
-        }
-
-      }
-
-      return [];
-
-    }
-
-
-    async function loadHilalMatches() {
-
-      const status =
-        document.getElementById(
-          "footballUpdateStatus"
-        );
-
-      try {
-
-        status.textContent =
-          "جاري تحديث مباريات الهلال...";
-
-
-        /*
-         * FotMob يرسل بيانات الفريق وفيها
-         * المباريات الحالية والقادمة والسابقة.
-         */
-
-        const data =
-          await fotmobFetch(
-            `/teams?id=${HILAL_TEAM_ID}`
-          );
-
-
-        let incomingMatches =
-          extractFotMobMatches(
-            data
-          );
-
-
-        /*
-         * بعض نسخ بيانات FotMob تستخدم
-         * بنية مختلفة للمباريات.
-         */
-
-        if (
-          !incomingMatches.length &&
-          Array.isArray(
-            data?.content?.fixtures?.allMatches
-          )
-        ) {
-
-          incomingMatches =
-            data.content.fixtures.allMatches
-              .map(
-                normalizeFotMobMatch
-              )
-              .filter(Boolean);
-
-        }
-
-
-        const cachedMatches =
-          loadCachedHilalMatches();
-
-
-        /*
-         * لا نمسح البيانات القديمة إذا فشل
-         * مصدر البيانات أو تغير شكل الاستجابة.
-         */
-
-        if (incomingMatches.length) {
-
-          hilalMatches =
-            mergeHilalMatches(
-              cachedMatches,
-              incomingMatches
-            );
-
-          saveCachedHilalMatches(
-            hilalMatches
-          );
+          element.textContent =
+            `متبقي ${days} يوم و ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
         } else {
 
-          hilalMatches =
-            cachedMatches;
-
+          element.textContent =
+            `متبقي ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
         }
+      }
+    );
+  }
 
+  function openMatchModal(match) {
 
-        /*
-         * جلب تفاصيل المباريات المنتهية
-         * من FotMob لإظهار الأهداف والتشكيلات.
-         */
+    const key =
+      matchDateKey(match);
 
-        const importantMatches =
-          hilalMatches
-            .filter(
-              match => {
+    openDayModal(key);
 
-                const type =
-                  match.status?.type;
+    setTimeout(
+      function() {
 
-                return (
-                  type === "finished" ||
-                  type === "inprogress"
-                );
+        const matchElements =
+          document.querySelectorAll(
+            ".modal-match"
+          );
 
-              }
-            )
-            .slice(-30);
+        matchElements.forEach(
+          element => {
 
-
-        for (
-          const match
-          of importantMatches
-        ) {
-
-          try {
-
-            const detail =
-              await fotmobFetch(
-                `/matchDetails?matchId=${encodeURIComponent(
-                  match.fotmobMatchId || match.id
-                )}`
-              );
-
-
-            match.liveDetails =
-              detail;
-
-            const normalizedDetail =
-              normalizeFotMobDetails(
-                detail,
-                match
-              );
-
+            const text =
+              element.textContent;
 
             if (
-              normalizedDetail
+              text.includes(match.home) &&
+              text.includes(match.away)
             ) {
-
-              match.homeScore =
-                normalizedDetail.homeScore ||
-                match.homeScore;
-
-              match.awayScore =
-                normalizedDetail.awayScore ||
-                match.awayScore;
-
-              match.status =
-                normalizedDetail.status ||
-                match.status;
-
-              match.startTimestamp =
-                normalizedDetail.startTimestamp ||
-                match.startTimestamp;
-
+              element.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+              });
             }
-
-          } catch (detailError) {
-
-            console.warn(
-              "تعذر تحميل تفاصيل مباراة:",
-              match.id,
-              detailError
-            );
-
           }
-
-        }
-
-
-        saveCachedHilalMatches(
-          hilalMatches
         );
 
+      },
+      100
+    );
+  }
 
-        renderHilalMatches();
+  function renderModalEvents() {
 
-        syncHilalCalendarEvents();
-
-
-        status.textContent =
-          `آخر تحديث ${new Date().toLocaleTimeString(
-            "ar-SA",
-            {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true
-            }
-          )}`;
-
-
-      } catch (error) {
-
-        console.error(
-          "خطأ في تحميل مباريات الهلال:",
-          error
-        );
-
-
-        const cachedMatches =
-          loadCachedHilalMatches();
-
-
-        if (cachedMatches.length) {
-
-          hilalMatches =
-            cachedMatches;
-
-          renderHilalMatches();
-
-          syncHilalCalendarEvents();
-
-          status.textContent =
-            "تم عرض المباريات المحفوظة";
-
-        } else {
-
-          hilalMatches = [];
-
-          renderHilalMatches();
-
-          status.textContent =
-            "تعذر تحديث مباريات الهلال";
-
-        }
-
-      }
-
-    }
-
-
-    function normalizeFotMobDetails(
-      detail,
-      match
-    ) {
-
-      const content =
-        detail?.content ||
-        detail?.matchDetails ||
-        detail;
-
-
-      if (!content) {
-        return null;
-      }
-
-
-      const general =
-        content.general ||
-        content.matchFacts?.general ||
-        {};
-
-
-      const home =
-        general.homeTeam ||
-        content.homeTeam ||
-        match.homeTeam ||
-        {};
-
-      const away =
-        general.awayTeam ||
-        content.awayTeam ||
-        match.awayTeam ||
-        {};
-
-
-      const timestamp =
-        Number(
-          general.matchTimeUTC
-            ? Date.parse(
-                general.matchTimeUTC
-              ) / 1000
-            : match.startTimestamp
-        );
-
-
-      const status =
-        content.matchFacts?.status ||
-        content.status ||
-        {};
-
-
-      let statusType =
-        match.status?.type ||
-        "notstarted";
-
-
-      if (
-        status.finished === true
-      ) {
-
-        statusType =
-          "finished";
-
-      } else if (
-        status.started === true &&
-        status.finished !== true
-      ) {
-
-        statusType =
-          "inprogress";
-
-      }
-
-
-      const score =
-        content.matchFacts?.periods?.All ||
-        content.matchFacts?.score ||
-        {};
-
-
-      const homeScore =
-        Number(
-          score.home ??
-          content.homeScore ??
-          match.homeScore?.current ??
-          0
-        );
-
-
-      const awayScore =
-        Number(
-          score.away ??
-          content.awayScore ??
-          match.awayScore?.current ??
-          0
-        );
-
-
-      return {
-
-        startTimestamp:
-          Number.isFinite(timestamp)
-            ? timestamp
-            : match.startTimestamp,
-
-        status: {
-          type: statusType
-        },
-
-        homeScore: {
-          current: homeScore
-        },
-
-        awayScore: {
-          current: awayScore
-        }
-
-      };
-
-    }
-
-
-    function getSaudiDate(
-      timestamp
-    ) {
-
-      return new Date(
-        timestamp * 1000
+    const container =
+      document.getElementById(
+        "modalEvents"
       );
 
-    }
+    container.innerHTML = "";
 
+    const allUniqueEvents =
+      getAllUniqueEvents();
 
-    function formatMatchDate(
-      timestamp
-    ) {
-
-      if (!timestamp) {
-        return "--";
-      }
-
-      return new Intl.DateTimeFormat(
-        "ar-SA",
-        {
-          weekday: "short",
-          day: "numeric",
-          month: "short"
-        }
-      ).format(
-        getSaudiDate(timestamp)
+    const dayEvents =
+      allUniqueEvents.filter(
+        event =>
+          event.date === selectedDateKey
       );
 
-    }
-
-
-    function formatMatchTime(
-      timestamp
-    ) {
-
-      if (!timestamp) {
-        return "--";
-      }
-
-      return new Intl.DateTimeFormat(
-        "ar-SA",
-        {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true
-        }
-      ).format(
-        getSaudiDate(timestamp)
-      );
-
-    }
-
-
-    function getNextHilalMatch() {
-
-      const now =
-        Math.floor(
-          Date.now() / 1000
-        );
-
-      return hilalMatches
-        .filter(
-          match => {
-
-            if (
-              !match ||
-              !match.startTimestamp ||
-              match.startTimestamp <= now
-            ) {
-              return false;
-            }
-
-            const type =
-              match.status?.type;
-
-            return (
-              type !== "canceled" &&
-              type !== "finished"
-            );
-
-          }
-        )
-        .sort(
-          (a, b) =>
-            a.startTimestamp -
-            b.startTimestamp
-        )[0] || null;
-
-    }
-
-
-    function renderNextHilalCountdown() {
-
-      const container =
-        document.getElementById(
-          "nextMatchCountdown"
-        );
-
-      const match =
-        getNextHilalMatch();
-
-      clearInterval(
-        hilalCountdownTimer
-      );
-
-
-      if (!match) {
-
-        container.innerHTML = `
-          <div class="next-match-label">
-            المباراة القادمة
-          </div>
-
-          <div class="next-match-teams">
-            لا توجد مباراة قادمة حاليًا
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      const home =
-        translateHilalName(
-          match.homeTeam?.name
-        );
-
-      const away =
-        translateHilalName(
-          match.awayTeam?.name
-        );
-
-
-      const update =
-        () => {
-
-          const now =
-            Date.now();
-
-          const target =
-            match.startTimestamp *
-            1000;
-
-          const difference =
-            target -
-            now;
-
-
-          if (difference <= 0) {
-
-            container.innerHTML = `
-              <div class="next-match-label">
-                المباراة القادمة
-              </div>
-
-              <div class="next-match-teams">
-                ${escapeHTML(home)}
-                ×
-                ${escapeHTML(away)}
-              </div>
-
-              <div class="next-match-status">
-                بدأت المباراة أو أصبحت قريبة جدًا
-              </div>
-            `;
-
-            clearInterval(
-              hilalCountdownTimer
-            );
-
-            return;
-
-          }
-
-
-          const totalSeconds =
-            Math.floor(
-              difference / 1000
-            );
-
-          const days =
-            Math.floor(
-              totalSeconds / 86400
-            );
-
-          const hours =
-            Math.floor(
-              (totalSeconds % 86400) / 3600
-            );
-
-          const minutes =
-            Math.floor(
-              (totalSeconds % 3600) / 60
-            );
-
-          const seconds =
-            totalSeconds %
-            60;
-
-
-          let timerText;
-
-
-          if (days > 0) {
-
-            timerText =
-              `${days} يوم ` +
-              `${String(hours).padStart(2, "0")}:` +
-              `${String(minutes).padStart(2, "0")}:` +
-              `${String(seconds).padStart(2, "0")}`;
-
-          } else {
-
-            timerText =
-              `${String(hours).padStart(2, "0")}:` +
-              `${String(minutes).padStart(2, "0")}:` +
-              `${String(seconds).padStart(2, "0")}`;
-
-          }
-
-
-          container.innerHTML = `
-            <div class="next-match-label">
-              المباراة القادمة للهلال
-            </div>
-
-            <div class="next-match-teams">
-              ${escapeHTML(home)}
-              ×
-              ${escapeHTML(away)}
-            </div>
-
-            <div class="next-match-date">
-              ${escapeHTML(
-                formatMatchDate(
-                  match.startTimestamp
-                )
-              )}
-              —
-              ${escapeHTML(
-                formatMatchTime(
-                  match.startTimestamp
-                )
-              )}
-            </div>
-
-            <div class="next-match-timer">
-              ${escapeHTML(timerText)}
-            </div>
-
-            <div class="next-match-status">
-              الوقت المتبقي
-            </div>
-          `;
-
-        };
-
-
-      update();
-
-
-      hilalCountdownTimer =
-        setInterval(
-          update,
-          1000
-        );
-
-    }
-
-
-    function getStatusText(
-      match
-    ) {
-
-      const type =
-        match.status?.type;
-
-
-      if (type === "inprogress") {
-        return "مباشر";
-      }
-
-      if (type === "finished") {
-        return "انتهت";
-      }
-
-      if (type === "postponed") {
-        return "مؤجلة";
-      }
-
-      if (type === "canceled") {
-        return "ملغاة";
-      }
-
-      return "قادمة";
-
-    }
-
-
-    function getCompetitionName(
-      match
-    ) {
-
-      const name =
-        match.tournament?.name ||
-        match.league?.name ||
-        match.competition?.name ||
-        "";
-
-      return translateHilalName(
-        name
-      ) || "مباراة";
-
-    }
-
-
-    function extractGoalsFromFotMob(
-      match
-    ) {
-
-      const detail =
-        match.liveDetails;
-
-      if (!detail) {
-        return [];
-      }
-
-
-      const content =
-        detail.content ||
-        detail.matchDetails ||
-        detail;
-
-
-      const incidents =
-        content.incidents ||
-        content.matchFacts?.incidents ||
-        [];
-
-
-      if (!Array.isArray(incidents)) {
-        return [];
-      }
-
-
-      return incidents
-        .filter(
-          incident => {
-
-            const type =
-              String(
-                incident.type ||
-                incident.eventType ||
-                ""
-              ).toLowerCase();
-
-            return (
-              type === "goal" ||
-              incident.isGoal === true ||
-              incident.eventType === "Goal"
-            );
-
-          }
-        )
-        .map(
-          goal => {
-
-            const player =
-              goal.player ||
-              goal.scorer ||
-              {};
-
-
-            const assist =
-              goal.assist ||
-              goal.assistPlayer ||
-              goal.assister ||
-              null;
-
-
-            const scorerName =
-              player.name ||
-              goal.playerName ||
-              "";
-
-
-            const assistName =
-              assist?.name ||
-              goal.assistName ||
-              "";
-
-
-            return {
-
-              minute:
-                goal.time ||
-                goal.minute ||
-                "",
-
-              scorer:
-                translateHilalName(
-                  scorerName,
-                  true
-                ),
-
-              assist:
-                assistName
-                  ? translateHilalName(
-                      assistName,
-                      true
-                    )
-                  : "",
-
-              isOwnGoal:
-                goal.isOwnGoal === true,
-
-              isHome:
-                goal.isHome === true
-
-            };
-
-          }
-        );
-
-    }
-
-
-    function getGoals(
-      match
-    ) {
-
-      return extractGoalsFromFotMob(
-        match
-      );
-
-    }
-
-
-    function getStartingLineup(
-      match
-    ) {
-
-      const detail =
-        match.liveDetails;
-
-      if (!detail) {
-        return null;
-      }
-
-
-      const content =
-        detail.content ||
-        detail.matchDetails ||
-        detail;
-
-
-      const lineup =
-        content.lineup ||
-        content.matchFacts?.lineup ||
-        null;
-
-
-      if (!lineup) {
-        return null;
-      }
-
-
-      let players = [];
-
-
-      if (Array.isArray(lineup.players)) {
-
-        players =
-          lineup.players;
-
-      } else if (
-        Array.isArray(
-          lineup.lineup
-        )
-      ) {
-
-        players =
-          lineup.lineup;
-
-      } else if (
-        Array.isArray(
-          lineup.home
-        ) ||
-        Array.isArray(
-          lineup.away
-        )
-      ) {
-
-        const isHome =
-          match.homeTeam?.id ===
-          HILAL_TEAM_ID;
-
-        players =
-          isHome
-            ? lineup.home || []
-            : lineup.away || [];
-
-      }
-
-
-      const starters =
-        players
-          .filter(
-            item => {
-
-              if (
-                item.substitute === true
-              ) {
-                return false;
-              }
-
-              if (
-                item.isSubstitute === true
-              ) {
-                return false;
-              }
-
-              return true;
-
-            }
-          )
-          .map(
-            item => {
-
-              const player =
-                item.player ||
-                item;
-
-              return translateHilalName(
-                player.name ||
-                player.playerName ||
-                "",
-                true
-              );
-
-            }
-          )
-          .filter(
-            name =>
-              name &&
-              name !== "لاعب"
-          );
-
-
-      if (!starters.length) {
-        return null;
-      }
-
-
-      const formation =
-        lineup.formation ||
-        lineup.homeFormation ||
-        lineup.awayFormation ||
-        "";
-
-
-      return {
-
-        formation,
-
-        players:
-          starters
-
-      };
-
-    }
-
-
-    function renderHilalMatches() {
-
-      const container =
-        document.getElementById(
-          "matchesGrid"
-        );
-
-      const more =
-        document.getElementById(
-          "moreMatches"
-        );
-
-
-      renderNextHilalCountdown();
-
-
-      if (!hilalMatches.length) {
-
-        container.innerHTML = `
-          <div class="empty">
-            لا توجد بيانات مباريات الهلال حاليًا
-          </div>
-        `;
-
-        more.innerHTML = "";
-
-        return;
-
-      }
-
-
-      const now =
-        Math.floor(
-          Date.now() / 1000
-        );
-
-
-      const upcoming =
-        [...hilalMatches]
-          .filter(
-            match =>
-              (match.startTimestamp || 0) >= now
-          )
-          .sort(
-            (a, b) =>
-              (a.startTimestamp || 0) -
-              (b.startTimestamp || 0)
-          );
-
-
-      const previous =
-        [...hilalMatches]
-          .filter(
-            match =>
-              (match.startTimestamp || 0) < now
-          )
-          .sort(
-            (a, b) =>
-              (b.startTimestamp || 0) -
-              (a.startTimestamp || 0)
-          );
-
-
-      let matches =
-        [
-          ...upcoming,
-          ...previous
-        ];
-
-
-      if (!showAllMatches) {
-
-        matches =
-          matches.slice(
-            0,
-            12
-          );
-
-      }
-
+    if (dayEvents.length === 0) {
 
       container.innerHTML =
-        matches
-          .map(
-            match =>
-              renderMatchCard(
-                match
-              )
-          )
-          .join("");
+        `<div class="empty-state">
+          لا توجد مواعيد مضافة لهذا اليوم
+        </div>`;
 
-
-      openedHilalLineups.forEach(
-        matchId => {
-
-          const content =
-            document.querySelector(
-              `.lineup-content[data-match-id="${matchId}"]`
-            );
-
-          const button =
-            document.querySelector(
-              `.lineup-toggle[data-match-id="${matchId}"]`
-            );
-
-          if (
-            content &&
-            button
-          ) {
-
-            content.classList.add(
-              "show"
-            );
-
-            button.classList.add(
-              "open"
-            );
-
-          }
-
-        }
-      );
-
-
-      document
-        .querySelectorAll(
-          ".lineup-toggle"
-        )
-        .forEach(
-          button => {
-
-            button.addEventListener(
-              "click",
-              () => {
-
-                const matchId =
-                  button.dataset.matchId;
-
-                const content =
-                  document.querySelector(
-                    `.lineup-content[data-match-id="${matchId}"]`
-                  );
-
-
-                if (!content) {
-                  return;
-                }
-
-
-                const opened =
-                  content.classList.toggle(
-                    "show"
-                  );
-
-
-                button.classList.toggle(
-                  "open",
-                  opened
-                );
-
-
-                if (opened) {
-
-                  openedHilalLineups.add(
-                    matchId
-                  );
-
-                } else {
-
-                  openedHilalLineups.delete(
-                    matchId
-                  );
-
-                }
-
-              }
-            );
-
-          }
-        );
-
-
-      const total =
-        hilalMatches.length;
-
-
-      if (total > 12) {
-
-        more.innerHTML = `
-          <button
-            type="button"
-            id="toggleMatchesBtn"
-          >
-            ${
-              showAllMatches
-                ? "عرض مباريات أقل"
-                : `عرض جميع المباريات (${total})`
-            }
-          </button>
-        `;
-
-
-        document
-          .getElementById(
-            "toggleMatchesBtn"
-          )
-          .addEventListener(
-            "click",
-            () => {
-
-              showAllMatches =
-                !showAllMatches;
-
-              renderHilalMatches();
-
-            }
-          );
-
-      } else {
-
-        more.innerHTML = "";
-
-      }
-
+      return;
     }
 
-
-    function renderMatchCard(
-      match
-    ) {
-
-      const home =
-        translateHilalName(
-          match.homeTeam?.name
-        );
-
-
-      const away =
-        translateHilalName(
-          match.awayTeam?.name
-        );
-
-
-      const status =
-        match.status?.type ||
-        "notstarted";
-
-
-      const isLive =
-        status === "inprogress";
-
-
-      const isFinished =
-        status === "finished";
-
-
-      const homeScore =
-        match.homeScore?.current;
-
-
-      const awayScore =
-        match.awayScore?.current;
-
-
-      const scoreText =
-        homeScore != null &&
-        awayScore != null &&
-        (
-          isFinished ||
-          isLive
-        )
-          ? `${homeScore} - ${awayScore}`
-          : "—";
-
-
-      const statusText =
-        getStatusText(
-          match
-        );
-
-
-      const dateText =
-        formatMatchDate(
-          match.startTimestamp
-        );
-
-
-      const timeText =
-        formatMatchTime(
-          match.startTimestamp
-        );
-
-
-      const goals =
-        getGoals(
-          match
-        );
-
-
-      const lineup =
-        getStartingLineup(
-          match
-        );
-
-
-      const goalsHTML =
-        goals.length
-          ? `
-            <div class="match-details">
-
-              ${goals
-                .map(
-                  goal => `
-                    <div class="goal-line">
-
-                      <span>
-                        ⚽
-                      </span>
-
-                      <span>
-                        ${escapeHTML(
-                          goal.scorer
-                        )}
-                        ${
-                          goal.minute
-                            ? ` (${escapeHTML(
-                                String(
-                                  goal.minute
-                                )
-                              )})`
-                            : ""
-                        }
-                      </span>
-
-                      ${
-                        goal.assist
-                          ? `
-                            <span class="assist">
-                              ← ${escapeHTML(
-                                goal.assist
-                              )}
-                            </span>
-                          `
-                          : ""
-                      }
-
-                    </div>
-                  `
-                )
-                .join("")}
-
-            </div>
-          `
-          : "";
-
-
-      const lineupHTML =
-        lineup
-          ? `
-            <div class="lineup-box">
-
-              <button
-                type="button"
-                class="lineup-toggle"
-                data-match-id="${escapeHTML(
-                  String(match.id)
-                )}"
-              >
-
-                <span>
-                  التشكيلة الأساسية
-                  ${
-                    lineup.formation
-                      ? ` — ${escapeHTML(
-                          lineup.formation
-                        )}`
-                      : ""
-                  }
-                </span>
-
-                <span class="lineup-arrow">
-                  ▼
-                </span>
-
-              </button>
-
-
-              <div
-                class="lineup-content"
-                data-match-id="${escapeHTML(
-                  String(match.id)
-                )}"
-              >
-
-                <div class="lineup">
-                  ${lineup.players
-                    .map(
-                      player =>
-                        escapeHTML(
-                          player
-                        )
-                    )
-                    .join(" • ")}
-                </div>
-
-              </div>
-
-            </div>
-          `
-          : "";
-
-
-      return `
-        <div
-          class="match-card
-            ${isLive ? "live" : ""}
-            ${isFinished ? "finished" : ""}"
-        >
-
-          <div class="match-competition">
-            ${escapeHTML(
-              getCompetitionName(
-                match
-              )
-            )}
-          </div>
-
-
-          <div class="match-teams">
-
-            <div class="team home">
-              ${escapeHTML(home)}
-            </div>
-
-
-            <div class="score-box">
-
-              ${
-                isLive
-                  ? `
-                    <div class="match-live-label">
-                      ${escapeHTML(
-                        statusText
-                      )}
-                    </div>
-                  `
-                  : `
-                    <div class="match-time">
-                      ${escapeHTML(
-                        dateText
-                      )}
-                    </div>
-                  `
-              }
-
-
-              <div class="score">
-                ${escapeHTML(
-                  String(
-                    scoreText
-                  )
-                )}
-              </div>
-
-
-              <div class="match-time">
-                ${
-                  isLive ||
-                  isFinished
-                    ? escapeHTML(
-                        statusText
-                      )
-                    : escapeHTML(
-                        timeText
-                      )
-                }
-              </div>
-
-            </div>
-
-
-            <div class="team away">
-              ${escapeHTML(away)}
-            </div>
-
-          </div>
-
-
-          ${goalsHTML}
-
-          ${lineupHTML}
-
-        </div>
-      `;
-
-    }
-
-
-    function syncHilalCalendarEvents() {
-
-      let changed = false;
-
-
-      hilalMatches.forEach(
-        match => {
-
-          if (
-            !match.startTimestamp ||
-            !match.homeTeam ||
-            !match.awayTeam
-          ) {
-            return;
-          }
-
-
-          const date =
-            formatDate(
-              getSaudiDate(
-                match.startTimestamp
-              )
-            );
-
-
-          const title =
-            `${translateHilalName(
-              match.homeTeam.name
-            )} × ${translateHilalName(
-              match.awayTeam.name
-            )}`;
-
-
-          const existing =
-            events.find(
-              event =>
-                event.fotmobMatchId ===
-                String(match.id)
-            );
-
-
-          const time =
-            new Intl.DateTimeFormat(
-              "ar-SA",
-              {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false
-              }
-            ).format(
-              getSaudiDate(
-                match.startTimestamp
-              )
-            );
-
-
-          const notes =
-            getCompetitionName(
-              match
-            );
-
-
-          if (!existing) {
-
-            events.push({
-
-              date,
-
-              title,
-
-              type: "match",
-
-              time,
-
-              notes,
-
-              systemEvent: true,
-
-              fotmobMatchId:
-                String(match.id)
-
-            });
-
-            changed = true;
-
-          } else {
-
-            let updated = false;
-
-
-            if (
-              existing.title !==
-              title
-            ) {
-
-              existing.title =
-                title;
-
-              updated = true;
-
-            }
-
-
-            if (
-              existing.time !==
-              time
-            ) {
-
-              existing.time =
-                time;
-
-              updated = true;
-
-            }
-
-
-            if (
-              existing.notes !==
-              notes
-            ) {
-
-              existing.notes =
-                notes;
-
-              updated = true;
-
-            }
-
-
-            if (updated) {
-              changed = true;
-            }
-
-          }
-
-        }
-      );
-
-
-      if (changed) {
-
-        saveEvents();
-
-        renderCalendar();
-
-      }
-
-    }
-
-
-    /* =========================================================
-       التقويم
-    ========================================================= */
-
-    function renderCalendar() {
-
-      const year =
-        calendarDate.getFullYear();
-
-      const month =
-        calendarDate.getMonth();
-
-
-      document.getElementById(
-        "monthTitle"
-      ).textContent =
-        new Intl.DateTimeFormat(
-          "ar-SA",
-          {
-            month: "long",
-            year: "numeric"
-          }
-        ).format(
-          calendarDate
-        );
-
-
-      const firstDay =
-        new Date(
-          year,
-          month,
-          1
-        ).getDay();
-
-
-      const daysInMonth =
-        new Date(
-          year,
-          month + 1,
-          0
-        ).getDate();
-
-
-      const previousMonthDays =
-        new Date(
-          year,
-          month,
-          0
-        ).getDate();
-
-
-      const calendar =
-        document.getElementById(
-          "calendarDays"
-        );
-
-
-      calendar.innerHTML = "";
-
-
-      for (
-        let i =
-          firstDay - 1;
-        i >= 0;
-        i--
-      ) {
-
-        const day =
-          document.createElement(
-            "div"
-          );
-
-        day.className =
-          "day muted";
-
-        day.textContent =
-          previousMonthDays - i;
-
-        calendar.appendChild(
-          day
-        );
-
-      }
-
-
-      for (
-        let dayNumber = 1;
-        dayNumber <= daysInMonth;
-        dayNumber++
-      ) {
-
-        const date =
-          new Date(
-            year,
-            month,
-            dayNumber
-          );
-
-
-        const dateString =
-          formatDate(date);
-
-
-        const day =
-          document.createElement(
-            "div"
-          );
-
-
-        day.className =
-          "day";
-
-        day.textContent =
-          dayNumber;
-
-        day.dataset.date =
-          dateString;
-
-
-        const today =
-          new Date();
-
-
-        if (
-          dayNumber ===
-            today.getDate() &&
-          month ===
-            today.getMonth() &&
-          year ===
-            today.getFullYear()
-        ) {
-
-          day.classList.add(
-            "today"
-          );
-
-        }
-
-
-        const dayEvents =
-          events.filter(
-            event =>
-              event.date ===
-              dateString
-          );
-
-
-        if (
-          dayEvents.length > 0
-        ) {
-
-          day.classList.add(
-            "has-event"
-          );
-
-          day.title =
-            dayEvents
-              .map(
-                event =>
-                  event.title
-              )
-              .join("، ");
-
-        }
-
-
-        const hasHilalMatch =
-          dayEvents.some(
-            event =>
-              event.type === "match" &&
-              (
-                event.fotmobMatchId ||
-                event.sofascoreEventId
-              )
-          );
-
-
-        if (hasHilalMatch) {
-
-          day.classList.add(
-            "hilal-match-day"
-          );
-
-        }
-
-
-        day.addEventListener(
-          "click",
-          () => {
-
-            if (
-              dayEvents.length > 0
-            ) {
-
-              openDayEventsModal(
-                dateString,
-                dayEvents
-              );
-
-            } else {
-
-              openEventModal(
-                dateString
-              );
-
-            }
-
-          }
-        );
-
-
-        calendar.appendChild(
-          day
-        );
-
-      }
-
-
-      renderEvents();
-
-    }
-
-
-    function renderEvents() {
-
-      const list =
-        document.getElementById(
-          "eventsList"
-        );
-
-
-      const year =
-        calendarDate.getFullYear();
-
-      const month =
-        calendarDate.getMonth();
-
-
-      const monthEvents =
-        events
-          .map(
-            (event, index) => ({
-              ...event,
-              index
-            })
-          )
-          .filter(
-            event => {
-
-              const eventDate =
-                new Date(
-                  `${event.date}T12:00:00`
-                );
-
-              return (
-                eventDate.getFullYear() ===
-                  year &&
-                eventDate.getMonth() ===
-                  month
-              );
-
-            }
-          )
-          .sort(
-            (a, b) =>
-              a.date.localeCompare(
-                b.date
-              )
-          );
-
-
-      if (!monthEvents.length) {
-
-        list.innerHTML = `
-          <div class="empty">
-            لا توجد أحداث مضافة لهذا الشهر
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      list.innerHTML =
-        monthEvents
-          .map(
-            event => `
-
-              <div
-                class="event
-                ${escapeHTML(
-                  event.type ||
-                  "personal"
-                )}"
-                data-event-index="${event.index}"
-              >
-
-                <div class="event-title">
-
-                  ${getEventEmoji(
-                    event.type
-                  )}
-
-                  ${escapeHTML(
-                    event.title
-                  )}
-
-                </div>
-
-                <div class="event-date">
-
-                  ${formatEventDate(
-                    event.date
-                  )}
-
-                  ${
-                    event.time
-                      ? ` — ${escapeHTML(
-                          formatTimeArabic(
-                            event.time
-                          )
-                        )}`
-                      : ""
-                  }
-
-                </div>
-
-                ${
-                  event.notes
-                    ? `
-                      <div class="event-notes">
-                        ${escapeHTML(
-                          event.notes
-                        )}
-                      </div>
-                    `
-                    : ""
-                }
-
-                <button
-                  class="delete-event"
-                  data-index="${event.index}"
-                  type="button"
-                >
-                  حذف
-                </button>
-
-              </div>
-
-            `
-          )
-          .join("");
-
-
-      document
-        .querySelectorAll(
-          ".event"
-        )
-        .forEach(
-          eventElement => {
-
-            eventElement.addEventListener(
-              "click",
-              event => {
-
-                if (
-                  event.target.closest(
-                    ".delete-event"
-                  )
-                ) {
-                  return;
-                }
-
-                const index =
-                  Number(
-                    eventElement.dataset.eventIndex
-                  );
-
-                const selectedEvent =
-                  events[index];
-
-                if (
-                  selectedEvent
-                ) {
-
-                  openEventCountdown(
-                    selectedEvent
-                  );
-
-                }
-
-              }
-            );
-
-          }
-        );
-
-
-      document
-        .querySelectorAll(
-          ".delete-event"
-        )
-        .forEach(
-          button => {
-
-            button.addEventListener(
-              "click",
-              event => {
-
-                event.stopPropagation();
-
-                const index =
-                  Number(
-                    button.dataset.index
-                  );
-
-                deleteEvent(
-                  index,
-                  event
-                );
-
-              }
-            );
-
-          }
-        );
-
-    }
-
-
-    function openDayEventsModal(
-      date,
-      dayEvents
-    ) {
-
-      selectedDayForEvents =
-        date;
-
-
-      const modal =
-        document.getElementById(
-          "dayEventsModal"
-        );
-
-
-      const dateElement =
-        document.getElementById(
-          "dayEventsDate"
-        );
-
-
-      const list =
-        document.getElementById(
-          "dayEventsList"
-        );
-
-
-      dateElement.textContent =
-        formatEventDate(
-          date
-        );
-
-
-      list.innerHTML = "";
-
-
-      dayEvents.forEach(
-        event => {
-
-          const button =
-            document.createElement(
-              "button"
-            );
-
-
-          button.type =
-            "button";
-
-
-          button.className =
-            "day-event-option";
-
-
-          button.innerHTML = `
-
-            <div class="day-event-icon">
-              ${getEventEmoji(event.type)}
-            </div>
-
-            <div class="day-event-info">
-
-              <div class="day-event-title">
-                ${escapeHTML(
-                  event.title
-                )}
-              </div>
-
-              <div class="day-event-time">
-                ${
-                  event.time
-                    ? escapeHTML(
-                        formatTimeArabic(
-                          event.time
-                        )
-                      )
-                    : "طوال اليوم"
-                }
-              </div>
-
-            </div>
-
-          `;
-
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              closeDayEventsModal();
-
-              openEventCountdown(
-                event
-              );
-
-            }
-          );
-
-
-          list.appendChild(
-            button
-          );
-
-        }
-      );
-
-
-      modal.classList.add(
-        "show"
-      );
-
-    }
-
-
-    function closeDayEventsModal() {
-
-      document
-        .getElementById(
-          "dayEventsModal"
-        )
-        .classList.remove(
-          "show"
-        );
-
-    }
-
-
-    function addEventToSelectedDay() {
-
-      if (
-        !selectedDayForEvents
-      ) {
-        return;
-      }
-
-
-      const date =
-        selectedDayForEvents;
-
-
-      closeDayEventsModal();
-
-
-      openEventModal(
-        date
-      );
-
-    }
-
-
-    function getEventTargetDate(
-      event
-    ) {
-
-      if (
-        !event ||
-        !event.date
-      ) {
-        return null;
-      }
-
-
-      let hours = 0;
-      let minutes = 0;
-
-
-      if (
-        event.time &&
-        event.time.includes(":")
-      ) {
-
-        const parts =
-          event.time
-            .split(":")
-            .map(Number);
-
-        hours =
-          Number.isNaN(parts[0])
-            ? 0
-            : parts[0];
-
-        minutes =
-          Number.isNaN(parts[1])
-            ? 0
-            : parts[1];
-
-      }
-
-
-      const target =
-        new Date(
-          `${event.date}T00:00:00`
-        );
-
-
-      target.setHours(
-        hours,
-        minutes,
-        0,
-        0
-      );
-
-
-      return target;
-
-    }
-
-
-    function openEventCountdown(
-      event
-    ) {
-
-      selectedCountdownEvent =
-        event;
-
-
-      const target =
-        getEventTargetDate(
-          event
-        );
-
-
-      if (!target) {
-        return;
-      }
-
-
-      document.getElementById(
-        "countdownEventIcon"
-      ).textContent =
-        getEventEmoji(
-          event.type
-        );
-
-
-      document.getElementById(
-        "countdownEventTitle"
-      ).textContent =
-        event.title;
-
-
-      document.getElementById(
-        "countdownEventDate"
-      ).textContent =
-        `${formatEventDate(
-          event.date
-        )}${
-          event.time
-            ? ` — ${formatTimeArabic(
-                event.time
-              )}`
-            : ""
-        }`;
-
-
-      document
-        .getElementById(
-          "countdownModal"
-        )
-        .classList.add(
-          "show"
-        );
-
-
-      updateEventCountdown();
-
-
-      clearInterval(
-        eventCountdownTimer
-      );
-
-
-      eventCountdownTimer =
-        setInterval(
-          updateEventCountdown,
-          1000
-        );
-
-    }
-
-
-    function updateEventCountdown() {
-
-      if (
-        !selectedCountdownEvent
-      ) {
-        return;
-      }
-
-
-      const target =
-        getEventTargetDate(
-          selectedCountdownEvent
-        );
-
-
-      if (!target) {
-        return;
-      }
-
-
-      const now =
-        new Date();
-
-
-      const difference =
-        target.getTime() -
-        now.getTime();
-
-
-      const countdownElement =
-        document.getElementById(
-          "eventCountdown"
-        );
-
-
-      const noteElement =
-        document.getElementById(
-          "eventCountdownNote"
-        );
-
-
-      if (
-        difference <= 0
-      ) {
-
-        countdownElement.textContent =
-          "انتهى / بدأ";
-
-        countdownElement.classList.add(
-          "finished"
-        );
-
-        noteElement.textContent =
-          "هذا الحدث وصل إلى موعده";
-
-        clearInterval(
-          eventCountdownTimer
-        );
-
-        return;
-
-      }
-
-
-      countdownElement.classList.remove(
-        "finished"
-      );
-
-
-      const totalSeconds =
-        Math.floor(
-          difference / 1000
-        );
-
-
-      const days =
-        Math.floor(
-          totalSeconds / 86400
-        );
-
-      const hours =
-        Math.floor(
-          (totalSeconds % 86400) / 3600
-        );
-
-      const minutes =
-        Math.floor(
-          (totalSeconds % 3600) / 60
-        );
-
-      const seconds =
-        totalSeconds % 60;
-
-
-      if (days > 0) {
-
-        countdownElement.textContent =
-          `${days} يوم ` +
-          `${String(hours).padStart(2, "0")}:` +
-          `${String(minutes).padStart(2, "0")}:` +
-          `${String(seconds).padStart(2, "0")}`;
-
-      } else {
-
-        countdownElement.textContent =
-          `${String(hours).padStart(2, "0")}:` +
-          `${String(minutes).padStart(2, "0")}:` +
-          `${String(seconds).padStart(2, "0")}`;
-
-      }
-
-
-      noteElement.textContent =
-        selectedCountdownEvent.time
-          ? "الوقت المتبقي حتى موعد الحدث"
-          : "العد يبدأ من بداية يوم الحدث";
-
-    }
-
-
-    function closeEventCountdown() {
-
-      clearInterval(
-        eventCountdownTimer
-      );
-
-      selectedCountdownEvent =
-        null;
-
-      document
-        .getElementById(
-          "countdownModal"
-        )
-        .classList.remove(
-          "show"
-        );
-
-    }
-
-
-    function formatEventDate(
-      dateString
-    ) {
-
-      const date =
-        new Date(
-          `${dateString}T12:00:00`
-        );
-
-
-      return new Intl.DateTimeFormat(
-        "ar-SA",
-        {
-          weekday: "long",
-          day: "numeric",
-          month: "long"
-        }
-      ).format(
-        date
-      );
-
-    }
-
-
-    function getEventEmoji(
-      type
-    ) {
-
-      if (
-        type === "match"
-      ) {
-        return "⚽";
-      }
-
-      if (
-        type === "holiday"
-      ) {
-        return "🇸🇦";
-      }
-
-      if (
-        type === "islamic"
-      ) {
-        return "🌙";
-      }
-
-      if (
-        type === "national"
-      ) {
-        return "🇸🇦";
-      }
-
-      if (
-        type === "reminder"
-      ) {
-        return "🔔";
-      }
-
-      if (
-        type === "personal"
-      ) {
-        return "📌";
-      }
-
-      return "📅";
-
-    }
-
-
-    function openEventModal(
-      date
-    ) {
-
-      document
-        .getElementById(
-          "eventModal"
-        )
-        .classList.add(
-          "show"
-        );
-
-
-      document.getElementById(
-        "eventDate"
-      ).value =
-        date;
-
-
-      document.getElementById(
-        "selectedDateText"
-      ).textContent =
-        `إضافة حدث بتاريخ ${formatEventDate(
-          date
-        )}`;
-
-
-      document.getElementById(
-        "eventTitle"
-      ).focus();
-
-    }
-
-
-    function closeEventModal() {
-
-      document
-        .getElementById(
-          "eventModal"
-        )
-        .classList.remove(
-          "show"
-        );
-
-
-      document
-        .getElementById(
-          "eventForm"
-        )
-        .reset();
-
-
-      document.getElementById(
-        "eventDate"
-      ).value =
-        "";
-
-    }
-
-
-    function deleteEvent(
-      index,
-      event
-    ) {
-
-      event.stopPropagation();
-
-
-      if (
-        index < 0 ||
-        index >= events.length
-      ) {
-        return;
-      }
-
-
-      const selectedEvent =
-        events[index];
-
-
-      if (
-        selectedEvent.systemEvent
-      ) {
-
-        const confirmed =
-          confirm(
-            "هذا حدث رسمي أو مباراة مضافة تلقائيًا. هل تريد حذفه؟"
-          );
-
-
-        if (!confirmed) {
-          return;
-        }
-
-      } else {
-
-        const confirmed =
-          confirm(
-            "هل تريد حذف هذا الحدث؟"
-          );
-
-
-        if (!confirmed) {
-          return;
-        }
-
-      }
-
-
-      events.splice(
-        index,
-        1
-      );
-
-
-      saveEvents();
-
-      renderCalendar();
-
-    }
-
-
-    function escapeHTML(
-      value
-    ) {
-
-      return String(
-        value ?? ""
-      )
-        .replaceAll(
-          "&",
-          "&amp;"
-        )
-        .replaceAll(
-          "<",
-          "&lt;"
-        )
-        .replaceAll(
-          ">",
-          "&gt;"
-        )
-        .replaceAll(
-          '"',
-          "&quot;"
-        )
-        .replaceAll(
-          "'",
-          "&#039;"
-        );
-
-    }
-
-
-    document
-      .getElementById(
-        "citySelect"
-      )
-      .addEventListener(
-        "change",
-        event => {
-
-          currentCity =
-            event.target.value;
-
-          loadPrayerTimes();
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "refreshBtn"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          loadPrayerTimes();
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "prevMonth"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          calendarDate.setMonth(
-            calendarDate.getMonth() - 1
-          );
-
-          renderCalendar();
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "nextMonth"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          calendarDate.setMonth(
-            calendarDate.getMonth() + 1
-          );
-
-          renderCalendar();
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "closeModal"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          closeEventModal();
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "eventModal"
-      )
-      .addEventListener(
-        "click",
-        event => {
-
-          if (
-            event.target.id ===
-            "eventModal"
-          ) {
-
-            closeEventModal();
-
-          }
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "closeCountdownModal"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          closeEventCountdown();
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "closeCountdownButton"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          closeEventCountdown();
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "countdownModal"
-      )
-      .addEventListener(
-        "click",
-        event => {
-
-          if (
-            event.target.id ===
-            "countdownModal"
-          ) {
-
-            closeEventCountdown();
-
-          }
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "closeDayEventsModal"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          closeDayEventsModal();
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "addDayEventButton"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          addEventToSelectedDay();
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "dayEventsModal"
-      )
-      .addEventListener(
-        "click",
-        event => {
-
-          if (
-            event.target.id ===
-            "dayEventsModal"
-          ) {
-
-            closeDayEventsModal();
-
-          }
-
-        }
-      );
-
-
-    document.addEventListener(
-      "keydown",
+    dayEvents.forEach(
       event => {
 
-        if (
-          event.key ===
-          "Escape"
-        ) {
+        const element =
+          document.createElement("div");
 
-          closeEventModal();
+        element.className =
+          "custom-event";
 
-          closeEventCountdown();
+        element.innerHTML = `
+          <div class="custom-event-top">
 
-          closeDayEventsModal();
+            <div>
+              <div class="custom-event-title">
+                ${escapeHTML(event.title)}
+              </div>
 
-        }
+              <div class="custom-event-type">
+                ${escapeHTML(event.type)}
+              </div>
+            </div>
 
+            <div class="custom-event-time">
+              ${
+                event.time
+                ?
+                format12HourFromString(event.time)
+                :
+                ""
+              }
+            </div>
+
+          </div>
+
+          ${
+            event.description
+            ?
+            `
+              <div class="custom-event-description">
+                ${escapeHTML(event.description)}
+              </div>
+            `
+            :
+            ""
+          }
+
+          ${
+            event.id
+            ?
+            `
+              <button
+                class="delete-event"
+                onclick="deleteCustomEvent('${event.id}')"
+              >
+                حذف
+              </button>
+            `
+            :
+            ""
+          }
+        `;
+
+        container.appendChild(element);
+      }
+    );
+  }
+
+  function escapeHTML(value) {
+
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function deleteCustomEvent(id) {
+
+    const eventsList =
+      getCustomEvents();
+
+    const filtered =
+      eventsList.filter(
+        event =>
+          event.id !== id
+      );
+
+    saveCustomEvents(filtered);
+
+    renderCalendar();
+    renderModalEvents();
+  }
+
+  document
+    .getElementById("showEventForm")
+    .addEventListener(
+      "click",
+      function() {
+
+        document
+          .getElementById("eventForm")
+          .classList.add("show");
       }
     );
 
+  document
+    .getElementById("cancelEvent")
+    .addEventListener(
+      "click",
+      function() {
 
-    document
-      .getElementById(
-        "eventForm"
-      )
-      .addEventListener(
-        "submit",
-        event => {
+        document
+          .getElementById("eventForm")
+          .classList.remove("show");
+      }
+    );
 
-          event.preventDefault();
+  document
+    .getElementById("eventForm")
+    .addEventListener(
+      "submit",
+      function(event) {
 
+        event.preventDefault();
 
-          const newEvent = {
+        const title =
+          document
+            .getElementById("eventTitle")
+            .value
+            .trim();
 
-            date:
-              document.getElementById(
-                "eventDate"
-              ).value,
+        const type =
+          document
+            .getElementById("eventType")
+            .value;
 
-            title:
-              document.getElementById(
-                "eventTitle"
-              ).value.trim(),
+        const time =
+          document
+            .getElementById("eventTime")
+            .value;
 
-            type:
-              document.getElementById(
-                "eventType"
-              ).value,
+        const description =
+          document
+            .getElementById("eventDescription")
+            .value
+            .trim();
 
-            time:
-              document.getElementById(
-                "eventTime"
-              ).value,
+        if (!title) {
+          return;
+        }
 
-            notes:
-              document.getElementById(
-                "eventNotes"
-              ).value.trim(),
+        const eventsList =
+          getCustomEvents();
 
-            systemEvent:
-              false
-
-          };
-
-
-          if (
-            !newEvent.date
-          ) {
-            return;
-          }
-
-
-          if (
-            !newEvent.title
-          ) {
-            return;
-          }
-
-
-          events.push(
-            newEvent
+        const duplicate =
+          eventsList.some(
+            existingEvent =>
+              existingEvent.date === selectedDateKey &&
+              existingEvent.title.trim().toLowerCase() ===
+              title.trim().toLowerCase()
           );
 
+        if (duplicate) {
 
-          saveEvents();
+          document
+            .getElementById("eventForm")
+            .classList.remove("show");
 
-          closeEventModal();
+          renderModalEvents();
 
-          renderCalendar();
-
+          return;
         }
-      );
 
+        const newEvent = {
 
-    updateClock();
+          id:
+            Date.now().toString() +
+            Math.random()
+              .toString(36)
+              .slice(2),
 
-    setInterval(
-      updateClock,
-      1000
+          date:
+            selectedDateKey,
+
+          title:
+            title,
+
+          type:
+            type,
+
+          time:
+            time,
+
+          description:
+            description
+        };
+
+        eventsList.push(
+          newEvent
+        );
+
+        saveCustomEvents(
+          eventsList
+        );
+
+        document
+          .getElementById("eventForm")
+          .reset();
+
+        document
+          .getElementById("eventForm")
+          .classList.remove("show");
+
+        renderCalendar();
+        renderModalEvents();
+      }
     );
 
+  document
+    .getElementById("closeModal")
+    .addEventListener(
+      "click",
+      function() {
 
-    loadPrayerTimes();
-
-
-    renderCalendar();
-
-
-    loadHilalMatches();
-
-
-    setInterval(
-      loadHilalMatches,
-      30000
+        document
+          .getElementById("dayModal")
+          .classList.remove("show");
+      }
     );
 
-  </script>
+  document
+    .getElementById("dayModal")
+    .addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          event.target ===
+          document.getElementById("dayModal")
+        ) {
+
+          document
+            .getElementById("dayModal")
+            .classList.remove("show");
+        }
+      }
+    );
+
+  document
+    .getElementById("prevMonth")
+    .addEventListener(
+      "click",
+      function() {
+
+        currentCalendarDate =
+          new Date(
+            currentCalendarDate.getFullYear(),
+            currentCalendarDate.getMonth() - 1,
+            1
+          );
+
+        renderCalendar();
+      }
+    );
+
+  document
+    .getElementById("nextMonth")
+    .addEventListener(
+      "click",
+      function() {
+
+        currentCalendarDate =
+          new Date(
+            currentCalendarDate.getFullYear(),
+            currentCalendarDate.getMonth() + 1,
+            1
+          );
+
+        renderCalendar();
+      }
+    );
+
+  renderTopDate();
+  renderPrayerCountdown();
+  renderCalendar();
+  renderMatches();
+
+  setInterval(
+    function() {
+
+      renderTopDate();
+      renderPrayerCountdown();
+      updateMatchCountdowns();
+
+    },
+    1000
+  );
+
+  setInterval(
+    function() {
+
+      renderMatches();
+      renderCalendar();
+
+      if (
+        document
+          .getElementById("dayModal")
+          .classList.contains("show")
+      ) {
+        renderModalMatches();
+      }
+
+    },
+    60000
+  );
+
+</script>
 
 </body>
 </html>

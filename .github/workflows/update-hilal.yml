@@ -1,0 +1,467 @@
+name: تحديث مباريات الهلال
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-hilal:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: تحميل المستودع
+        uses: actions/checkout@v4
+
+      - name: تحديث بيانات الهلال
+        shell: python {0}
+        run: |
+          import json
+          import os
+          import time
+          from datetime import datetime, timezone
+          from urllib.request import Request, urlopen
+
+          BASE_URL = "https://www.sofascore.com/api/v1"
+          TEAM_ID = 21895
+          DATA_FILE = "data/hilal.json"
+
+          os.makedirs("data", exist_ok=True)
+
+          def fetch_json(url):
+              request = Request(
+                  url,
+                  headers={
+                      "User-Agent": "Mozilla/5.0",
+                      "Accept": "application/json,text/plain,*/*",
+                      "Referer": "https://www.sofascore.com/"
+                  }
+              )
+
+              with urlopen(
+                  request,
+                  timeout=25
+              ) as response:
+
+                  return json.load(response)
+
+
+          old_data = {
+              "updatedAt": None,
+              "teamId": TEAM_ID,
+              "matches": []
+          }
+
+
+          if os.path.exists(DATA_FILE):
+
+              try:
+
+                  with open(
+                      DATA_FILE,
+                      "r",
+                      encoding="utf-8"
+                  ) as file:
+
+                      old_data =
+                          json.load(file)
+
+              except Exception:
+
+                  old_data = {
+                      "updatedAt": None,
+                      "teamId": TEAM_ID,
+                      "matches": []
+                  }
+
+
+          old_matches = old_data.get(
+              "matches",
+              []
+          )
+
+
+          old_map = {
+              str(match.get("id")): match
+              for match in old_matches
+              if match.get("id") is not None
+          }
+
+
+          now = int(
+              time.time()
+          )
+
+
+          current_date =
+              datetime.now(
+                  timezone.utc
+              )
+
+
+          if current_date.month >= 7:
+
+              season_start_date =
+                  datetime(
+                      current_date.year,
+                      7,
+                      1,
+                      tzinfo=timezone.utc
+                  )
+
+          else:
+
+              season_start_date =
+                  datetime(
+                      current_date.year - 1,
+                      7,
+                      1,
+                      tzinfo=timezone.utc
+                  )
+
+
+          season_start =
+              int(
+                  season_start_date.timestamp()
+              )
+
+
+          events = {}
+
+
+          for direction in (
+              "next",
+              "last"
+          ):
+
+              for page in range(4):
+
+                  url =
+                      f"{BASE_URL}/team/{TEAM_ID}/events/{direction}/{page}"
+
+                  try:
+
+                      data =
+                          fetch_json(url)
+
+                      for event in data.get(
+                          "events",
+                          []
+                      ):
+
+                          if event.get(
+                              "id"
+                          ) is not None:
+
+                              events[
+                                  str(
+                                      event["id"]
+                                  )
+                              ] = event
+
+                  except Exception as error:
+
+                      print(
+                          "خطأ في تحميل صفحة:",
+                          direction,
+                          page,
+                          error
+                      )
+
+
+          season_events = []
+
+
+          for event in events.values():
+
+              timestamp =
+                  int(
+                      event.get(
+                          "startTimestamp",
+                          0
+                      ) or 0
+                  )
+
+
+              if timestamp >= season_start:
+
+                  season_events.append(
+                      event
+                  )
+
+
+          season_events.sort(
+              key=lambda item:
+                  item.get(
+                      "startTimestamp",
+                      0
+                  )
+          )
+
+
+          final_matches = []
+
+
+          for event in season_events:
+
+              match_id =
+                  str(
+                      event["id"]
+                  )
+
+
+              old_match =
+                  old_map.get(
+                      match_id,
+                      {}
+                  )
+
+
+              merged = {
+                  **old_match,
+                  **event
+              }
+
+
+              status =
+                  (
+                      event.get(
+                          "status"
+                      ) or {}
+                  ).get(
+                      "type"
+                  )
+
+
+              timestamp =
+                  int(
+                      event.get(
+                          "startTimestamp",
+                          0
+                      ) or 0
+                  )
+
+
+              needs_details = (
+                  not old_match.get(
+                      "detailsLoaded",
+                      False
+                  )
+                  or
+                  status == "inprogress"
+                  or
+                  (
+                      timestamp and
+                      abs(
+                          timestamp - now
+                      ) <= 172800
+                  )
+              )
+
+
+              if needs_details:
+
+                  try:
+
+                      incidents =
+                          fetch_json(
+                              f"{BASE_URL}/event/{match_id}/incidents"
+                          )
+
+                      merged["incidents"] =
+                          incidents.get(
+                              "incidents",
+                              []
+                          )
+
+                  except Exception as error:
+
+                      print(
+                          "خطأ في الأهداف:",
+                          match_id,
+                          error
+                      )
+
+
+                  try:
+
+                      lineup =
+                          fetch_json(
+                              f"{BASE_URL}/event/{match_id}/lineups"
+                          )
+
+
+                      merged["lineups"] = {
+                          "home":
+                              lineup.get(
+                                  "home",
+                                  {}
+                              ),
+
+                          "away":
+                              lineup.get(
+                                  "away",
+                                  {}
+                              )
+                      }
+
+                  except Exception as error:
+
+                      print(
+                          "خطأ في التشكيلة:",
+                          match_id,
+                          error
+                      )
+
+
+                  home_players =
+                      (
+                          merged.get(
+                              "lineups",
+                              {}
+                          )
+                          .get(
+                              "home",
+                              {}
+                          )
+                          .get(
+                              "players",
+                              []
+                          )
+                      )
+
+
+                  away_players =
+                      (
+                          merged.get(
+                              "lineups",
+                              {}
+                          )
+                          .get(
+                              "away",
+                              {}
+                          )
+                          .get(
+                              "players",
+                              []
+                          )
+                      )
+
+
+                  has_lineup = (
+                      len(home_players) > 0
+                      or
+                      len(away_players) > 0
+                  )
+
+
+                  if (
+                      status == "finished"
+                      or
+                      status == "inprogress"
+                      or
+                      has_lineup
+                  ):
+
+                      merged[
+                          "detailsLoaded"
+                      ] = True
+
+                  else:
+
+                      merged[
+                          "detailsLoaded"
+                      ] = False
+
+
+              final_matches.append(
+                  merged
+              )
+
+
+          old_matches_normalized =
+              json.dumps(
+                  old_matches,
+                  ensure_ascii=False,
+                  sort_keys=True,
+                  separators=(",", ":")
+              )
+
+
+          new_matches_normalized =
+              json.dumps(
+                  final_matches,
+                  ensure_ascii=False,
+                  sort_keys=True,
+                  separators=(",", ":")
+              )
+
+
+          if (
+              old_matches_normalized ==
+              new_matches_normalized
+              and
+              os.path.exists(DATA_FILE)
+          ):
+
+              print(
+                  "لا توجد تغييرات في بيانات الهلال."
+              )
+
+          else:
+
+              output = {
+
+                  "updatedAt":
+                      datetime.now(
+                          timezone.utc
+                      ).isoformat(),
+
+                  "teamId":
+                      TEAM_ID,
+
+                  "seasonStart":
+                      season_start,
+
+                  "matches":
+                      final_matches
+
+              }
+
+
+              with open(
+                  DATA_FILE,
+                  "w",
+                  encoding="utf-8"
+              ) as file:
+
+                  json.dump(
+                      output,
+                      file,
+                      ensure_ascii=False,
+                      indent=2
+                  )
+
+
+              print(
+                  f"تم تحديث {len(final_matches)} مباراة."
+              )
+
+      - name: حفظ التحديثات
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/hilal.json
+
+          if git diff --cached --quiet; then
+            echo "لا توجد تغييرات للحفظ"
+          else
+            git commit -m "تحديث بيانات مباريات الهلال"
+            git push
+          fi
