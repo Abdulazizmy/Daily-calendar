@@ -1194,33 +1194,13 @@
 
         <div class="weekdays">
 
-          <div>
-            الأحد
-          </div>
-
-          <div>
-            الإثنين
-          </div>
-
-          <div>
-            الثلاثاء
-          </div>
-
-          <div>
-            الأربعاء
-          </div>
-
-          <div>
-            الخميس
-          </div>
-
-          <div>
-            الجمعة
-          </div>
-
-          <div>
-            السبت
-          </div>
+          <div>الأحد</div>
+          <div>الإثنين</div>
+          <div>الثلاثاء</div>
+          <div>الأربعاء</div>
+          <div>الخميس</div>
+          <div>الجمعة</div>
+          <div>السبت</div>
 
         </div>
 
@@ -1265,9 +1245,7 @@
 
           <div class="live-title">
 
-            <span>
-              ⚽
-            </span>
+            <span>⚽</span>
 
             <h2>
               مباريات الهلال
@@ -2205,31 +2183,64 @@
 
 
     /* =========================================================
-       الهلال — تم تعديل هذا الجزء فقط
+       الهلال — تحديث أونلاين
+       البيانات تأتي من data/hilal.json
     ========================================================= */
 
     const HILAL_TEAM_ID = 21895;
+
+    const HILAL_DATA_URL =
+      "./data/hilal.json";
+
+    const HILAL_REFRESH_INTERVAL =
+      5 * 60 * 1000;
+
+    const HILAL_MATCH_CACHE_KEY =
+      "hilalMatchesCacheSofascore";
+
+    const HILAL_LINEUP_OPEN_KEY =
+      "hilalOpenLineupsSofascore";
 
     let hilalMatches = [];
 
     let showAllMatches = false;
 
-    let footballTimer = null;
+    let openedHilalLineups =
+      new Set();
 
-    const SOFASCORE_BASE =
-      "https://www.sofascore.com/api/v1";
 
-    const HILAL_MATCH_CACHE_KEY =
-      "hilalMatchesCache";
+    try {
 
-    const HILAL_LINEUP_OPEN_KEY =
-      "hilalOpenLineups";
+      const savedLineups =
+        JSON.parse(
+          localStorage.getItem(
+            HILAL_LINEUP_OPEN_KEY
+          ) || "[]"
+        );
 
-    let openedHilalLineups = new Set();
+      if (
+        Array.isArray(savedLineups)
+      ) {
+
+        openedHilalLineups =
+          new Set(
+            savedLineups.map(
+              String
+            )
+          );
+
+      }
+
+    } catch (error) {
+
+      openedHilalLineups =
+        new Set();
+
+    }
 
 
     /* =========================================================
-       أسماء الهلال والفرق بالعربي
+       أسماء الفرق بالعربي
     ========================================================= */
 
     const hilalTeamNames = {
@@ -2237,120 +2248,385 @@
       "Al Hilal": "الهلال",
       "Al-Hilal": "الهلال",
       "Al Hilal Riyadh": "الهلال",
+      "Al Hilal SFC": "الهلال",
       "Hilal": "الهلال",
 
-      "Al Nassr": "النصر",
-      "Al-Nassr": "النصر",
-      "Al Ittihad": "الاتحاد",
-      "Al-Ittihad": "الاتحاد",
-      "Al Ahli": "الأهلي",
-      "Al-Ahli": "الأهلي",
-      "Al Shabab": "الشباب",
-      "Al-Shabab": "الشباب",
-      "Al Ettifaq": "الاتفاق",
-      "Al-Ettifaq": "الاتفاق",
-      "Al Fateh": "الفتح",
-      "Al-Fateh": "الفتح",
-      "Al Fayha": "الفيحاء",
-      "Al-Fayha": "الفيحاء",
       "Al Taawoun": "التعاون",
       "Al-Taawoun": "التعاون",
+      "Al Taawon": "التعاون",
+      "Al Taawoun FC": "التعاون",
+
+      "Al Ittihad": "الاتحاد",
+      "Al-Ittihad": "الاتحاد",
+      "Al Ittihad Club": "الاتحاد",
+
+      "Al Ahli": "الأهلي",
+      "Al-Ahli": "الأهلي",
+      "Al Ahli Saudi": "الأهلي",
+
+      "Al Shabab": "الشباب",
+      "Al-Shabab": "الشباب",
+
+      "Al Ettifaq": "الاتفاق",
+      "Al-Ettifaq": "الاتفاق",
+
+      "Al Fateh": "الفتح",
+      "Al-Fateh": "الفتح",
+
+      "Al Fayha": "الفيحاء",
+      "Al-Fayha": "الفيحاء",
+
       "Al Khaleej": "الخليج",
       "Al-Khaleej": "الخليج",
+
       "Al Riyadh": "الرياض",
       "Al-Riyadh": "الرياض",
+
       "Al Qadsiah": "القادسية",
       "Al-Qadsiah": "القادسية",
-      "Al Wehda": "الوحدة",
-      "Al-Wehda": "الوحدة",
-      "Al Raed": "الرائد",
-      "Al-Raed": "الرائد",
-      "Al Okhdood": "الأخدود",
-      "Al-Okhdood": "الأخدود",
+
       "Al Hazem": "الحزم",
       "Al-Hazem": "الحزم",
+
+      "Al Raed": "الرائد",
+      "Al-Raed": "الرائد",
+      "Al Raed FC": "الرائد",
+
+      "Al Okhdood": "الأخدود",
+      "Al-Okhdood": "الأخدود",
+
       "Al Kholood": "الخلود",
       "Al-Kholood": "الخلود",
+
       "Al Najma": "النجمة",
       "Al-Najma": "النجمة",
       "Al Najmah": "النجمة",
       "Al-Najmah": "النجمة",
+
       "Damac": "ضمك",
-      "Al Raed": "الرائد",
+
       "Al Batin": "الباطن",
+      "Al-Batin": "الباطن",
+
       "Al Ain": "العين",
+      "Al-Ain": "العين",
+
       "Al Wasl": "الوصل",
-      "Al Ain FC": "العين",
+      "Al-Wasl": "الوصل",
+
       "Neom SC": "نيوم",
       "NEOM": "نيوم",
       "Neom": "نيوم",
+
       "Al Jabalain": "الجبلين",
+      "Al-Jabalain": "الجبلين",
+
       "Al Arabi": "العربي",
+      "Al-Arabi": "العربي",
+
       "Al Bukayriyah": "البكيرية",
+      "Al-Bukayriyah": "البكيرية",
+
       "Al Safa": "الصفا",
+      "Al-Safa": "الصفا",
+
       "Al Diriyah": "الدرعية",
+      "Al-Diriyah": "الدرعية",
+
       "Al Suqoor": "الصقور",
+      "Al-Suqoor": "الصقور",
+
       "Al Zulfi": "الزلفي",
+      "Al-Zulfi": "الزلفي",
+
       "Al Adalah": "العدالة",
-      "Al Jandal": "الجندل"
+      "Al-Adalah": "العدالة",
+
+      "Al Jandal": "الجندل",
+      "Al-Jandal": "الجندل",
+
+      "Al Gharafa": "الغرافة",
+      "Al-Gharafa": "الغرافة",
+      "Al Gharafa SC": "الغرافة",
+
+      "Al Sadd": "السد",
+      "Al-Sadd": "السد",
+      "Al Sadd SC": "السد",
+
+      "Al Faisaly": "الفيصلي",
+      "Al-Faisaly": "الفيصلي",
+
+      "Al Shamal": "الشمال",
+      "Al-Shamal": "الشمال",
+      "Al Shamal SC": "الشمال",
+
+      "Shabab Al Ahli": "شباب الأهلي",
+      "Shabab Al-Ahli": "شباب الأهلي",
+      "Shabab Al Ahli Dubai FC": "شباب الأهلي",
+
+      "Neftchi": "نفتشي فرغانة",
+      "Neftchi Fargona": "نفتشي فرغانة",
+      "Neftchi Fergana": "نفتشي فرغانة",
+
+      "Pakhtakor": "باختاكور",
+      "Pakhtakor Tashkent": "باختاكور",
+
+      "Abha": "أبها",
+      "Abha Club": "أبها",
+
+      "Al Wehda": "الوحدة",
+      "Al-Wehda": "الوحدة",
+
+      "Al Wehda Mecca": "الوحدة",
+
+      "Al Akhdoud": "الأخدود",
+      "Al-Akhdoud": "الأخدود"
 
     };
 
+
+    /* =========================================================
+       أسماء البطولات بالعربي
+    ========================================================= */
 
     const competitionNames = {
 
-      "Saudi Pro League": "الدوري السعودي",
-      "Saudi Professional League": "الدوري السعودي",
-      "Saudi King's Cup": "كأس خادم الحرمين الشريفين",
-      "King's Cup": "كأس خادم الحرمين الشريفين",
-      "Saudi Super Cup": "كأس السوبر السعودي",
-      "AFC Champions League": "دوري أبطال آسيا",
-      "AFC Champions League Elite": "دوري أبطال آسيا للنخبة",
-      "AFC Champions League Two": "دوري أبطال آسيا 2",
-      "AFC Champions League 2": "دوري أبطال آسيا 2",
-      "Club World Cup": "كأس العالم للأندية",
-      "FIFA Club World Cup": "كأس العالم للأندية",
-      "Arab Club Champions Cup": "كأس الملك سلمان للأندية",
-      "Friendly International": "مباراة ودية",
-      "Friendlies": "مباراة ودية"
+      "Saudi Pro League":
+        "الدوري السعودي",
+
+      "Saudi Professional League":
+        "الدوري السعودي",
+
+      "Saudi King's Cup":
+        "كأس خادم الحرمين الشريفين",
+
+      "King's Cup":
+        "كأس خادم الحرمين الشريفين",
+
+      "Kings Cup":
+        "كأس خادم الحرمين الشريفين",
+
+      "Saudi Super Cup":
+        "كأس السوبر السعودي",
+
+      "AFC Champions League":
+        "دوري أبطال آسيا",
+
+      "AFC Champions League Elite":
+        "دوري أبطال آسيا للنخبة",
+
+      "AFC Champions League Elite West":
+        "دوري أبطال آسيا للنخبة",
+
+      "AFC Champions League Two":
+        "دوري أبطال آسيا 2",
+
+      "AFC Champions League 2":
+        "دوري أبطال آسيا 2",
+
+      "AFC Champions League Two - Group Stage":
+        "دوري أبطال آسيا 2",
+
+      "Club World Cup":
+        "كأس العالم للأندية",
+
+      "FIFA Club World Cup":
+        "كأس العالم للأندية",
+
+      "Arab Club Champions Cup":
+        "كأس الملك سلمان للأندية",
+
+      "Friendly International":
+        "مباراة ودية",
+
+      "Friendlies":
+        "مباراة ودية",
+
+      "Friendly":
+        "مباراة ودية"
 
     };
 
 
+    /* =========================================================
+       أسماء لاعبي الهلال بالعربي
+    ========================================================= */
+
     const hilalPlayerNames = {
 
-      "Salem Al-Dawsari": "سالم الدوسري",
-      "Salem Al Dawsari": "سالم الدوسري",
-      "Aleksandar Mitrovic": "ألكسندر ميتروفيتش",
-      "Aleksandar Mitrović": "ألكسندر ميتروفيتش",
-      "Malcom": "مالكوم",
-      "Malcom Filipe Silva de Oliveira": "مالكوم",
-      "Ruben Neves": "روبن نيفيز",
-      "Rúben Neves": "روبن نيفيز",
-      "Sergej Milinkovic-Savic": "سيرجي سافيتش",
-      "Sergej Milinković-Savić": "سيرجي سافيتش",
-      "Joao Cancelo": "جواو كانسيلو",
-      "João Cancelo": "جواو كانسيلو",
-      "Kalidou Koulibaly": "كاليدو كوليبالي",
-      "Yassine Bounou": "ياسين بونو",
-      "Bono": "ياسين بونو",
-      "Mohammed Kanno": "محمد كنو",
-      "Mohamed Kanno": "محمد كنو",
-      "Nasser Al-Dawsari": "ناصر الدوسري",
-      "Nasser Al Dawsari": "ناصر الدوسري",
-      "Renan Lodi": "رينان لودي",
-      "Marcos Leonardo": "ماركوس ليوناردو",
-      "Hamad Al-Yami": "حمد اليامي",
-      "Hamad Al Yami": "حمد اليامي",
-      "Ali Al-Bulaihi": "علي البليهي",
-      "Ali Al Bulayhi": "علي البليهي",
-      "Mohammed Al-Breik": "محمد البريك",
-      "Mohammed Al Burayk": "محمد البريك",
-      "Abdulelah Al-Malki": "عبدالإله المالكي",
-      "Abdullah Al-Hamdan": "عبدالله الحمدان",
-      "Khalid Al-Ghannam": "خالد الغنام",
-      "Musab Al-Juwayr": "مصعب الجوير",
-      "Musab Al Juwayr": "مصعب الجوير"
+      "Salem Al-Dawsari":
+        "سالم الدوسري",
+
+      "Salem Al Dawsari":
+        "سالم الدوسري",
+
+      "Aleksandar Mitrovic":
+        "ألكسندر ميتروفيتش",
+
+      "Aleksandar Mitrović":
+        "ألكسندر ميتروفيتش",
+
+      "Malcom":
+        "مالكوم",
+
+      "Malcom Filipe Silva de Oliveira":
+        "مالكوم",
+
+      "Ruben Neves":
+        "روبن نيفيز",
+
+      "Rúben Neves":
+        "روبن نيفيز",
+
+      "Sergej Milinkovic-Savic":
+        "سيرجي سافيتش",
+
+      "Sergej Milinković-Savić":
+        "سيرجي سافيتش",
+
+      "Joao Cancelo":
+        "جواو كانسيلو",
+
+      "João Cancelo":
+        "جواو كانسيلو",
+
+      "Kalidou Koulibaly":
+        "كاليدو كوليبالي",
+
+      "Yassine Bounou":
+        "ياسين بونو",
+
+      "Bono":
+        "ياسين بونو",
+
+      "Mohammed Kanno":
+        "محمد كنو",
+
+      "Mohamed Kanno":
+        "محمد كنو",
+
+      "Nasser Al-Dawsari":
+        "ناصر الدوسري",
+
+      "Nasser Al Dawsari":
+        "ناصر الدوسري",
+
+      "Renan Lodi":
+        "رينان لودي",
+
+      "Marcos Leonardo":
+        "ماركوس ليوناردو",
+
+      "Hamad Al-Yami":
+        "حمد اليامي",
+
+      "Hamad Al Yami":
+        "حمد اليامي",
+
+      "Ali Al-Bulaihi":
+        "علي البليهي",
+
+      "Ali Al Bulayhi":
+        "علي البليهي",
+
+      "Mohammed Al-Breik":
+        "محمد البريك",
+
+      "Mohammed Al Burayk":
+        "محمد البريك",
+
+      "Abdulelah Al-Malki":
+        "عبدالإله المالكي",
+
+      "Abdullah Al-Hamdan":
+        "عبدالله الحمدان",
+
+      "Khalid Al-Ghannam":
+        "خالد الغنام",
+
+      "Musab Al-Juwayr":
+        "مصعب الجوير",
+
+      "Musab Al Juwayr":
+        "مصعب الجوير",
+
+      "Gabriel Martinelli":
+        "غابرييل مارتينيلي",
+
+      "Ollie Watkins":
+        "أولي واتكينز",
+
+      "Mohamed Kader Meite":
+        "محمد كادير ميتي",
+
+      "Sultan Mandash":
+        "سلطان مندش",
+
+      "Crysencio Summerville":
+        "كريسينسيو سومرفيل",
+
+      "Saimon Bouabre":
+        "سايمون بوبري",
+
+      "Murad Al Hawsawi":
+        "مراد الحوساوي",
+
+      "Sabri Abdu Dahal":
+        "صبري عبدو دهال",
+
+      "Nawaf Al-Habashi":
+        "نواف الحبشي",
+
+      "Abdullah Al-Anazi":
+        "عبدالله العنزي",
+
+      "Theo Hernández":
+        "ثيو هيرنانديز",
+
+      "Theo Hernandez":
+        "ثيو هيرنانديز",
+
+      "Yusuf Akçiçek":
+        "يوسف أكتشيك",
+
+      "Yusuf Akcicek":
+        "يوسف أكتشيك",
+
+      "Hassan Tambakti":
+        "حسان تمبكتي",
+
+      "Hassan Al-Tambakti":
+        "حسان تمبكتي",
+
+      "Ali Lajami":
+        "علي لاجامي",
+
+      "Moteb Al-Harbi":
+        "متعب الحربي",
+
+      "Mohammed Mahzari":
+        "محمد مهزاري",
+
+      "Meshal Al Dawood":
+        "مشعل الداوود",
+
+      "Saad Al Mutairy":
+        "سعد المطيري",
+
+      "Mohammed Al-Sarnoukh":
+        "محمد السرنّوخ",
+
+      "Mohamed Al-Sarnukh":
+        "محمد السرنّوخ",
+
+      "Mohammed Al-Owais":
+        "محمد العويس",
+
+      "Mohammed Al-Yami":
+        "محمد اليامي",
+
+      "Rayan Khalid Al-Dossary":
+        "ريان خالد الدوسري"
 
     };
 
@@ -2400,7 +2676,9 @@
           english.toLowerCase() ===
           lower
         ) {
+
           return arabic;
+
         }
 
       }
@@ -2416,14 +2694,14 @@
           english.toLowerCase() ===
           lower
         ) {
+
           return arabic;
+
         }
 
       }
 
-      if (
-        isPlayer
-      ) {
+      if (isPlayer) {
 
         for (
           const [english, arabic]
@@ -2436,53 +2714,25 @@
             english.toLowerCase() ===
             lower
           ) {
+
             return arabic;
+
           }
 
         }
+
+        return "لاعب";
 
       }
 
-      /*
-       * إذا لم يكن الاسم موجودًا في القاموس
-       * نعرض تسمية عربية بدل إظهار النص الأجنبي.
-       */
-
-      return isPlayer
-        ? "لاعب"
-        : "الفريق المنافس";
+      return "الفريق المنافس";
 
     }
 
 
-    function sofascoreFetch(
-      endpoint
-    ) {
-
-      return fetch(
-        SOFASCORE_BASE + endpoint,
-        {
-          cache: "no-store"
-        }
-      )
-      .then(
-        response => {
-
-          if (!response.ok) {
-
-            throw new Error(
-              `تعذر تحميل بيانات المباراة`
-            );
-
-          }
-
-          return response.json();
-
-        }
-      );
-
-    }
-
+    /* =========================================================
+       التخزين المحلي — آخر بيانات ناجحة
+    ========================================================= */
 
     function loadCachedHilalMatches() {
 
@@ -2498,17 +2748,15 @@
         if (
           !Array.isArray(cached)
         ) {
+
           return [];
+
         }
 
         return cached.filter(
           match =>
             match &&
-            match.id &&
-            (
-              match.homeTeam?.id === HILAL_TEAM_ID ||
-              match.awayTeam?.id === HILAL_TEAM_ID
-            )
+            match.id
         );
 
       } catch (error) {
@@ -2526,28 +2774,9 @@
 
       try {
 
-        const cleaned =
-          matches.map(
-            match => {
-
-              const copy = {
-                ...match
-              };
-
-              /*
-               * تفاصيل المباريات لا نحتاج حفظها
-               * داخل التخزين إذا كانت ضخمة.
-               * لكن نحفظ الأهداف والتشكيلة لأنها مهمة.
-               */
-
-              return copy;
-
-            }
-          );
-
         localStorage.setItem(
           HILAL_MATCH_CACHE_KEY,
-          JSON.stringify(cleaned)
+          JSON.stringify(matches)
         );
 
       } catch (error) {
@@ -2562,88 +2791,9 @@
     }
 
 
-    function mergeHilalMatches(
-      existing,
-      incoming
-    ) {
-
-      const map =
-        new Map();
-
-
-      [
-        ...existing,
-        ...incoming
-      ].forEach(
-        match => {
-
-          if (
-            !match ||
-            !match.id
-          ) {
-            return;
-          }
-
-          const homeId =
-            match.homeTeam?.id;
-
-          const awayId =
-            match.awayTeam?.id;
-
-
-          if (
-            homeId !== HILAL_TEAM_ID &&
-            awayId !== HILAL_TEAM_ID
-          ) {
-            return;
-          }
-
-
-          const old =
-            map.get(
-              match.id
-            );
-
-
-          if (old) {
-
-            map.set(
-              match.id,
-              {
-                ...old,
-                ...match,
-
-                liveDetails:
-                  match.liveDetails ||
-                  old.liveDetails ||
-                  null
-              }
-            );
-
-          } else {
-
-            map.set(
-              match.id,
-              match
-            );
-
-          }
-
-        }
-      );
-
-
-      return Array.from(
-        map.values()
-      )
-      .sort(
-        (a, b) =>
-          (a.startTimestamp || 0) -
-          (b.startTimestamp || 0)
-      );
-
-    }
-
+    /* =========================================================
+       تحميل بيانات الهلال من الملف الأونلاين
+    ========================================================= */
 
     async function loadHilalMatches() {
 
@@ -2652,211 +2802,75 @@
           "footballUpdateStatus"
         );
 
-
       try {
 
         status.textContent =
           "جاري تحديث مباريات الهلال...";
 
 
-        /*
-         * نجيب عددًا كبيرًا من الصفحات القديمة
-         * حتى لا تختفي المباريات مع مرور الوقت.
-         */
+        const response =
+          await fetch(
+            `${HILAL_DATA_URL}?ts=${Date.now()}`,
+            {
+              cache: "no-store"
+            }
+          );
 
-        const requests = [];
 
+        if (!response.ok) {
 
-        for (
-          let page = 0;
-          page <= 5;
-          page++
-        ) {
-
-          requests.push(
-            sofascoreFetch(
-              `/team/${HILAL_TEAM_ID}/events/next/${page}`
-            )
+          throw new Error(
+            `HTTP Error: ${response.status}`
           );
 
         }
 
 
-        for (
-          let page = 0;
-          page <= 20;
-          page++
+        const data =
+          await response.json();
+
+
+        if (
+          !data ||
+          !Array.isArray(
+            data.matches
+          )
         ) {
 
-          requests.push(
-            sofascoreFetch(
-              `/team/${HILAL_TEAM_ID}/events/last/${page}`
-            )
+          throw new Error(
+            "بيانات الهلال غير صالحة"
           );
 
         }
 
 
-        const results =
-          await Promise.allSettled(
-            requests
-          );
+        if (
+          data.matches.length
+        ) {
 
-
-        const incomingMatches = [];
-
-
-        results.forEach(
-          result => {
-
-            if (
-              result.status ===
-                "fulfilled" &&
-              result.value &&
-              Array.isArray(
-                result.value.events
-              )
-            ) {
-
-              incomingMatches.push(
-                ...result.value.events
+          hilalMatches =
+            data.matches
+              .filter(
+                match =>
+                  match &&
+                  match.id &&
+                  match.homeTeam &&
+                  match.awayTeam
               );
 
-            }
-
-          }
-        );
-
-
-        /*
-         * ندمج البيانات الجديدة مع كل المباريات
-         * التي سبق حفظها.
-         */
-
-        const cachedMatches =
-          loadCachedHilalMatches();
-
-
-        hilalMatches =
-          mergeHilalMatches(
-            cachedMatches,
-            incomingMatches
+          saveCachedHilalMatches(
+            hilalMatches
           );
 
+        } else {
 
-        /*
-         * نجيب تفاصيل عدد أكبر من المباريات السابقة.
-         */
+          const cached =
+            loadCachedHilalMatches();
 
-        const importantMatches =
-          hilalMatches
-            .filter(
-              match => {
+          hilalMatches =
+            cached;
 
-                const type =
-                  match.status?.type;
-
-                return (
-                  type === "inprogress" ||
-                  type === "finished"
-                );
-
-              }
-            )
-            .slice(-30);
-
-
-        const details =
-          await Promise.allSettled(
-            importantMatches.map(
-              async match => {
-
-                const [
-                  incidents,
-                  lineups
-                ] =
-                  await Promise.allSettled([
-
-                    sofascoreFetch(
-                      `/event/${match.id}/incidents`
-                    ),
-
-                    sofascoreFetch(
-                      `/event/${match.id}/lineups`
-                    )
-
-                  ]);
-
-
-                return {
-
-                  id:
-                    match.id,
-
-                  incidents:
-                    incidents.status ===
-                      "fulfilled"
-                      ? incidents.value
-                      : null,
-
-                  lineups:
-                    lineups.status ===
-                      "fulfilled"
-                      ? lineups.value
-                      : null
-
-                };
-
-              }
-            )
-          );
-
-
-        details.forEach(
-          result => {
-
-            if (
-              result.status !==
-              "fulfilled"
-            ) {
-              return;
-            }
-
-
-            const detail =
-              result.value;
-
-
-            const match =
-              hilalMatches.find(
-                item =>
-                  item.id ===
-                  detail.id
-              );
-
-
-            if (!match) {
-              return;
-            }
-
-
-            match.liveDetails = {
-
-              incidents:
-                detail.incidents,
-
-              lineups:
-                detail.lineups
-
-            };
-
-          }
-        );
-
-
-        saveCachedHilalMatches(
-          hilalMatches
-        );
+        }
 
 
         renderHilalMatches();
@@ -2864,16 +2878,45 @@
         syncHilalCalendarEvents();
 
 
-        status.textContent =
-          `آخر تحديث ${new Date().toLocaleTimeString(
-            "ar-SA",
-            {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true
-            }
-          )}`;
+        if (
+          data.updatedAt
+        ) {
 
+          const updateDate =
+            new Date(
+              data.updatedAt
+            );
+
+
+          if (
+            !Number.isNaN(
+              updateDate.getTime()
+            )
+          ) {
+
+            status.textContent =
+              `آخر تحديث للبيانات ${updateDate.toLocaleTimeString(
+                "ar-SA",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true
+                }
+              )}`;
+
+          } else {
+
+            status.textContent =
+              "تم تحديث مباريات الهلال";
+
+          }
+
+        } else {
+
+          status.textContent =
+            "تم تحديث مباريات الهلال";
+
+        }
 
       } catch (error) {
 
@@ -2892,21 +2935,21 @@
         ) {
 
           hilalMatches =
-            cachedMatches.sort(
-              (a, b) =>
-                (a.startTimestamp || 0) -
-                (b.startTimestamp || 0)
-            );
-
+            cachedMatches;
 
           renderHilalMatches();
 
+          syncHilalCalendarEvents();
 
           status.textContent =
-            "تم عرض المباريات المحفوظة";
-
+            "تعذر التحديث — تم عرض آخر البيانات";
 
         } else {
+
+          hilalMatches =
+            [];
+
+          renderHilalMatches();
 
           status.textContent =
             "تعذر تحديث مباريات الهلال";
@@ -2918,12 +2961,16 @@
     }
 
 
+    /* =========================================================
+       تواريخ وأوقات المباريات
+    ========================================================= */
+
     function getSaudiDate(
       timestamp
     ) {
 
       return new Date(
-        timestamp * 1000
+        Number(timestamp) * 1000
       );
 
     }
@@ -2945,7 +2992,9 @@
           month: "short"
         }
       ).format(
-        getSaudiDate(timestamp)
+        getSaudiDate(
+          timestamp
+        )
       );
 
     }
@@ -2967,11 +3016,17 @@
           hour12: true
         }
       ).format(
-        getSaudiDate(timestamp)
+        getSaudiDate(
+          timestamp
+        )
       );
 
     }
 
+
+    /* =========================================================
+       المباراة القادمة
+    ========================================================= */
 
     function getNextHilalMatch() {
 
@@ -2980,15 +3035,32 @@
           Date.now() / 1000
         );
 
+
       return hilalMatches
         .filter(
-          match =>
-            match &&
-            match.startTimestamp &&
-            match.startTimestamp > now &&
-            match.status &&
-            match.status.type !== "canceled" &&
-            match.status.type !== "finished"
+          match => {
+
+            if (
+              !match ||
+              !match.startTimestamp
+            ) {
+
+              return false;
+
+            }
+
+
+            const type =
+              match.status?.type;
+
+
+            return (
+              match.startTimestamp > now &&
+              type !== "canceled" &&
+              type !== "finished"
+            );
+
+          }
         )
         .sort(
           (a, b) =>
@@ -3006,8 +3078,10 @@
           "nextMatchCountdown"
         );
 
+
       const match =
         getNextHilalMatch();
+
 
       clearInterval(
         hilalCountdownTimer
@@ -3036,6 +3110,7 @@
           match.homeTeam?.name
         );
 
+
       const away =
         translateHilalName(
           match.awayTeam?.name
@@ -3048,16 +3123,20 @@
           const now =
             Date.now();
 
+
           const target =
-            match.startTimestamp *
-            1000;
+            Number(
+              match.startTimestamp
+            ) * 1000;
+
 
           const difference =
-            target -
-            now;
+            target - now;
 
 
-          if (difference <= 0) {
+          if (
+            difference <= 0
+          ) {
 
             container.innerHTML = `
               <div class="next-match-label">
@@ -3089,30 +3168,35 @@
               difference / 1000
             );
 
+
           const days =
             Math.floor(
               totalSeconds / 86400
             );
+
 
           const hours =
             Math.floor(
               (totalSeconds % 86400) / 3600
             );
 
+
           const minutes =
             Math.floor(
               (totalSeconds % 3600) / 60
             );
 
+
           const seconds =
-            totalSeconds %
-            60;
+            totalSeconds % 60;
 
 
           let timerText;
 
 
-          if (days > 0) {
+          if (
+            days > 0
+          ) {
 
             timerText =
               `${days} يوم ` +
@@ -3156,7 +3240,9 @@
             </div>
 
             <div class="next-match-timer">
-              ${escapeHTML(timerText)}
+              ${escapeHTML(
+                timerText
+              )}
             </div>
 
             <div class="next-match-status">
@@ -3179,19 +3265,16 @@
     }
 
 
+    /* =========================================================
+       حالة المباراة
+    ========================================================= */
+
     function getStatusText(
       match
     ) {
 
-      if (
-        !match.status
-      ) {
-        return "";
-      }
-
-
       const type =
-        match.status.type;
+        match.status?.type;
 
 
       if (
@@ -3230,147 +3313,201 @@
       }
 
 
-      if (
-        type === "halftime"
-      ) {
-
-        return "بين الشوطين";
-
-      }
-
-
       return "قادمة";
 
     }
 
 
+    /* =========================================================
+       البطولة
+    ========================================================= */
+
     function getCompetitionName(
       match
     ) {
 
+      const name =
+        match.tournament?.name ||
+        match.league?.name ||
+        match.competition?.name ||
+        "";
+
+
       if (
-        match.tournament &&
-        match.tournament.name
+        competitionNames[name]
       ) {
 
-        return translateHilalName(
-          match.tournament.name
-        );
+        return competitionNames[name];
 
       }
+
+
+      const translated =
+        translateHilalName(
+          name
+        );
+
+
+      if (
+        translated &&
+        translated !== "الفريق المنافس"
+      ) {
+
+        return translated;
+
+      }
+
 
       return "مباراة";
 
     }
 
 
+    /* =========================================================
+       الأهداف من بيانات Sofascore
+    ========================================================= */
+
     function getGoals(
       match
     ) {
 
       const incidents =
-        match.liveDetails &&
-        match.liveDetails.incidents &&
-        match.liveDetails.incidents.incidents;
-
-
-      if (
-        !Array.isArray(incidents)
-      ) {
-
-        return [];
-
-      }
+        Array.isArray(
+          match.incidents
+        )
+          ? match.incidents
+          : [];
 
 
       return incidents
         .filter(
           incident =>
-            incident.incidentType ===
-              "goal" ||
-            incident.incidentClass ===
-              "goal"
+            incident &&
+            (
+              incident.incidentType ===
+                "goal" ||
+              incident.incidentClass ===
+                "goal" ||
+              incident.incidentClass ===
+                "penalty"
+            )
         )
         .map(
           goal => {
 
-            const isHome =
-              goal.isHome === true;
+            const scorer =
+              goal.player?.name ||
+              goal.scorer?.name ||
+              goal.playerName ||
+              "";
 
 
-            let scorer =
-              goal.player?.name
-                ? translateHilalName(
-                    goal.player.name,
-                    true
-                  )
-                : "لاعب";
+            const assist =
+              goal.assist1?.name ||
+              goal.assist2?.name ||
+              goal.assist?.name ||
+              goal.assistPlayer?.name ||
+              "";
 
 
-            let assist =
-              goal.assist1?.name
-                ? translateHilalName(
-                    goal.assist1.name,
-                    true
-                  )
-                : "";
+            let minute =
+              "";
+
+
+            if (
+              goal.time !== undefined &&
+              goal.time !== null
+            ) {
+
+              minute =
+                `${goal.time}'`;
+
+            }
+
+
+            if (
+              goal.addedTime !== undefined &&
+              goal.addedTime !== null
+            ) {
+
+              minute +=
+                `+${goal.addedTime}`;
+
+            }
 
 
             return {
 
-              minute:
-                goal.time
-                  ? `${goal.time}'`
+              minute,
+
+              scorer:
+                translateHilalName(
+                  scorer,
+                  true
+                ),
+
+              assist:
+                assist
+                  ? translateHilalName(
+                      assist,
+                      true
+                    )
                   : "",
-
-              scorer,
-
-              assist,
 
               isOwnGoal:
                 goal.incidentClass ===
-                "ownGoal",
+                  "ownGoal" ||
+                goal.isOwnGoal === true,
 
-              isHome
+              isHome:
+                goal.isHome === true
 
             };
 
           }
+        )
+        .filter(
+          goal =>
+            goal.scorer &&
+            goal.scorer !== "لاعب"
         );
 
     }
 
 
+    /* =========================================================
+       التشكيلة من بيانات Sofascore
+    ========================================================= */
+
     function getStartingLineup(
       match
     ) {
 
-      const lineups =
-        match.liveDetails &&
-        match.liveDetails.lineups;
+      if (
+        !match.lineups
+      ) {
 
-
-      if (!lineups) {
         return null;
+
       }
 
 
       const isHome =
-        match.homeTeam &&
-        match.homeTeam.id ===
-        HILAL_TEAM_ID;
+        Number(
+          match.homeTeam?.id
+        ) === HILAL_TEAM_ID;
 
 
-      const hilalLineup =
+      const side =
         isHome
-          ? lineups.home
-          : lineups.away;
+          ? match.lineups.home
+          : match.lineups.away;
 
 
       if (
-        !hilalLineup ||
+        !side ||
         !Array.isArray(
-          hilalLineup.players
+          side.players
         )
       ) {
 
@@ -3380,42 +3517,42 @@
 
 
       const starters =
-        hilalLineup.players
+        side.players
           .filter(
             item =>
-              item.substitute !== true
+              item &&
+              item.substitute !== true &&
+              item.player &&
+              item.player.name
           )
           .map(
-            item => {
-
-              if (
-                item.player &&
-                item.player.name
-              ) {
-
-                return translateHilalName(
-                  item.player.name,
-                  true
-                );
-
-              }
-
-              return null;
-
-            }
+            item =>
+              translateHilalName(
+                item.player.name,
+                true
+              )
           )
-          .filter(Boolean);
+          .filter(
+            name =>
+              name &&
+              name !== "لاعب"
+          );
 
 
-      if (!starters.length) {
+      if (
+        !starters.length
+      ) {
+
         return null;
+
       }
 
 
       return {
 
         formation:
-          hilalLineup.formation ||
+          side.formation ||
+          side.formationName ||
           "",
 
         players:
@@ -3426,12 +3563,17 @@
     }
 
 
+    /* =========================================================
+       عرض المباريات
+    ========================================================= */
+
     function renderHilalMatches() {
 
       const container =
         document.getElementById(
           "matchesGrid"
         );
+
 
       const more =
         document.getElementById(
@@ -3442,7 +3584,9 @@
       renderNextHilalCountdown();
 
 
-      if (!hilalMatches.length) {
+      if (
+        !hilalMatches.length
+      ) {
 
         container.innerHTML = `
           <div class="empty">
@@ -3463,20 +3607,22 @@
         );
 
 
-      /*
-       * القادمة أولًا ثم السابقة من الأحدث للأقدم.
-       */
-
       const upcoming =
         [...hilalMatches]
           .filter(
             match =>
-              (match.startTimestamp || 0) >= now
+              Number(
+                match.startTimestamp
+              ) >= now
           )
           .sort(
             (a, b) =>
-              (a.startTimestamp || 0) -
-              (b.startTimestamp || 0)
+              Number(
+                a.startTimestamp || 0
+              ) -
+              Number(
+                b.startTimestamp || 0
+              )
           );
 
 
@@ -3484,22 +3630,31 @@
         [...hilalMatches]
           .filter(
             match =>
-              (match.startTimestamp || 0) < now
+              Number(
+                match.startTimestamp
+              ) < now
           )
           .sort(
             (a, b) =>
-              (b.startTimestamp || 0) -
-              (a.startTimestamp || 0)
+              Number(
+                b.startTimestamp || 0
+              ) -
+              Number(
+                a.startTimestamp || 0
+              )
           );
 
 
-      let matches = [
-        ...upcoming,
-        ...previous
-      ];
+      let matches =
+        [
+          ...upcoming,
+          ...previous
+        ];
 
 
-      if (!showAllMatches) {
+      if (
+        !showAllMatches
+      ) {
 
         matches =
           matches.slice(
@@ -3521,10 +3676,6 @@
           .join("");
 
 
-      /*
-       * إعادة فتح التشكيلات التي كان المستخدم فاتحها.
-       */
-
       openedHilalLineups.forEach(
         matchId => {
 
@@ -3533,10 +3684,12 @@
               `.lineup-content[data-match-id="${matchId}"]`
             );
 
+
           const button =
             document.querySelector(
               `.lineup-toggle[data-match-id="${matchId}"]`
             );
+
 
           if (
             content &&
@@ -3571,6 +3724,7 @@
                 const matchId =
                   button.dataset.matchId;
 
+
                 const content =
                   document.querySelector(
                     `.lineup-content[data-match-id="${matchId}"]`
@@ -3594,7 +3748,9 @@
                 );
 
 
-                if (opened) {
+                if (
+                  opened
+                ) {
 
                   openedHilalLineups.add(
                     matchId
@@ -3608,6 +3764,20 @@
 
                 }
 
+
+                try {
+
+                  localStorage.setItem(
+                    HILAL_LINEUP_OPEN_KEY,
+                    JSON.stringify(
+                      Array.from(
+                        openedHilalLineups
+                      )
+                    )
+                  );
+
+                } catch (error) {}
+
               }
             );
 
@@ -3619,7 +3789,9 @@
         hilalMatches.length;
 
 
-      if (total > 12) {
+      if (
+        total > 12
+      ) {
 
         more.innerHTML = `
           <button
@@ -3660,6 +3832,10 @@
     }
 
 
+    /* =========================================================
+       بطاقة المباراة
+    ========================================================= */
+
     function renderMatchCard(
       match
     ) {
@@ -3682,36 +3858,30 @@
 
 
       const isLive =
-        status ===
-        "inprogress";
+        status === "inprogress";
 
 
       const isFinished =
-        status ===
-        "finished";
+        status === "finished";
 
 
       const homeScore =
-        match.homeScore &&
-        (
-          match.homeScore.normaltime ??
-          match.homeScore.current ??
-          match.homeScore.display
-        );
+        match.homeScore?.current ??
+        match.homeScore?.display;
 
 
       const awayScore =
-        match.awayScore &&
-        (
-          match.awayScore.normaltime ??
-          match.awayScore.current ??
-          match.awayScore.display
-        );
+        match.awayScore?.current ??
+        match.awayScore?.display;
 
 
       const scoreText =
         homeScore != null &&
-        awayScore != null
+        awayScore != null &&
+        (
+          isFinished ||
+          isLive
+        )
           ? `${homeScore} - ${awayScore}`
           : "—";
 
@@ -3735,7 +3905,9 @@
 
 
       const goals =
-        getGoals(match);
+        getGoals(
+          match
+        );
 
 
       const lineup =
@@ -3764,7 +3936,11 @@
                         )}
                         ${
                           goal.minute
-                            ? ` (${escapeHTML(goal.minute)})`
+                            ? ` (${escapeHTML(
+                                String(
+                                  goal.minute
+                                )
+                              )})`
                             : ""
                         }
                       </span>
@@ -3856,7 +4032,9 @@
 
           <div class="match-competition">
             ${escapeHTML(
-              getCompetitionName(match)
+              getCompetitionName(
+                match
+              )
             )}
           </div>
 
@@ -3874,12 +4052,16 @@
                 isLive
                   ? `
                     <div class="match-live-label">
-                      ${escapeHTML(statusText)}
+                      ${escapeHTML(
+                        statusText
+                      )}
                     </div>
                   `
                   : `
                     <div class="match-time">
-                      ${escapeHTML(dateText)}
+                      ${escapeHTML(
+                        dateText
+                      )}
                     </div>
                   `
               }
@@ -3887,16 +4069,23 @@
 
               <div class="score">
                 ${escapeHTML(
-                  String(scoreText)
+                  String(
+                    scoreText
+                  )
                 )}
               </div>
 
 
               <div class="match-time">
                 ${
-                  isLive || isFinished
-                    ? escapeHTML(statusText)
-                    : escapeHTML(timeText)
+                  isLive ||
+                  isFinished
+                    ? escapeHTML(
+                        statusText
+                      )
+                    : escapeHTML(
+                        timeText
+                      )
                 }
               </div>
 
@@ -3920,6 +4109,10 @@
     }
 
 
+    /* =========================================================
+       إضافة مباريات الهلال للتقويم
+    ========================================================= */
+
     function syncHilalCalendarEvents() {
 
       let changed = false;
@@ -3933,7 +4126,9 @@
             !match.homeTeam ||
             !match.awayTeam
           ) {
+
             return;
+
           }
 
 
@@ -3953,11 +4148,19 @@
             )}`;
 
 
+          const matchId =
+            String(
+              match.id
+            );
+
+
           const existing =
             events.find(
               event =>
                 event.sofascoreEventId ===
-                match.id
+                  matchId ||
+                event.fotmobMatchId ===
+                  matchId
             );
 
 
@@ -3999,7 +4202,7 @@
               systemEvent: true,
 
               sofascoreEventId:
-                match.id
+                matchId
 
             });
 
@@ -4011,7 +4214,8 @@
 
 
             if (
-              existing.title !== title
+              existing.title !==
+              title
             ) {
 
               existing.title =
@@ -4023,7 +4227,21 @@
 
 
             if (
-              existing.time !== time
+              existing.date !==
+              date
+            ) {
+
+              existing.date =
+                date;
+
+              updated = true;
+
+            }
+
+
+            if (
+              existing.time !==
+              time
             ) {
 
               existing.time =
@@ -4035,7 +4253,8 @@
 
 
             if (
-              existing.notes !== notes
+              existing.notes !==
+              notes
             ) {
 
               existing.notes =
@@ -4046,8 +4265,25 @@
             }
 
 
-            if (updated) {
+            if (
+              existing.sofascoreEventId !==
+              matchId
+            ) {
+
+              existing.sofascoreEventId =
+                matchId;
+
+              updated = true;
+
+            }
+
+
+            if (
+              updated
+            ) {
+
               changed = true;
+
             }
 
           }
@@ -4056,7 +4292,9 @@
       );
 
 
-      if (changed) {
+      if (
+        changed
+      ) {
 
         saveEvents();
 
@@ -4237,11 +4475,16 @@
           dayEvents.some(
             event =>
               event.type === "match" &&
-              event.sofascoreEventId
+              (
+                event.sofascoreEventId ||
+                event.fotmobMatchId
+              )
           );
 
 
-        if (hasHilalMatch) {
+        if (
+          hasHilalMatch
+        ) {
 
           day.classList.add(
             "hilal-match-day"
@@ -4335,7 +4578,9 @@
           );
 
 
-      if (!monthEvents.length) {
+      if (
+        !monthEvents.length
+      ) {
 
         list.innerHTML = `
           <div class="empty">
@@ -4869,7 +5114,9 @@
         totalSeconds % 60;
 
 
-      if (days > 0) {
+      if (
+        days > 0
+      ) {
 
         countdownElement.textContent =
           `${days} يوم ` +
@@ -5448,11 +5695,10 @@
     loadHilalMatches();
 
 
-    footballTimer =
-      setInterval(
-        loadHilalMatches,
-        30000
-      );
+    setInterval(
+      loadHilalMatches,
+      HILAL_REFRESH_INTERVAL
+    );
 
   </script>
 
