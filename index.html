@@ -104,7 +104,7 @@
 
     .top-info {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 14px;
       margin-bottom: 18px;
     }
@@ -782,6 +782,16 @@
       font-size: 11px;
     }
 
+    .past-title {
+      margin-top: 22px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .past-title[hidden] {
+      display: none;
+    }
+
     .season-open {
       width: 100%;
       margin-top: 14px;
@@ -825,7 +835,6 @@
       border-radius: 15px;
       padding: 12px;
       margin-bottom: 8px;
-      cursor: pointer;
     }
 
     .season-top {
@@ -887,23 +896,6 @@
 
     .season-more[hidden] {
       display: none;
-    }
-
-    .reset-score {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-
-    .score-hint {
-      color: var(--muted);
-      font-size: 10px;
-      margin-top: 8px;
     }
 
     .modal-overlay {
@@ -1302,6 +1294,11 @@
     </div>
 
     <div class="info-card">
+      <div class="info-label">التاريخ الميلادي</div>
+      <div class="info-value" id="gregorianDate">--</div>
+    </div>
+
+    <div class="info-card">
       <div class="info-label">اليوم</div>
       <div class="info-value" id="dayName">--</div>
     </div>
@@ -1397,7 +1394,11 @@
 
     <div class="matches" id="matchesContainer"></div>
 
-    <button type="button" class="season-open" id="openSeason">كل مباريات الموسم: الأهداف والبطاقات والنتائج</button>
+    <h3 class="past-title" id="pastTitle" hidden>آخر المباريات</h3>
+
+    <div id="pastContainer"></div>
+
+    <button type="button" class="season-open" id="openSeason">كل مباريات الموسم</button>
 
     <div class="update-note" id="updateNote" hidden></div>
 
@@ -1526,63 +1527,13 @@
 
   const today = new Date();
 
-  // ===== التقويم الهجري (أم القرى) =====
   const HIJRI_LOCALE = "ar-SA-u-ca-islamic-umalqura";
 
-  const hijriPartsFmt = new Intl.DateTimeFormat(
-    "en-US-u-ca-islamic-umalqura-nu-latn",
-    { year: "numeric", month: "numeric", day: "numeric" }
+  let currentCalendarDate = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    1
   );
-
-  function hijriParts(date) {
-    const out = { y: 0, m: 0, d: 0 };
-
-    hijriPartsFmt.formatToParts(date).forEach(function(part) {
-      if (part.type === "year") {
-        out.y = parseInt(part.value, 10);
-      } else if (part.type === "month") {
-        out.m = parseInt(part.value, 10);
-      } else if (part.type === "day") {
-        out.d = parseInt(part.value, 10);
-      }
-    });
-
-    return out;
-  }
-
-  // الساعة 12 الظهر عشان تغيّر الصيف/الشتاء ما يقلب اليوم
-  function atNoon(year, month, day) {
-    return new Date(year, month, day, 12, 0, 0);
-  }
-
-  function hijriMonthStart(date) {
-    const p = hijriParts(date);
-
-    return atNoon(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() - (p.d - 1)
-    );
-  }
-
-  function hijriMonthLength(start) {
-    const month = hijriParts(start).m;
-    let n = 1;
-
-    while (
-      n < 31 &&
-      hijriParts(
-        atNoon(start.getFullYear(), start.getMonth(), start.getDate() + n)
-      ).m === month
-    ) {
-      n++;
-    }
-
-    return n;
-  }
-
-  // بداية الشهر الهجري المعروض (بالتاريخ الميلادي داخلياً، بس العرض كله هجري)
-  let currentCalendarDate = hijriMonthStart(today);
 
   let selectedDateKey = null;
 
@@ -1813,7 +1764,7 @@
       note.textContent =
         "آخر تحديث تلقائي للجدول: " +
         new Intl.DateTimeFormat(
-          HIJRI_LOCALE,
+          "ar-SA-u-ca-gregory",
           {
             day: "numeric",
             month: "long",
@@ -2039,32 +1990,6 @@
     );
   }
 
-  function getMatchResults() {
-    try {
-
-      const saved =
-        JSON.parse(
-          localStorage.getItem("hilalMatchResults") || "{}"
-        );
-
-      if (!saved || typeof saved !== "object") {
-        return {};
-      }
-
-      return saved;
-
-    } catch (error) {
-      return {};
-    }
-  }
-
-  function saveMatchResults(results) {
-    localStorage.setItem(
-      "hilalMatchResults",
-      JSON.stringify(results)
-    );
-  }
-
   function getMatchKey(match) {
     return [
       match.start,
@@ -2073,28 +1998,7 @@
     ].join("|");
   }
 
-  function manualResultOf(match) {
-    const saved = getMatchResults()[getMatchKey(match)];
-
-    if (
-      saved &&
-      saved.home !== undefined && saved.home !== "" &&
-      saved.away !== undefined && saved.away !== ""
-    ) {
-      return { home: String(saved.home), away: String(saved.away) };
-    }
-
-    return null;
-  }
-
   function getMatchResult(match) {
-
-    // تعديلك اليدوي يغلب أي نتيجة ثانية (رسمية أو مباشرة)
-    const manual = manualResultOf(match);
-
-    if (manual) {
-      return manual;
-    }
 
     // نتيجة مباشرة أثناء المباراة (قبل ما تنزل النتيجة الرسمية)
     const liveNow = match.id ? liveState[match.id] : null;
@@ -2117,9 +2021,7 @@
       };
     }
 
-    const results = getMatchResults();
-
-    return results[getMatchKey(match)] || null;
+    return null;
   }
 
   function dateKey(year, month, day) {
@@ -2160,6 +2062,16 @@
   function renderTopDate() {
 
     const now = new Date();
+
+    document.getElementById("gregorianDate").textContent =
+      new Intl.DateTimeFormat(
+        "ar-SA-u-ca-gregory",
+        {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        }
+      ).format(now);
 
     document.getElementById("hijriDate").textContent =
       getHijriDate(now);
@@ -2567,19 +2479,22 @@
 
     grid.innerHTML = "";
 
-    const monthStart = currentCalendarDate;
+    const year =
+      currentCalendarDate.getFullYear();
+
+    const month =
+      currentCalendarDate.getMonth();
 
     document.getElementById("monthTitle").textContent =
-      new Intl.DateTimeFormat(
-        HIJRI_LOCALE,
-        { month: "long", year: "numeric" }
-      ).format(monthStart);
+      `${monthNames[month]} ${year}`;
 
     document.getElementById("monthHijri").textContent = "";
 
-    const firstDay = monthStart.getDay();
+    const firstDay =
+      new Date(year, month, 1).getDay();
 
-    const daysInMonth = hijriMonthLength(monthStart);
+    const daysInMonth =
+      new Date(year, month + 1, 0).getDate();
 
     const uniqueMatches =
       getUniqueMatches();
@@ -2599,17 +2514,8 @@
 
     for (let day = 1; day <= daysInMonth; day++) {
 
-      const cellDate = atNoon(
-        monthStart.getFullYear(),
-        monthStart.getMonth(),
-        monthStart.getDate() + day - 1
-      );
-
-      const key = dateKey(
-        cellDate.getFullYear(),
-        cellDate.getMonth(),
-        cellDate.getDate()
-      );
+      const key =
+        dateKey(year, month, day);
 
       const dayElement =
         document.createElement("div");
@@ -2886,6 +2792,8 @@
 
   function renderMatches() {
 
+    renderPast();
+
     const container =
       document.getElementById(
         "matchesContainer"
@@ -3041,7 +2949,7 @@
       "modalDateTitle"
     ).textContent =
       new Intl.DateTimeFormat(
-        HIJRI_LOCALE,
+        "ar-SA-u-ca-gregory",
         {
           weekday: "long",
           day: "numeric",
@@ -3131,12 +3039,6 @@
             </div>`;
         }
 
-        const homeScore =
-          result ? result.home : "";
-
-        const awayScore =
-          result ? result.away : "";
-
         element.innerHTML = `
           <div class="modal-match-main">
 
@@ -3179,116 +3081,13 @@
 
           ${countdownText}
 
-          <div class="score-editor">
-
-            <div class="score-title">
-              النتيجة${manualResultOf(match) ? " (معدّلة يدوياً)" : ""}
-            </div>
-
-            <div class="score-inputs">
-
-              <input
-                class="score-input"
-                type="number"
-                min="0"
-                id="homeScore_${encodeURIComponent(match.start)}"
-                value="${homeScore}"
-                placeholder="0"
-              >
-
-              <div class="score-separator">
-                -
-              </div>
-
-              <input
-                class="score-input"
-                type="number"
-                min="0"
-                id="awayScore_${encodeURIComponent(match.start)}"
-                value="${awayScore}"
-                placeholder="0"
-              >
-
-            </div>
-
-            <button
-              class="save-score"
-              type="button"
-            >
-              حفظ النتيجة
-            </button>
-
-            ${manualResultOf(match)
-              ? '<button class="reset-score" type="button">رجوع للنتيجة الرسمية</button>'
-              : ""}
-
-            <div class="score-hint">تعديلك يُحفظ على هذا الجوال فقط</div>
-
-          </div>
+          ${result && result.home !== "" && result.away !== ""
+            ? `<div class="season-score" style="justify-content:center;margin-top:10px"><span>${escapeHTML(result.home)}</span><span>-</span><span>${escapeHTML(result.away)}</span></div>`
+            : ""}
 
           ${matchDetailsHTML(match)}
         `;
 
-        element
-          .querySelector(".save-score")
-          .addEventListener(
-            "click",
-            function(event) {
-
-              event.stopPropagation();
-
-              const inputs =
-                element.querySelectorAll(
-                  ".score-input"
-                );
-
-              const homeScore =
-                inputs[0].value;
-
-              const awayScore =
-                inputs[1].value;
-
-              if (
-                homeScore === "" ||
-                awayScore === ""
-              ) {
-                return;
-              }
-
-              const results =
-                getMatchResults();
-
-              results[getMatchKey(match)] = {
-                home: homeScore,
-                away: awayScore
-              };
-
-              saveMatchResults(results);
-
-              renderModalMatches();
-              renderMatches();
-            }
-          );
-
-        const resetButton = element.querySelector(".reset-score");
-
-        if (resetButton) {
-          resetButton.addEventListener(
-            "click",
-            function(event) {
-
-              event.stopPropagation();
-
-              const results = getMatchResults();
-
-              delete results[getMatchKey(match)];
-              saveMatchResults(results);
-
-              renderModalMatches();
-              renderMatches();
-            }
-          );
-        }
 
         container.appendChild(element);
       }
@@ -3684,12 +3483,10 @@
       function() {
 
         currentCalendarDate =
-          hijriMonthStart(
-            atNoon(
-              currentCalendarDate.getFullYear(),
-              currentCalendarDate.getMonth(),
-              currentCalendarDate.getDate() - 1
-            )
+          new Date(
+            currentCalendarDate.getFullYear(),
+            currentCalendarDate.getMonth() - 1,
+            1
           );
 
         renderCalendar();
@@ -3703,11 +3500,10 @@
       function() {
 
         currentCalendarDate =
-          atNoon(
+          new Date(
             currentCalendarDate.getFullYear(),
-            currentCalendarDate.getMonth(),
-            currentCalendarDate.getDate() +
-              hijriMonthLength(currentCalendarDate)
+            currentCalendarDate.getMonth() + 1,
+            1
           );
 
         renderCalendar();
@@ -3739,7 +3535,27 @@
   }
 
   function matchDetailsHTML(match) {
-    const d = match.id ? matchDetails[match.id] : null;
+    let d = match.id ? matchDetails[match.id] : null;
+    const liveInfo = match.id ? liveState[match.id] : null;
+
+    if (!d && liveInfo && liveInfo.state !== "pre" && liveInfo.goals) {
+      d = {
+        live: true,
+        goals: liveInfo.goals.map(function(g) {
+          return {
+            minute: g.minute,
+            side: g.side,
+            player: g.scorer,
+            type: g.own ? "own" : (g.pen ? "penalty" : "goal"),
+            assist: g.assist || ""
+          };
+        }),
+        cards: liveInfo.cards || [],
+        assists: [],
+        assistsDone: true,
+        assistsKnown: false
+      };
+    }
 
     if (!d) {
 
@@ -3804,7 +3620,7 @@
           (a.count > 1 ? " ×" + a.count : "") +
           ' (' + escapeHTML(teamName(a.side)) + ')';
       }).join(" · ") + '</div>';
-    } else if ((d.goals || []).length > 0 && !d.assistsKnown) {
+    } else if ((d.goals || []).length > 0 && !d.assistsKnown && !d.live) {
       html += '<div class="md-note">' + (d.assistsDone
         ? "الصناعة غير متوفرة من المصدر لهذي المباراة."
         : "الصناعة لسا ما نزلت.") + '</div>';
@@ -3813,9 +3629,8 @@
     return html + '</div>';
   }
 
-  // ===== نافذة مباريات الموسم =====
+  // ===== المباريات السابقة ونافذة الموسم =====
   let seasonTab = "results";
-  const seasonOpen = new Set();
 
   function formatHijriFull(date) {
     return new Intl.DateTimeFormat(
@@ -3848,34 +3663,62 @@
       : '<div class="season-badge loss">خسارة</div>';
   }
 
-  function seasonEditorHTML(match) {
-    const result = getMatchResult(match);
-    const manual = manualResultOf(match);
+  // بطاقة مباراة: التاريخ الهجري، الفريقين، النتيجة، وتحتها الأهداف والصناعة والبطاقات
+  function buildMatchItem(m, showDetails) {
+    const date = new Date(m.start);
+    const result = getMatchResult(m);
+    const el = document.createElement("div");
 
-    return '<div class="score-editor">' +
-      '<div class="score-title">النتيجة' + (manual ? " (معدّلة يدوياً)" : "") + '</div>' +
-      '<div class="score-inputs">' +
-        '<input class="score-input" type="number" min="0" placeholder="0" value="' + (result ? escapeHTML(result.home) : "") + '">' +
-        '<div class="score-separator">-</div>' +
-        '<input class="score-input" type="number" min="0" placeholder="0" value="' + (result ? escapeHTML(result.away) : "") + '">' +
+    el.className = "season-item";
+
+    el.innerHTML =
+      '<div class="season-top"><span>' + escapeHTML(formatHijriFull(date)) + ' · ' +
+        escapeHTML(formatMatchTime(date)) + '</span><span>' + escapeHTML(m.competition) + '</span></div>' +
+      '<div class="season-main">' +
+        '<div class="season-team">' + logoHTML(m.homeLogo, m.home) + '<span>' + escapeHTML(m.home) + '</span></div>' +
+        (result
+          ? '<div class="season-score"><span>' + escapeHTML(result.home) + '</span><span>-</span><span>' + escapeHTML(result.away) + '</span></div>'
+          : '<div class="season-score vs">VS</div>') +
+        '<div class="season-team">' + logoHTML(m.awayLogo, m.away) + '<span>' + escapeHTML(m.away) + '</span></div>' +
       '</div>' +
-      '<button class="save-score" type="button">حفظ النتيجة</button>' +
-      (manual ? '<button class="reset-score" type="button">رجوع للنتيجة الرسمية</button>' : "") +
-      '<div class="score-hint">تعديلك يُحفظ على هذا الجوال فقط</div>' +
-    '</div>';
+      resultBadge(m) +
+      (showDetails ? matchDetailsHTML(m) : "");
+
+    return el;
+  }
+
+  function finishedMatches() {
+    return getUniqueMatches().filter(function(m) {
+      return getMatchStatus(m).type === "finished";
+    }).reverse();
+  }
+
+  // آخر 5 مباريات منتهية تحت المباريات القادمة
+  function renderPast() {
+    const box = document.getElementById("pastContainer");
+    const title = document.getElementById("pastTitle");
+
+    if (!box || !title) {
+      return;
+    }
+
+    const recent = finishedMatches().slice(0, 5);
+
+    box.innerHTML = "";
+    title.hidden = recent.length === 0;
+
+    recent.forEach(function(m) {
+      box.appendChild(buildMatchItem(m, true));
+    });
   }
 
   function renderSeasonModal() {
     document.getElementById("seasonTitle").textContent =
       "مباريات " + currentTeam.name + " هذا الموسم";
 
-    const all = getUniqueMatches();
+    const finished = finishedMatches();
 
-    const finished = all.filter(function(m) {
-      return getMatchStatus(m).type === "finished";
-    }).reverse();
-
-    const upcoming = all.filter(function(m) {
+    const upcoming = getUniqueMatches().filter(function(m) {
       return getMatchStatus(m).type !== "finished";
     });
 
@@ -3898,75 +3741,7 @@
     }
 
     shown.forEach(function(m) {
-      const key = getMatchKey(m);
-      const date = new Date(m.start);
-      const result = getMatchResult(m);
-      const el = document.createElement("div");
-
-      el.className = "season-item";
-
-      el.innerHTML =
-        '<div class="season-top"><span>' + escapeHTML(formatHijriFull(date)) + ' · ' +
-          escapeHTML(formatMatchTime(date)) + '</span><span>' + escapeHTML(m.competition) + '</span></div>' +
-        '<div class="season-main">' +
-          '<div class="season-team">' + logoHTML(m.homeLogo, m.home) + '<span>' + escapeHTML(m.home) + '</span></div>' +
-          (result
-            ? '<div class="season-score"><span>' + escapeHTML(result.home) + '</span><span>-</span><span>' + escapeHTML(result.away) + '</span></div>'
-            : '<div class="season-score vs">VS</div>') +
-          '<div class="season-team">' + logoHTML(m.awayLogo, m.away) + '<span>' + escapeHTML(m.away) + '</span></div>' +
-        '</div>' +
-        resultBadge(m) +
-        '<div class="season-more"' + (seasonOpen.has(key) ? "" : " hidden") + '>' +
-          matchDetailsHTML(m) + seasonEditorHTML(m) +
-        '</div>';
-
-      const more = el.querySelector(".season-more");
-
-      more.addEventListener("click", function(event) {
-        event.stopPropagation();
-      });
-
-      el.addEventListener("click", function() {
-        if (seasonOpen.has(key)) {
-          seasonOpen.delete(key);
-          more.hidden = true;
-        } else {
-          seasonOpen.add(key);
-          more.hidden = false;
-        }
-      });
-
-      more.querySelector(".save-score").addEventListener("click", function() {
-        const inputs = more.querySelectorAll(".score-input");
-
-        if (inputs[0].value === "" || inputs[1].value === "") {
-          return;
-        }
-
-        const results = getMatchResults();
-
-        results[key] = { home: inputs[0].value, away: inputs[1].value };
-        saveMatchResults(results);
-
-        renderSeasonModal();
-        renderMatches();
-      });
-
-      const reset = more.querySelector(".reset-score");
-
-      if (reset) {
-        reset.addEventListener("click", function() {
-          const results = getMatchResults();
-
-          delete results[key];
-          saveMatchResults(results);
-
-          renderSeasonModal();
-          renderMatches();
-        });
-      }
-
-      list.appendChild(el);
+      list.appendChild(buildMatchItem(m, seasonTab === "results"));
     });
   }
 

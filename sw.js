@@ -1,6 +1,6 @@
 // Service Worker للتقويم اليومي
 // غيّر رقم النسخة كل ما عدّلت ملفات الموقع عشان يتحدث الكاش عند المستخدمين
-const VERSION = 'v8';
+const VERSION = 'v10';
 const SHELL_CACHE = `calendar-shell-${VERSION}`;
 const RUNTIME_CACHE = `calendar-runtime-${VERSION}`;
 
