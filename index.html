@@ -516,6 +516,214 @@
       margin-top: 4px;
     }
 
+    /* ===== المباشر ===== */
+    .live-panel {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .live-panel[hidden] {
+      display: none;
+    }
+
+    .live-card {
+      background: linear-gradient(135deg, rgba(255,94,121,0.10), rgba(22,137,255,0.08));
+      border: 1px solid rgba(255,94,121,0.35);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .live-card.done {
+      background: rgba(255,255,255,0.035);
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .live-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--red);
+      font-weight: 800;
+    }
+
+    .live-card.done .live-badge {
+      color: var(--muted);
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      animation: livePulse 1.2s infinite;
+    }
+
+    .live-card.done .live-dot {
+      display: none;
+    }
+
+    @keyframes livePulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,94,121,0.6); }
+      100% { box-shadow: 0 0 0 9px rgba(255,94,121,0); }
+    }
+
+    .live-score {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .live-team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      min-width: 0;
+    }
+
+    .live-team img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .live-nums {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 30px;
+      font-weight: 800;
+    }
+
+    .live-goals {
+      list-style: none;
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .live-goals li {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px 8px;
+      font-size: 12px;
+    }
+
+    .g-min {
+      color: var(--green);
+      font-weight: 800;
+      min-width: 34px;
+    }
+
+    .g-team {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .g-assist {
+      color: var(--muted);
+      font-size: 11px;
+      flex-basis: 100%;
+      padding-right: 42px;
+    }
+
+    .live-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .live-sound {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .live-error {
+      background: rgba(255,94,121,0.08);
+      border: 1px solid rgba(255,94,121,0.3);
+      color: var(--red);
+      border-radius: 12px;
+      padding: 9px 12px;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .goal-toast {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(94vw, 440px);
+      z-index: 3000;
+      background: linear-gradient(135deg, #0f3d2c, #123a63);
+      border: 1px solid var(--green);
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+      text-align: center;
+      cursor: pointer;
+      animation: toastIn 0.35s ease-out;
+    }
+
+    .goal-toast[hidden] {
+      display: none;
+    }
+
+    .goal-toast .t-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .goal-toast .t-score {
+      font-size: 15px;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .goal-toast .t-line {
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .goal-toast .t-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translate(-50%, -20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -1008,6 +1216,8 @@
 
     <div class="team-note" id="teamNote" hidden></div>
 
+    <div class="live-panel" id="livePanel" hidden></div>
+
     <div class="matches" id="matchesContainer"></div>
 
     <div class="update-note" id="updateNote" hidden></div>
@@ -1117,6 +1327,8 @@
 
 </div>
 
+<div class="goal-toast" id="goalToast" role="status" aria-live="polite" hidden></div>
+
 <script>
 
   const today = new Date();
@@ -1184,6 +1396,9 @@
 
   // كل المباريات (لكل الفرق)، وتنقرأ من matches.json
   let allMatches = [];
+
+  // حالة المباريات المباشرة (تنجلب من ESPN أثناء المباراة فقط)
+  let liveState = {};
 
   function getTeamByName(name) {
     return teams.find(team => team.name === name) || null;
@@ -1305,6 +1520,8 @@
         }
 
         loaded.push({
+          id: item.id ? String(item.id) : "",
+          status: item.status ? String(item.status) : "",
           start: item.start,
           home: String(item.home),
           away: String(item.away),
@@ -1588,6 +1805,16 @@
   }
 
   function getMatchResult(match) {
+
+    // نتيجة مباشرة أثناء المباراة (قبل ما تنزل النتيجة الرسمية)
+    const liveNow = match.id ? liveState[match.id] : null;
+
+    if (liveNow && liveNow.state !== "pre" && match.status !== "final") {
+      return {
+        home: String(liveNow.homeScore),
+        away: String(liveNow.awayScore)
+      };
+    }
 
     // نتيجة رسمية جاية تلقائياً من matches.json
     if (
@@ -2319,6 +2546,25 @@
   }
 
   function getMatchStatus(match) {
+
+    const liveNow = match.id ? liveState[match.id] : null;
+
+    if (liveNow && match.status !== "final") {
+
+      if (liveNow.state === "in") {
+        return {
+          type: "live",
+          text: "مباشر" + (liveNow.clock ? " · " + liveNow.clock : "")
+        };
+      }
+
+      if (liveNow.state === "post") {
+        return {
+          type: "finished",
+          text: "انتهت المباراة"
+        };
+      }
+    }
 
     const now =
       new Date();
@@ -3153,10 +3399,608 @@
       }
     );
 
+
+  // ===== المباشر: النتيجة والأهداف لحظة بلحظة =====
+  // يشتغل بس أثناء المباراة، ويسأل ESPN كل 15 ثانية
+  const LIVE_POLL_MS = Number(window.__LIVE_POLL_MS) || 15000;
+  const LIVE_BEFORE_MS = 10 * 60 * 1000;
+  const LIVE_AFTER_MS = 3.5 * 60 * 60 * 1000;
+  const LIVE_KEEP_MS = 6 * 60 * 60 * 1000;
+
+  let liveBusy = false;
+  let liveFails = 0;
+  let liveLastOk = null;
+  let liveToastTimer = null;
+  let liveAudio = null;
+
+  function liveSoundOn() {
+    try {
+      return localStorage.getItem("liveSound") !== "off";
+    } catch (error) {
+      return true;
+    }
+  }
+
+  function setLiveSound(on) {
+    try {
+      localStorage.setItem("liveSound", on ? "on" : "off");
+    } catch (error) {}
+  }
+
+  function parseLiveId(id) {
+    const m = /^([a-z0-9.\-]+):(\d+)$/.exec(id || "");
+    return m ? { slug: m[1], event: m[2] } : null;
+  }
+
+  function liveCandidates() {
+    const now = Date.now();
+
+    return getUniqueMatches().filter(function(m) {
+
+      if (!parseLiveId(m.id) || m.status === "final") {
+        return false;
+      }
+
+      const t = new Date(m.start).getTime();
+
+      if (now < t - LIVE_BEFORE_MS || now > t + LIVE_AFTER_MS) {
+        return false;
+      }
+
+      const st = liveState[m.id];
+
+      if (st && st.state === "post") {
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  async function fetchLiveSummary(p) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(function() { ctrl.abort(); }, 10000);
+
+    try {
+      const res = await fetch(
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/" +
+        p.slug + "/summary?event=" + p.event,
+        { cache: "no-store", signal: ctrl.signal }
+      );
+
+      if (!res.ok) {
+        throw new Error("HTTP " + res.status);
+      }
+
+      return await res.json();
+
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  function liveScoreValue(c) {
+    let v = c ? c.score : null;
+
+    if (v && typeof v === "object") {
+      v = v.displayValue !== undefined ? v.displayValue : v.value;
+    }
+
+    const n = parseInt(v, 10);
+
+    return isNaN(n) ? null : n;
+  }
+
+  function liveClockText(status, type) {
+    const name = String((type && type.name) || "");
+
+    if (type && type.state === "post") {
+      return "انتهت";
+    }
+
+    if (/HALFTIME/i.test(name)) {
+      return "استراحة";
+    }
+
+    if (status && status.displayClock) {
+      return String(status.displayClock);
+    }
+
+    return String((type && (type.shortDetail || type.detail)) || "");
+  }
+
+  function isGoalEvent(k) {
+    if (!k) {
+      return false;
+    }
+
+    if (k.scoringPlay === true) {
+      return true;
+    }
+
+    const t = String(
+      (k.type && (k.type.type || k.type.text)) || ""
+    ).toLowerCase();
+
+    return /goal|penalty.*scored/.test(t) &&
+      !/kick|disallow|cancel|no goal|no-goal|goalkeeper/.test(t);
+  }
+
+  function readGoals(data, home, away) {
+    const list = Array.isArray(data.keyEvents) ? data.keyEvents : [];
+    const homeId = String(home.team && home.team.id);
+    const awayId = String(away.team && away.team.id);
+
+    return list.filter(isGoalEvent).map(function(k) {
+
+      const t = String(
+        (k.type && (k.type.type || k.type.text)) || ""
+      ).toLowerCase();
+
+      const own = /own/.test(t);
+      const pen = /penalty/.test(t);
+
+      const parts = (k.participants || [])
+        .map(function(p) {
+          return p && p.athlete &&
+            (p.athlete.displayName || p.athlete.shortName);
+        })
+        .filter(Boolean);
+
+      const text = String(k.text || k.shortText || "");
+
+      let scorer = parts[0] || "";
+      let assist = "";
+
+      const am = /assisted by ([^.]+?)(?:\s+with\b|\s+following\b|\s+after\b|\.|$)/i.exec(text);
+
+      if (am) {
+        assist = am[1].trim();
+      } else if (!own && !pen && parts[1]) {
+        assist = parts[1];
+      }
+
+      if (!scorer) {
+        const sm = /\d\.\s*([^().]+?)\s*\(/.exec(text);
+
+        if (sm) {
+          scorer = sm[1].trim();
+        }
+      }
+
+      if (assist === scorer) {
+        assist = "";
+      }
+
+      const teamId = k.team && k.team.id != null ? String(k.team.id) : "";
+
+      return {
+        minute: (k.clock && k.clock.displayValue) ? String(k.clock.displayValue) : "",
+        scorer: scorer,
+        assist: assist,
+        own: own,
+        pen: pen,
+        side: teamId === homeId ? "home" : (teamId === awayId ? "away" : "")
+      };
+    });
+  }
+
+  function readLive(data) {
+    const comp = data && data.header && data.header.competitions &&
+      data.header.competitions[0];
+
+    if (!comp) {
+      return null;
+    }
+
+    const type = (comp.status && comp.status.type) || {};
+    const state = (type.state === "in" || type.state === "post") ? type.state : "pre";
+    const comps = comp.competitors || [];
+    const home = comps.find(function(c) { return c.homeAway === "home"; });
+    const away = comps.find(function(c) { return c.homeAway === "away"; });
+
+    if (!home || !away) {
+      return null;
+    }
+
+    const hs = liveScoreValue(home);
+    const as = liveScoreValue(away);
+
+    if (state !== "pre" && (hs === null || as === null)) {
+      return null;
+    }
+
+    return {
+      state: state,
+      clock: liveClockText(comp.status, type),
+      homeScore: hs === null ? 0 : hs,
+      awayScore: as === null ? 0 : as,
+      goals: readGoals(data, home, away)
+    };
+  }
+
+  function liveSignature(info) {
+    return [
+      info.state,
+      info.clock,
+      info.homeScore,
+      info.awayScore,
+      info.goals.map(function(g) {
+        return [g.minute, g.scorer, g.assist].join("~");
+      }).join("|")
+    ].join("#");
+  }
+
+  // ترجع true إذا تغيّر شي يستاهل إعادة الرسم
+  function applyLive(match, info) {
+    const prev = liveState[match.id];
+    const st = prev || { announced: undefined, annH: 0, annA: 0, pending: false, sig: "" };
+    const total = info.homeScore + info.awayScore;
+    const sig = liveSignature(info);
+    const changed = sig !== st.sig;
+
+    st.sig = sig;
+    st.match = match;
+    st.state = info.state;
+    st.clock = info.clock;
+    st.homeScore = info.homeScore;
+    st.awayScore = info.awayScore;
+    st.goals = info.goals;
+    liveState[match.id] = st;
+
+    if (st.announced === undefined) {
+      // أول مرة نشوف المباراة: ما نزعجك بأهداف صارت قبل ما نبدأ نتابع
+      st.announced = info.state === "pre" ? 0 : total;
+      st.annH = info.state === "pre" ? 0 : info.homeScore;
+      st.annA = info.state === "pre" ? 0 : info.awayScore;
+      return true;
+    }
+
+    if (info.state === "pre") {
+      return changed;
+    }
+
+    if (total > st.announced) {
+
+      // إذا تفاصيل الهدف (اللاعب) لسا ما نزلت، ننتظر دورة وحدة
+      if (info.goals.length < total && !st.pending) {
+        st.pending = true;
+        return true;
+      }
+
+      announceGoals(match, st, total);
+      st.announced = total;
+      st.annH = info.homeScore;
+      st.annA = info.awayScore;
+      st.pending = false;
+
+    } else if (total < st.announced) {
+
+      showGoalToast({
+        title: "أُلغي هدف (VAR)",
+        score: liveScoreLine(match, info.homeScore, info.awayScore),
+        line: "",
+        sub: ""
+      });
+
+      st.announced = total;
+      st.annH = info.homeScore;
+      st.annA = info.awayScore;
+      st.pending = false;
+    }
+
+    return true;
+  }
+
+  function liveScoreLine(match, hs, as) {
+    return match.home + "  " + hs + " - " + as + "  " + match.away;
+  }
+
+  function announceGoals(match, st, total) {
+    const k = total - st.announced;
+
+    let g = null;
+
+    if (st.goals.length >= total) {
+      g = st.goals[total - 1];
+    } else if (st.goals.length > st.announced) {
+      g = st.goals[st.goals.length - 1];
+    }
+
+    let side = "";
+
+    if (st.homeScore > st.annH && st.awayScore === st.annA) {
+      side = "home";
+    } else if (st.awayScore > st.annA && st.homeScore === st.annH) {
+      side = "away";
+    } else if (g && g.side) {
+      side = g.side;
+    }
+
+    const teamName = side === "home" ? match.home : (side === "away" ? match.away : "");
+
+    let title = "هدف";
+
+    if (g && g.own) {
+      title = "هدف عكسي" + (teamName ? " لصالح " + teamName : "");
+    } else if (teamName) {
+      title = "هدف " + teamName;
+    }
+
+    if (k > 1) {
+      title = k + " أهداف جديدة";
+    }
+
+    let line = "";
+    let sub = "";
+
+    if (g && g.scorer) {
+      line = g.scorer + (g.minute ? " (" + g.minute + ")" : "") + (g.pen ? " - ركلة جزاء" : "");
+    } else if (st.clock) {
+      line = "الدقيقة " + st.clock;
+    }
+
+    if (g && g.assist) {
+      sub = "صناعة: " + g.assist;
+    }
+
+    showGoalToast({
+      title: title,
+      score: liveScoreLine(match, st.homeScore, st.awayScore),
+      line: line,
+      sub: sub
+    });
+  }
+
+  function liveBeep() {
+    if (!liveSoundOn()) {
+      return;
+    }
+
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+
+      if (!Ctx) {
+        return;
+      }
+
+      liveAudio = liveAudio || new Ctx();
+
+      if (liveAudio.state === "suspended") {
+        liveAudio.resume();
+      }
+
+      const t0 = liveAudio.currentTime;
+
+      [880, 1175, 1568].forEach(function(freq, i) {
+        const osc = liveAudio.createOscillator();
+        const gain = liveAudio.createGain();
+
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, t0 + i * 0.16);
+        gain.gain.exponentialRampToValueAtTime(0.25, t0 + i * 0.16 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + i * 0.16 + 0.24);
+        osc.connect(gain);
+        gain.connect(liveAudio.destination);
+        osc.start(t0 + i * 0.16);
+        osc.stop(t0 + i * 0.16 + 0.26);
+      });
+
+    } catch (error) {}
+  }
+
+  function showGoalToast(t) {
+    const el = document.getElementById("goalToast");
+
+    el.innerHTML =
+      '<div class="t-title">⚽ ' + escapeHTML(t.title) + '</div>' +
+      '<div class="t-score">' + escapeHTML(t.score) + '</div>' +
+      (t.line ? '<div class="t-line"><bdi>' + escapeHTML(t.line) + '</bdi></div>' : "") +
+      (t.sub ? '<div class="t-sub"><bdi>' + escapeHTML(t.sub) + '</bdi></div>' : "");
+
+    el.hidden = false;
+
+    liveBeep();
+
+    if (liveSoundOn() && navigator.vibrate) {
+      try {
+        navigator.vibrate([250, 120, 250, 120, 400]);
+      } catch (error) {}
+    }
+
+    clearTimeout(liveToastTimer);
+
+    liveToastTimer = setTimeout(function() {
+      el.hidden = true;
+    }, 14000);
+  }
+
+  function renderLivePanel() {
+    const panel = document.getElementById("livePanel");
+
+    if (!panel) {
+      return;
+    }
+
+    const now = Date.now();
+
+    const cards = Object.keys(liveState)
+      .map(function(id) { return liveState[id]; })
+      .filter(function(st) {
+        return st.match &&
+          st.state !== "pre" &&
+          st.match.status !== "final" &&
+          matchInvolvesTeam(st.match, currentTeam) &&
+          now < new Date(st.match.start).getTime() + LIVE_KEEP_MS;
+      })
+      .sort(function(a, b) {
+        return new Date(a.match.start) - new Date(b.match.start);
+      });
+
+    const showError = liveFails >= 3 && liveCandidates().length > 0;
+
+    if (cards.length === 0 && !showError) {
+      panel.hidden = true;
+      panel.innerHTML = "";
+      return;
+    }
+
+    let html = "";
+
+    if (showError) {
+      html += '<div class="live-error">تعذر الاتصال بمصدر النتائج المباشرة، بنعيد المحاولة تلقائياً</div>';
+    }
+
+    cards.forEach(function(st) {
+      const m = st.match;
+      const done = st.state === "post";
+
+      let goalsHTML = "";
+
+      st.goals.forEach(function(g) {
+        const teamName = !g.own && g.side ? (g.side === "home" ? m.home : m.away) : "";
+
+        goalsHTML +=
+          '<li>' +
+            '<span class="g-min">' + escapeHTML(g.minute || "") + '</span>' +
+            '<span>⚽ <b><bdi>' + escapeHTML(g.scorer || "هدف") + '</bdi></b>' +
+              (g.own ? ' (هدف عكسي)' : '') +
+              (g.pen ? ' (ركلة جزاء)' : '') +
+            '</span>' +
+            (teamName ? '<span class="g-team">' + escapeHTML(teamName) + '</span>' : '') +
+            (g.assist ? '<span class="g-assist">صناعة: <bdi>' + escapeHTML(g.assist) + '</bdi></span>' : '') +
+          '</li>';
+      });
+
+      html +=
+        '<div class="live-card' + (done ? ' done' : '') + '">' +
+          '<div class="live-head">' +
+            '<span class="live-badge"><span class="live-dot"></span>' +
+              (done ? 'انتهت المباراة' : 'مباشر' + (st.clock ? ' · ' + escapeHTML(st.clock) : '')) +
+            '</span>' +
+            '<span>' + escapeHTML(m.competition) + '</span>' +
+          '</div>' +
+          '<div class="live-score">' +
+            '<div class="live-team">' + logoHTML(m.homeLogo, m.home) + '<span>' + escapeHTML(m.home) + '</span></div>' +
+            '<div class="live-nums"><span>' + st.homeScore + '</span><span>-</span><span>' + st.awayScore + '</span></div>' +
+            '<div class="live-team">' + logoHTML(m.awayLogo, m.away) + '<span>' + escapeHTML(m.away) + '</span></div>' +
+          '</div>' +
+          (goalsHTML ? '<ul class="live-goals">' + goalsHTML + '</ul>' : '') +
+        '</div>';
+    });
+
+    if (cards.length > 0) {
+      html +=
+        '<div class="live-foot">' +
+          '<span>' +
+            (liveLastOk ? 'آخر تحديث ' + liveLastOk.toLocaleTimeString("ar-SA-u-nu-latn", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : '') +
+          '</span>' +
+          '<button type="button" class="live-sound" data-live-sound>' +
+            (liveSoundOn() ? '🔊 الصوت والاهتزاز: شغّال' : '🔇 الصوت والاهتزاز: مقفل') +
+          '</button>' +
+        '</div>';
+    }
+
+    panel.innerHTML = html;
+    panel.hidden = false;
+  }
+
+  async function pollLive() {
+    if (liveBusy || document.hidden) {
+      return;
+    }
+
+    const list = liveCandidates();
+
+    if (list.length === 0) {
+      renderLivePanel();
+      return;
+    }
+
+    liveBusy = true;
+
+    let changed = false;
+    let okAny = false;
+    let failAny = false;
+
+    try {
+      await Promise.all(list.map(async function(m) {
+        try {
+          const data = await fetchLiveSummary(parseLiveId(m.id));
+          const info = readLive(data);
+
+          if (info) {
+            okAny = true;
+
+            if (applyLive(m, info)) {
+              changed = true;
+            }
+          }
+        } catch (error) {
+          failAny = true;
+          console.warn("Live error:", error);
+        }
+      }));
+
+      if (okAny) {
+        liveFails = 0;
+        liveLastOk = new Date();
+      } else if (failAny) {
+        liveFails++;
+      }
+
+    } finally {
+      liveBusy = false;
+    }
+
+    if (changed) {
+      renderMatches();
+    }
+
+    renderLivePanel();
+  }
+
+  document.getElementById("livePanel").addEventListener("click", function(e) {
+    if (e.target.closest("[data-live-sound]")) {
+      setLiveSound(!liveSoundOn());
+      renderLivePanel();
+    }
+  });
+
+  document.getElementById("goalToast").addEventListener("click", function() {
+    this.hidden = true;
+  });
+
+  // المتصفح يمنع الصوت قبل أول لمسة، فنجهّزه عند أول لمسة
+  document.addEventListener("pointerdown", function unlockAudio() {
+    document.removeEventListener("pointerdown", unlockAudio);
+
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+
+      if (Ctx) {
+        liveAudio = liveAudio || new Ctx();
+        liveAudio.resume();
+      }
+    } catch (error) {}
+  });
+
+  setInterval(pollLive, LIVE_POLL_MS);
+
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "visible") {
+      pollLive();
+    }
+  });
+
   renderTopDate();
   renderPrayerCountdown();
   renderCalendar();
-  loadData().then(rerenderMatches);
+  loadData().then(function() {
+    rerenderMatches();
+    pollLive();
+  });
   loadPrayerTimes();
 
   setInterval(
