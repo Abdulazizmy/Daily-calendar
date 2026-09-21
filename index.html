@@ -403,6 +403,17 @@
       margin-bottom: 14px;
     }
 
+    .update-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .update-note[hidden] {
+      display: none;
+    }
+
     .team-note[hidden] {
       display: none;
     }
@@ -999,6 +1010,8 @@
 
     <div class="matches" id="matchesContainer"></div>
 
+    <div class="update-note" id="updateNote" hidden></div>
+
   </section>
 
 </div>
@@ -1164,7 +1177,7 @@
 
   // الفرق: تنحمّل من teams.json، وهذي نسخة احتياطية إذا تعذر التحميل
   let teams = [
-    { id: "hilal", name: "الهلال", logo: logos.hilal, complete: true, completeUntil: "" }
+    { id: "hilal", name: "الهلال", logo: logos.hilal, complete: true, leagueOnly: false }
   ];
 
   let currentTeam = teams[0];
@@ -1183,7 +1196,20 @@
   }
 
   function matchInvolvesTeam(match, team) {
+
+    // المباريات اللي تجي من التحديث التلقائي فيها معرّف الفريق، وهذا يفرّق
+    // بين فرقنا وأندية أجنبية تشبهها بالاسم (مثل الفيصلي الأردني)
+    if (match.homeId !== null || match.awayId !== null) {
+      return match.homeId === team.id || match.awayId === team.id;
+    }
+
     return match.home === team.name || match.away === team.name;
+  }
+
+  function teamLogoForId(id) {
+    const team = teams.find(item => item.id === id);
+
+    return team ? team.logo : "";
   }
 
   // رابط آمن للاستخدام داخل CSS
@@ -1226,7 +1252,7 @@
           name: String(item.name),
           logo: logos[item.logo] || item.logo || "",
           complete: item.complete === true,
-          completeUntil: item.completeUntil ? String(item.completeUntil) : ""
+          leagueOnly: item.leagueOnly === true
         });
       });
 
@@ -1283,9 +1309,15 @@
           home: String(item.home),
           away: String(item.away),
           competition: String(item.competition || ""),
-          homeLogo: logos[item.homeLogo] || item.homeLogo || teamLogoForName(item.home),
-          awayLogo: logos[item.awayLogo] || item.awayLogo || teamLogoForName(item.away),
-          venue: String(item.venue || "")
+          homeId: item.homeId !== undefined ? String(item.homeId) : null,
+          awayId: item.awayId !== undefined ? String(item.awayId) : null,
+          homeLogo: logos[item.homeLogo] || item.homeLogo ||
+            (item.homeId !== undefined ? teamLogoForId(item.homeId) : teamLogoForName(item.home)),
+          awayLogo: logos[item.awayLogo] || item.awayLogo ||
+            (item.awayId !== undefined ? teamLogoForId(item.awayId) : teamLogoForName(item.away)),
+          venue: String(item.venue || ""),
+          homeScore: Number.isInteger(item.homeScore) ? item.homeScore : null,
+          awayScore: Number.isInteger(item.awayScore) ? item.awayScore : null
         });
       });
 
@@ -1300,9 +1332,42 @@
     }
   }
 
+  // آخر مرة تحدّث فيها الجدول تلقائياً (ملف matches-meta.json يكتبه التحديث التلقائي)
+  async function loadMeta() {
+    const note = document.getElementById("updateNote");
+
+    try {
+      const meta = await loadJSON("matches-meta.json");
+      const when = new Date(meta.updatedAt);
+
+      if (isNaN(when.getTime())) {
+        throw new Error("تاريخ غير صحيح");
+      }
+
+      note.textContent =
+        "آخر تحديث تلقائي للجدول: " +
+        new Intl.DateTimeFormat(
+          "ar-SA-u-ca-gregory",
+          {
+            day: "numeric",
+            month: "long",
+            hour: "numeric",
+            minute: "2-digit",
+            timeZone: "Asia/Riyadh"
+          }
+        ).format(when);
+
+      note.hidden = false;
+
+    } catch (error) {
+      note.hidden = true;
+    }
+  }
+
   async function loadData() {
     await loadTeams();
     await loadMatches();
+    await loadMeta();
     setupTeamSelect();
   }
 
@@ -1367,24 +1432,13 @@
       return;
     }
 
-    if (currentTeam.completeUntil) {
-      const until = new Date(currentTeam.completeUntil + "T23:59:59+03:00");
-
-      const untilText = new Intl.DateTimeFormat(
-        "ar-SA-u-ca-gregory",
-        {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-          timeZone: "Asia/Riyadh"
-        }
-      ).format(until);
-
+    if (currentTeam.leagueOnly) {
       note.textContent =
-        "جدول " + currentTeam.name + " مكتمل حتى " + untilText +
-        " فقط، وباقي المباريات ما أضيفت بعد.";
+        "المعروض حالياً: مباريات دوري روشن فقط، وتتحدث تلقائياً.";
     } else {
-      note.textContent = "جدول " + currentTeam.name + " غير مكتمل.";
+      note.textContent = "";
+      note.hidden = true;
+      return;
     }
 
     note.hidden = false;
@@ -1534,6 +1588,18 @@
   }
 
   function getMatchResult(match) {
+
+    // نتيجة رسمية جاية تلقائياً من matches.json
+    if (
+      Number.isInteger(match.homeScore) &&
+      Number.isInteger(match.awayScore)
+    ) {
+      return {
+        home: String(match.homeScore),
+        away: String(match.awayScore)
+      };
+    }
+
     const results = getMatchResults();
 
     return results[getMatchKey(match)] || null;
@@ -3125,10 +3191,24 @@
   setInterval(
     function() {
       loadPrayerTimes();
-      loadData().then(rerenderMatches);
     },
     6 * 60 * 60 * 1000
   );
+
+  // تحديث المباريات والنتائج من الملف كل نص ساعة
+  setInterval(
+    function() {
+      loadData().then(rerenderMatches);
+    },
+    30 * 60 * 1000
+  );
+
+  // وإذا رجعت للتطبيق بعد ما كان مخفي (مثلاً من الخلفية) نحدّث مباشرة
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "visible") {
+      loadData().then(rerenderMatches);
+    }
+  });
 
 </script>
 
