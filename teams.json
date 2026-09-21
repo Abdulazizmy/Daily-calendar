@@ -1,0 +1,110 @@
+[
+  {
+    "id": "hilal",
+    "name": "الهلال",
+    "logo": "https://commons.wikimedia.org/wiki/Special:FilePath/Al_Hilal_SFC_Logo.svg",
+    "complete": true
+  },
+  {
+    "id": "nassr",
+    "name": "النصر",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/817.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "ittihad",
+    "name": "الاتحاد",
+    "logo": "https://commons.wikimedia.org/wiki/Special:FilePath/Al-Ittihad_logo.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "ahli",
+    "name": "الأهلي",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/8346.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "abha",
+    "name": "أبها",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/21833.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "ettifaq",
+    "name": "الاتفاق",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/8363.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "khaleej",
+    "name": "الخليج",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/21829.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "kholood",
+    "name": "الخلود",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/22028.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "diriyah",
+    "name": "الدرعية",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500-dark/131746.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "riyadh",
+    "name": "الرياض",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/21965.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "shabab",
+    "name": "الشباب",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/793.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "taawoun",
+    "name": "التعاون",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/18459.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "fateh",
+    "name": "الفتح",
+    "logo": "https://commons.wikimedia.org/wiki/Special:FilePath/Al_Fateh_SC_Logo.svg",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "fayha",
+    "name": "الفيحاء",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/21827.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "qadsiah",
+    "name": "القادسية",
+    "logo": "https://commons.wikimedia.org/wiki/Special:FilePath/Al-Qadsiah%20Logo.svg",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "hazem",
+    "name": "الحزم",
+    "logo": "https://commons.wikimedia.org/wiki/Special:FilePath/Al-Hazem%20SC%20logo.png",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "faisaly",
+    "name": "الفيصلي",
+    "logo": "",
+    "completeUntil": "2026-10-31"
+  },
+  {
+    "id": "neom",
+    "name": "نيوم",
+    "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/130899.png",
+    "completeUntil": "2026-10-31"
+  }
+]

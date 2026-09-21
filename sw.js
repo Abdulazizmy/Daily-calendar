@@ -1,6 +1,6 @@
 // Service Worker للتقويم اليومي
 // غيّر رقم النسخة كل ما عدّلت ملفات الموقع عشان يتحدث الكاش عند المستخدمين
-const VERSION = 'v2';
+const VERSION = 'v4';
 const SHELL_CACHE = `calendar-shell-${VERSION}`;
 const RUNTIME_CACHE = `calendar-runtime-${VERSION}`;
 
@@ -10,6 +10,7 @@ const SHELL_FILES = [
   './index.html',
   './manifest.json',
   './matches.json',
+  './teams.json',
   './icon-192.png',
   './icon-512.png',
   './icon-maskable-512.png'
@@ -20,6 +21,7 @@ const STATIC_HOSTS = [
   'fonts.googleapis.com',
   'fonts.gstatic.com',
   'upload.wikimedia.org',
+  'a.espncdn.com',
   'commons.wikimedia.org'
 ];
 
@@ -73,8 +75,15 @@ async function prayerTimesFallback(request) {
   } catch (err) {
     const exact = await cache.match(request);
     if (exact) return exact;
+    // نفس المدينة فقط (نفس الإحداثيات)، عشان ما نعرض أوقات مدينة ثانية
+    const wanted = new URL(request.url).searchParams;
     const keys = await cache.keys();
-    const older = keys.filter((k) => API_HOSTS.includes(new URL(k.url).hostname));
+    const older = keys.filter((k) => {
+      const u = new URL(k.url);
+      return API_HOSTS.includes(u.hostname) &&
+        u.searchParams.get('latitude') === wanted.get('latitude') &&
+        u.searchParams.get('longitude') === wanted.get('longitude');
+    });
     if (older.length) return cache.match(older[older.length - 1]);
     throw err;
   }

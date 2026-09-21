@@ -157,6 +157,28 @@
       font-size: 11px;
     }
 
+    .pick-select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      color-scheme: dark;
+    }
+
+    .pick-select:focus {
+      border-color: var(--blue);
+    }
+
+    .pick-select option {
+      background: var(--card);
+      color: var(--text);
+    }
+
     .prayer-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
@@ -298,7 +320,7 @@
       color: var(--blue);
     }
 
-    .day.hilal-day::before {
+    .day.match-day::before {
       content: "";
       position: absolute;
       inset: 0;
@@ -308,7 +330,7 @@
           rgba(7,17,31,0.55),
           rgba(7,17,31,0.72)
         ),
-        url("https://commons.wikimedia.org/wiki/Special:FilePath/Al_Hilal_SFC_Logo.svg");
+        var(--team-logo, none);
       background-position: center;
       background-repeat: no-repeat;
       background-size: 95px;
@@ -317,7 +339,7 @@
       pointer-events: none;
     }
 
-    .day.hilal-day {
+    .day.match-day {
       border-color: rgba(22,137,255,0.45);
     }
 
@@ -369,6 +391,20 @@
       color: var(--blue);
       font-size: 9px;
       margin-top: 2px;
+    }
+
+    .team-note {
+      background: rgba(255,200,87,0.08);
+      border: 1px solid rgba(255,200,87,0.25);
+      color: var(--yellow);
+      border-radius: 12px;
+      padding: 9px 12px;
+      font-size: 11px;
+      margin-bottom: 14px;
+    }
+
+    .team-note[hidden] {
+      display: none;
     }
 
     .matches-section {
@@ -854,7 +890,7 @@
   <header class="header">
     <div class="header-icon">🌙</div>
     <h1>التقويم</h1>
-    <p>التاريخ، مواقيت الصلاة، المناسبات، ومباريات الهلال</p>
+    <p>التاريخ، مواقيت الصلاة، المناسبات، ومباريات فريقك</p>
   </header>
 
   <section class="top-info">
@@ -880,7 +916,7 @@
 
     <div class="section-title">
       <h2>مواقيت الصلاة</h2>
-      <span>الرياض</span>
+      <select id="citySelect" class="pick-select" aria-label="اختيار المدينة"></select>
     </div>
 
     <div class="prayer-grid" id="prayerGrid">
@@ -955,9 +991,11 @@
   <section class="matches-section">
 
     <div class="section-title">
-      <h2>المباريات القادمة للهلال</h2>
-      <span>6 مباريات</span>
+      <h2>المباريات القادمة</h2>
+      <select id="teamSelect" class="pick-select" aria-label="اختيار الفريق"></select>
     </div>
+
+    <div class="team-note" id="teamNote" hidden></div>
 
     <div class="matches" id="matchesContainer"></div>
 
@@ -976,8 +1014,8 @@
 
     <div class="modal-section">
 
-      <div class="modal-section-title">
-        مباريات الهلال
+      <div class="modal-section-title" id="modalMatchesTitle">
+        مباريات الفريق
       </div>
 
       <div id="modalMatches"></div>
@@ -1124,20 +1162,103 @@
       "https://commons.wikimedia.org/wiki/Special:FilePath/Al-Hazem%20SC%20logo.png"
   };
 
-  // المباريات تنقرأ من ملف matches.json (انظر loadMatches بالأسفل)
-  let hilalMatches = [];
+  // الفرق: تنحمّل من teams.json، وهذي نسخة احتياطية إذا تعذر التحميل
+  let teams = [
+    { id: "hilal", name: "الهلال", logo: logos.hilal, complete: true, completeUntil: "" }
+  ];
 
-  // تحميل المباريات من matches.json
-  // في ملف المباريات تقدر تكتب مفتاح الشعار (مثل hilal) أو رابط كامل أو تتركه فاضي
-  async function loadMatches() {
+  let currentTeam = teams[0];
+
+  // كل المباريات (لكل الفرق)، وتنقرأ من matches.json
+  let allMatches = [];
+
+  function getTeamByName(name) {
+    return teams.find(team => team.name === name) || null;
+  }
+
+  function teamLogoForName(name) {
+    const team = getTeamByName(name);
+
+    return team ? team.logo : "";
+  }
+
+  function matchInvolvesTeam(match, team) {
+    return match.home === team.name || match.away === team.name;
+  }
+
+  // رابط آمن للاستخدام داخل CSS
+  function cssUrl(url) {
+    return 'url("' +
+      String(url).replace(/["\\\n\r]/g, c => encodeURIComponent(c)) +
+      '")';
+  }
+
+  async function loadJSON(file) {
+    const response = await fetch(file, { cache: "no-cache" });
+
+    if (!response.ok) {
+      throw new Error("تعذر تحميل " + file);
+    }
+
+    return response.json();
+  }
+
+  // تحميل الفرق من teams.json
+  async function loadTeams() {
     try {
-      const response = await fetch("matches.json", { cache: "no-cache" });
+      const data = await loadJSON("teams.json");
 
-      if (!response.ok) {
-        throw new Error("تعذر تحميل ملف المباريات");
+      if (!Array.isArray(data)) {
+        throw new Error("صيغة ملف الفرق غير صحيحة");
       }
 
-      const data = await response.json();
+      const loaded = [];
+
+      data.forEach(function(item, index) {
+
+        if (!item || !item.id || !item.name) {
+          console.warn("تم تجاهل فريق غير صحيح رقم", index + 1, item);
+          return;
+        }
+
+        loaded.push({
+          id: String(item.id),
+          name: String(item.name),
+          logo: logos[item.logo] || item.logo || "",
+          complete: item.complete === true,
+          completeUntil: item.completeUntil ? String(item.completeUntil) : ""
+        });
+      });
+
+      if (loaded.length) {
+        teams = loaded;
+      }
+
+    } catch (error) {
+      console.error("Teams error:", error);
+    }
+
+    // نرجع للفريق المحفوظ، وإذا ما فيه نختار الهلال
+    let savedId = null;
+
+    try {
+      savedId = localStorage.getItem("selectedTeam");
+    } catch (error) {
+      console.warn("تعذر قراءة الفريق المحفوظ", error);
+    }
+
+    currentTeam =
+      teams.find(team => team.id === savedId) ||
+      teams.find(team => team.id === "hilal") ||
+      teams[0];
+  }
+
+  // تحميل المباريات من matches.json
+  // في ملف المباريات تقدر تكتب مفتاح الشعار (مثل hilal) أو رابط كامل،
+  // وإذا تركته فاضي ياخذ شعار الفريق من teams.json
+  async function loadMatches() {
+    try {
+      const data = await loadJSON("matches.json");
 
       if (!Array.isArray(data)) {
         throw new Error("صيغة ملف المباريات غير صحيحة");
@@ -1162,20 +1283,115 @@
           home: String(item.home),
           away: String(item.away),
           competition: String(item.competition || ""),
-          homeLogo: logos[item.homeLogo] || item.homeLogo || "",
-          awayLogo: logos[item.awayLogo] || item.awayLogo || "",
+          homeLogo: logos[item.homeLogo] || item.homeLogo || teamLogoForName(item.home),
+          awayLogo: logos[item.awayLogo] || item.awayLogo || teamLogoForName(item.away),
           venue: String(item.venue || "")
         });
       });
 
-      hilalMatches = loaded;
+      loaded.sort(
+        (a, b) => new Date(a.start) - new Date(b.start)
+      );
+
+      allMatches = loaded;
 
     } catch (error) {
       console.error("Matches error:", error);
     }
   }
 
+  async function loadData() {
+    await loadTeams();
+    await loadMatches();
+    setupTeamSelect();
+  }
+
+  let teamSelectReady = false;
+
+  function setupTeamSelect() {
+    const select = document.getElementById("teamSelect");
+
+    select.innerHTML = "";
+
+    teams.forEach(team => {
+      const option = document.createElement("option");
+      option.value = team.id;
+      option.textContent = team.name;
+      select.appendChild(option);
+    });
+
+    select.value = currentTeam.id;
+
+    if (teamSelectReady) {
+      return;
+    }
+
+    teamSelectReady = true;
+
+    select.addEventListener("change", function() {
+      const chosen = teams.find(team => team.id === select.value);
+
+      if (!chosen) {
+        return;
+      }
+
+      currentTeam = chosen;
+
+      try {
+        localStorage.setItem("selectedTeam", chosen.id);
+      } catch (error) {
+        console.warn("تعذر حفظ الفريق", error);
+      }
+
+      rerenderMatches();
+    });
+  }
+
+  // عناوين وتنبيه الفريق المختار
+  function updateTeamUI() {
+    const modalTitle = document.getElementById("modalMatchesTitle");
+
+    if (modalTitle) {
+      modalTitle.textContent = "مباريات " + currentTeam.name;
+    }
+
+    const note = document.getElementById("teamNote");
+
+    if (!note) {
+      return;
+    }
+
+    if (currentTeam.complete) {
+      note.hidden = true;
+      note.textContent = "";
+      return;
+    }
+
+    if (currentTeam.completeUntil) {
+      const until = new Date(currentTeam.completeUntil + "T23:59:59+03:00");
+
+      const untilText = new Intl.DateTimeFormat(
+        "ar-SA-u-ca-gregory",
+        {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+          timeZone: "Asia/Riyadh"
+        }
+      ).format(until);
+
+      note.textContent =
+        "جدول " + currentTeam.name + " مكتمل حتى " + untilText +
+        " فقط، وباقي المباريات ما أضيفت بعد.";
+    } else {
+      note.textContent = "جدول " + currentTeam.name + " غير مكتمل.";
+    }
+
+    note.hidden = false;
+  }
+
   function rerenderMatches() {
+    updateTeamUI();
     renderCalendar();
     renderMatches();
 
@@ -1191,7 +1407,11 @@
   function getUniqueMatches() {
     const seen = new Set();
 
-    return hilalMatches.filter(match => {
+    return allMatches.filter(match => {
+
+      if (!matchInvolvesTeam(match, currentTeam)) {
+        return false;
+      }
 
       const start = new Date(match.start);
 
@@ -1437,7 +1657,91 @@
     });
   }
 
+  // مدن السعودية (الإحداثيات أدق من الاسم في خدمة مواقيت الصلاة)
+  const saudiCities = [
+    { id: "riyadh",   name: "الرياض",        lat: 24.7136, lng: 46.6753 },
+    { id: "jeddah",   name: "جدة",           lat: 21.4858, lng: 39.1925 },
+    { id: "makkah",   name: "مكة المكرمة",   lat: 21.3891, lng: 39.8579 },
+    { id: "madinah",  name: "المدينة المنورة", lat: 24.5247, lng: 39.5692 },
+    { id: "dammam",   name: "الدمام",        lat: 26.4207, lng: 50.0888 },
+    { id: "khobar",   name: "الخبر",         lat: 26.2172, lng: 50.1971 },
+    { id: "jubail",   name: "الجبيل",        lat: 27.0046, lng: 49.6460 },
+    { id: "hofuf",    name: "الأحساء",       lat: 25.3648, lng: 49.5876 },
+    { id: "taif",     name: "الطائف",        lat: 21.2703, lng: 40.4158 },
+    { id: "buraydah", name: "بريدة",         lat: 26.3260, lng: 43.9750 },
+    { id: "tabuk",    name: "تبوك",          lat: 28.3838, lng: 36.5550 },
+    { id: "hail",     name: "حائل",          lat: 27.5114, lng: 41.7208 },
+    { id: "abha",     name: "أبها",          lat: 18.2164, lng: 42.5053 },
+    { id: "khamis",   name: "خميس مشيط",     lat: 18.3093, lng: 42.7292 },
+    { id: "jazan",    name: "جازان",         lat: 16.8892, lng: 42.5511 },
+    { id: "najran",   name: "نجران",         lat: 17.4917, lng: 44.1322 },
+    { id: "baha",     name: "الباحة",        lat: 20.0129, lng: 41.4677 },
+    { id: "yanbu",    name: "ينبع",          lat: 24.0895, lng: 38.0618 },
+    { id: "kharj",    name: "الخرج",         lat: 24.1554, lng: 47.3346 },
+    { id: "hafar",    name: "حفر الباطن",    lat: 28.4328, lng: 45.9708 },
+    { id: "sakaka",   name: "سكاكا",         lat: 29.9697, lng: 40.2064 },
+    { id: "arar",     name: "عرعر",          lat: 30.9753, lng: 41.0381 }
+  ];
+
+  let currentCity = saudiCities[0];
+  let prayerRequestId = 0;
+
+  try {
+    const savedCityId = localStorage.getItem("prayerCity");
+    const savedCity = saudiCities.find(city => city.id === savedCityId);
+
+    if (savedCity) {
+      currentCity = savedCity;
+    }
+  } catch (error) {
+    console.warn("تعذر قراءة المدينة المحفوظة", error);
+  }
+
+  (function setupCitySelect() {
+    const select = document.getElementById("citySelect");
+
+    saudiCities.forEach(city => {
+      const option = document.createElement("option");
+      option.value = city.id;
+      option.textContent = city.name;
+      select.appendChild(option);
+    });
+
+    select.value = currentCity.id;
+
+    select.addEventListener("change", function() {
+      const chosen = saudiCities.find(city => city.id === select.value);
+
+      if (!chosen) {
+        return;
+      }
+
+      currentCity = chosen;
+
+      try {
+        localStorage.setItem("prayerCity", chosen.id);
+      } catch (error) {
+        console.warn("تعذر حفظ المدينة", error);
+      }
+
+      // نمسح أوقات المدينة القديمة عشان ما تظهر لمدينة ثانية
+      prayers = [];
+
+      document.getElementById("prayerGrid").innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #aaa;">
+          جاري التحميل...
+        </div>
+      `;
+
+      document.getElementById("nextPrayer").textContent = "جاري التحميل...";
+
+      loadPrayerTimes();
+    });
+  })();
+
   async function loadPrayerTimes() {
+
+    const requestId = ++prayerRequestId;
 
     try {
 
@@ -1454,8 +1758,9 @@
         now.getFullYear();
 
       const url =
-        `https://api.aladhan.com/v1/timingsByCity/${day}-${month}-${year}` +
-        `?city=Riyadh&country=Saudi%20Arabia&method=4&school=0`;
+        `https://api.aladhan.com/v1/timings/${day}-${month}-${year}` +
+        `?latitude=${currentCity.lat}&longitude=${currentCity.lng}` +
+        `&method=4&school=0`;
 
       const response =
         await fetch(url);
@@ -1468,6 +1773,11 @@
 
       const data =
         await response.json();
+
+      // إذا غيّر المستخدم المدينة أثناء التحميل نتجاهل الرد القديم
+      if (requestId !== prayerRequestId) {
+        return;
+      }
 
       if (
         data.code !== 200 ||
@@ -1513,6 +1823,10 @@
       renderPrayerCountdown();
 
     } catch (error) {
+
+      if (requestId !== prayerRequestId) {
+        return;
+      }
 
       console.error(
         "Prayer times error:",
@@ -1742,7 +2056,12 @@
         );
 
       if (dayMatches.length > 0) {
-        dayElement.classList.add("hilal-day");
+        dayElement.classList.add("match-day");
+
+        dayElement.style.setProperty(
+          "--team-logo",
+          currentTeam.logo ? cssUrl(currentTeam.logo) : "none"
+        );
       }
 
       const dayEvents =
@@ -1781,7 +2100,7 @@
 
         matchEvent.innerHTML =
           `<span class="dot dot-blue"></span>
-           <span>مباراة الهلال</span>`;
+           <span>مباراة ${escapeHTML(currentTeam.name)}</span>`;
 
         eventContainer.appendChild(matchEvent);
 
@@ -2771,7 +3090,7 @@
   renderTopDate();
   renderPrayerCountdown();
   renderCalendar();
-  loadMatches().then(rerenderMatches);
+  loadData().then(rerenderMatches);
   loadPrayerTimes();
 
   setInterval(
@@ -2806,7 +3125,7 @@
   setInterval(
     function() {
       loadPrayerTimes();
-      loadMatches().then(rerenderMatches);
+      loadData().then(rerenderMatches);
     },
     6 * 60 * 60 * 1000
   );
