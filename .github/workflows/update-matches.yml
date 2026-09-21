@@ -15,6 +15,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -22,16 +23,17 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: جلب الجدول والنتائج من ESPN
+      - name: جلب الجدول والنتائج والتفاصيل من ESPN
         run: python scripts/update_matches.py
 
       - name: حفظ التغييرات
         run: |
-          if [ -n "$(git status --porcelain matches.json matches-meta.json)" ]; then
+          if [ -n "$(git status --porcelain matches.json matches-meta.json match-details.json)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add matches.json matches-meta.json
+            git add matches.json matches-meta.json match-details.json
             git commit -m "تحديث المباريات تلقائياً"
+            git pull --rebase
             git push
           else
             echo "ما فيه تغييرات"
