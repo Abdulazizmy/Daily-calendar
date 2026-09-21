@@ -10,6 +10,9 @@
 
 بطولات ما يغطيها ESPN (مثل كأس السوبر) تنكتب يدوياً في extra-matches.json.
 
+تفاصيل المباريات المنتهية (المسجلين والبطاقات والصناعة) تنكتب في match-details.json.
+هذي التفاصيل إضافية: إذا فشل جلبها ما يتأثر جدول المباريات.
+
 الأمان: إذا فشل أي فحص للدوري ما يكتب أي شي، ويبقى الملف القديم سليم.
 
 الاستخدام:
@@ -32,6 +35,8 @@ LOGO = "https://a.espncdn.com/i/teamlogos/soccer/500/{}.png"
 RIYADH = dt.timezone(dt.timedelta(hours=3))
 USER_AGENT = "Mozilla/5.0 (compatible; daily-calendar-updater)"
 WORKERS = 5
+DETAILS_BUDGET = 420      # ثواني نخصصها لجلب الصناعة في التشغيل الواحد
+ASSIST_TRIES = 3          # كم مرة نعيد محاولة الصناعة لمباراة قبل ما نتركها
 
 # strict=True: الدوري لازم يكتمل ويعدي الفحص، وإلا ما نكتب شي
 COMPETITIONS = [
@@ -310,6 +315,338 @@ def season_year(now):
     return now.year if now.month >= 7 else now.year - 1
 
 
+# ---------------------------------------------------------------- تفاصيل المباريات
+
+def team_id_from(value):
+    if isinstance(value, dict):
+        found = re.search(r"/teams/(\d+)", str(value.get("$ref") or ""))
+
+        if found:
+            return found.group(1)
+
+        if value.get("id"):
+            return str(value["id"])
+
+    return ""
+
+
+def play_player(play):
+    """اسم اللاعب من نص الحدث: 'Malcom (Al Hilal) Goal at 26'' """
+    text = str(play.get("text") or "")
+    found = re.match(r"^(.*?)\s+\(", text)
+
+    if found and found.group(1).strip():
+        return found.group(1).strip()
+
+    short = str(play.get("shortText") or "")
+    kind = str((play.get("type") or {}).get("text") or "")
+
+    if kind and short.endswith(kind):
+        short = short[: -len(kind)]
+
+    return short.strip()
+
+
+def play_minute(play):
+    clock = str((play.get("clock") or {}).get("displayValue") or "")
+    added = str((play.get("addedClock") or {}).get("displayValue") or "")
+
+    if added and added not in clock:
+        clock += added
+
+    return clock
+
+
+def fetch_plays(slug, event_id):
+    base = f"{CORE}{slug}/events/{event_id}/competitions/{event_id}/plays?limit=300"
+    first = FETCH(base)
+    items = list(first.get("items") or [])
+
+    for page in range(2, int(first.get("pageCount") or 1) + 1):
+        items += FETCH(f"{base}&page={page}").get("items") or []
+
+    return [resolve(item) for item in items]
+
+
+def athlete_name(ref, cache):
+    if not ref:
+        return ""
+
+    if ref not in cache:
+        try:
+            info = FETCH(ref)
+            cache[ref] = str(info.get("displayName") or info.get("fullName") or "")
+        except UpdateError:
+            cache[ref] = ""
+
+    return cache[ref]
+
+
+def parse_plays(items, home_id, away_id, names_cache):
+    """يطلع الأهداف والبطاقات من أحداث المباراة."""
+    goals, cards = [], []
+    prev_home = prev_away = 0
+
+    ordered = sorted(
+        (item for item in items if isinstance(item, dict)),
+        key=lambda p: (p.get("clock") or {}).get("value") or 0,
+    )
+
+    for play in ordered:
+        kind = str((play.get("type") or {}).get("type") or "").lower()
+        team_id = team_id_from(play.get("team"))
+        own_side = "home" if team_id == home_id else ("away" if team_id == away_id else "")
+
+        if play.get("scoringPlay") and not play.get("shootout"):
+            own = bool(play.get("ownGoal")) or "own" in kind
+            penalty = bool(play.get("penaltyKick")) or "penalty" in kind
+            home_score, away_score = play.get("homeScore"), play.get("awayScore")
+            side = ""
+
+            # الهدف يُنسب للفريق اللي زادت نتيجته (يشمل الأهداف العكسية)
+            if isinstance(home_score, int) and isinstance(away_score, int):
+                if home_score > prev_home:
+                    side = "home"
+                elif away_score > prev_away:
+                    side = "away"
+
+                prev_home, prev_away = home_score, away_score
+
+            if not side:
+                side = own_side
+
+                if own:
+                    side = {"home": "away", "away": "home"}.get(own_side, "")
+
+            assist = ""
+
+            for part in play.get("participants") or []:
+                if "assist" in str(part.get("type") or "").lower():
+                    athlete = part.get("athlete")
+                    assist = athlete_name(
+                        athlete.get("$ref") if isinstance(athlete, dict) else None,
+                        names_cache,
+                    )
+
+            goals.append({
+                "minute": play_minute(play),
+                "side": side,
+                "player": play_player(play),
+                "type": "own" if own else ("penalty" if penalty else "goal"),
+                "assist": assist,
+            })
+
+        elif play.get("yellowCard") or play.get("redCard") or "red-card" in kind:
+            red = bool(play.get("redCard")) or "red-card" in kind
+
+            cards.append({
+                "minute": play_minute(play),
+                "side": own_side,
+                "player": play_player(play),
+                "card": "red" if red else "yellow",
+            })
+
+    return goals, cards
+
+
+def stat_value(stats, wanted):
+    """يقرأ إحصائية بالاسم من رد إحصائيات اللاعب."""
+    found = []
+
+    def walk(node):
+        if isinstance(node, dict):
+            if node.get("name") == wanted and "value" in node:
+                found.append(node["value"])
+
+            for child in node.values():
+                walk(child)
+
+        elif isinstance(node, list):
+            for child in node:
+                walk(child)
+
+    walk(stats)
+
+    for value in found:
+        try:
+            return int(float(value))
+        except (TypeError, ValueError):
+            continue
+
+    return 0
+
+
+def fetch_team_assists(slug, event_id, team_id, names_cache):
+    """قائمة (اللاعب, عدد الصناعات) للاعبي فريق في مباراة."""
+    base = f"{CORE}{slug}/events/{event_id}/competitions/{event_id}/competitors/{team_id}"
+    roster = FETCH(f"{base}/roster?limit=100")
+    entries = roster.get("entries") or roster.get("items") or []
+    jobs = []
+
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+
+        athlete = entry.get("athlete") if isinstance(entry.get("athlete"), dict) else {}
+        player_id = str(entry.get("playerId") or "")
+
+        if not player_id:
+            found = re.search(r"/athletes/(\d+)", str(athlete.get("$ref") or ""))
+            player_id = found.group(1) if found else ""
+
+        if not player_id:
+            continue
+
+        stats = entry.get("statistics")
+        url = stats.get("$ref") if isinstance(stats, dict) and stats.get("$ref") else \
+            f"{base}/roster/{player_id}/statistics/0"
+
+        jobs.append((url, athlete.get("$ref"), entry.get("displayName") or athlete.get("displayName")))
+
+    if not jobs:
+        raise UpdateError("قائمة اللاعبين فاضية")
+
+    def one(job):
+        url, athlete_ref, name = job
+        count = stat_value(FETCH(url), "goalAssists")
+
+        if count > 0 and not name:
+            name = athlete_name(athlete_ref, names_cache)
+
+        return name or "", count
+
+    results = map_parallel(lambda job: safe(one, job), jobs)
+    good = [value for value, error in results if error is None]
+
+    if not good:
+        raise UpdateError("ما قدرنا نقرأ إحصائيات اللاعبين")
+
+    return [{"player": name, "count": count} for name, count in good if count > 0]
+
+
+def link_assists(entry):
+    """إذا فريق سجل هدف واحد عادي وصنعه لاعب واحد بالضبط نربطهم ببعض."""
+    for side in ("home", "away"):
+        eligible = [g for g in entry["goals"] if g["side"] == side and g["type"] == "goal"]
+        givers = [a for a in entry.get("assists", []) if a["side"] == side]
+
+        if (
+            len(eligible) == 1
+            and len(givers) == 1
+            and givers[0]["count"] == 1
+            and not eligible[0].get("assist")
+        ):
+            eligible[0]["assist"] = givers[0]["player"]
+            givers[0]["linked"] = True
+
+
+def update_details(final_events, before, now, log):
+    """يحدّث تفاصيل المباريات المنتهية. كل خطأ هنا ما يوقف شي."""
+    out = {key: value for key, value in before.items()}
+    names_cache = {}
+    started = time.time()
+    recent_from = now - dt.timedelta(hours=30)
+
+    todo = [
+        ev for ev in final_events
+        if ev["key"] not in before or ev["start"] > recent_from
+    ]
+
+    def get_plays(ev):
+        items = fetch_plays(ev["slug"], ev["eid"])
+        return parse_plays(items, ev["home_id"], ev["away_id"], names_cache)
+
+    results = map_parallel(lambda ev: safe(get_plays, ev), todo)
+    new_count = failed = 0
+
+    for ev, (parsed, error) in zip(todo, results):
+        if error is not None:
+            failed += 1
+            continue
+
+        goals, cards = parsed
+        old = before.get(ev["key"]) or {}
+        entry = {
+            "goals": goals,
+            "cards": cards,
+            "assists": old.get("assists", []),
+            "assistsDone": bool(old.get("assistsDone", False)),
+            "assistsKnown": bool(old.get("assistsKnown", False)),
+            "tries": int(old.get("tries", 0)),
+        }
+
+        if len(goals) != len(old.get("goals", goals)):
+            entry.update(assists=[], assistsDone=False, assistsKnown=False, tries=0)
+
+        if ev["key"] not in before:
+            new_count += 1
+
+        # نحافظ على ربط الصناعة القديم إذا الأهداف ما تغيرت
+        for new_goal, old_goal in zip(goals, old.get("goals", [])):
+            if old_goal.get("assist") and not new_goal.get("assist") \
+                    and old_goal.get("player") == new_goal.get("player"):
+                new_goal["assist"] = old_goal["assist"]
+
+        out[ev["key"]] = entry
+
+    # --- الصناعة: نبدأ بالأحدث، وبميزانية وقت
+    pending = sorted(
+        (ev for ev in final_events if ev["key"] in out and not out[ev["key"]]["assistsDone"]),
+        key=lambda ev: ev["start"],
+        reverse=True,
+    )
+    done_now = 0
+
+    for ev in pending:
+        if time.time() - started > DETAILS_BUDGET:
+            break
+
+        entry = out[ev["key"]]
+        found = []
+
+        try:
+            for side, team_id in (("home", ev["home_id"]), ("away", ev["away_id"])):
+                open_goals = [g for g in entry["goals"] if g["side"] == side and g["type"] == "goal"]
+
+                if not open_goals:
+                    continue
+
+                for item in fetch_team_assists(ev["slug"], ev["eid"], team_id, names_cache):
+                    found.append({"side": side, **item})
+
+            entry["assists"] = found
+            entry["assistsKnown"] = True
+            entry["assistsDone"] = True
+            link_assists(entry)
+            done_now += 1
+
+        except UpdateError:
+            entry["tries"] = entry.get("tries", 0) + 1
+
+            if entry["tries"] >= ASSIST_TRIES:
+                entry["assistsDone"] = True   # ESPN ما يوفرها: نوقف المحاولة
+
+    left = sum(1 for ev in final_events if ev["key"] in out and not out[ev["key"]]["assistsDone"])
+    unknown = sum(1 for ev in final_events if ev["key"] in out and not out[ev["key"]]["assistsKnown"]
+                  and out[ev["key"]]["assistsDone"])
+
+    log(
+        f"تفاصيل المباريات: {len(final_events)} منتهية | جديد: {new_count}"
+        f" | الصناعة اكتملت الآن: {done_now} | متبقي للصناعة: {left}"
+        + (f" | ESPN ما وفّر الصناعة لـ {unknown}" if unknown else "")
+        + (f" | تعذر جلب أحداث {failed}" if failed else "")
+    )
+
+    return out
+
+
+def dump_details(details):
+    return "{\n" + ",\n".join(
+        f" {json.dumps(key, ensure_ascii=False)}: {json.dumps(details[key], ensure_ascii=False)}"
+        for key in sorted(details)
+    ) + "\n}\n"
+
+
 # ---------------------------------------------------------------- التشغيل
 
 def collect_competition(comp, year, log):
@@ -397,6 +734,7 @@ def run(root, dry_run=False, now=None, log=print):
     all_rows = []
     counts = {}
     covered = set()
+    final_events = []
 
     for comp in COMPETITIONS:
         events, failed = collect_competition(comp, year, log)
@@ -504,6 +842,14 @@ def run(root, dry_run=False, now=None, log=print):
             if event["state"] == "final":
                 row["homeScore"], row["awayScore"] = event["scores"]
                 row["status"] = "final"
+                final_events.append({
+                    "key": row["id"],
+                    "slug": comp["slug"],
+                    "eid": event["id"],
+                    "home_id": event["home_id"],
+                    "away_id": event["away_id"],
+                    "start": event["start"],
+                })
             elif event["state"] == "live":
                 row["status"] = "live"
 
@@ -572,6 +918,28 @@ def run(root, dry_run=False, now=None, log=print):
 
     all_rows.sort(key=lambda r: (r["start"], r["home"]))
     text = dump_rows(all_rows)
+
+    # --- تفاصيل المباريات المنتهية (إضافية: أي فشل هنا ما يأثر على الجدول)
+    details_path = os.path.join(root, "match-details.json")
+    details_before_text = read_text(details_path)
+
+    try:
+        details_before = read_json(details_path, {})
+    except ValueError:
+        details_before = {}
+
+    valid_ids = {r["id"] for r in all_rows if r.get("id")}
+    covered_events = [e for e in final_events if e["key"] in valid_ids]
+
+    try:
+        details = update_details(covered_events, details_before, now, log)
+    except Exception as error:  # noqa: BLE001
+        log(f"تفاصيل المباريات: تعذر التحديث ({type(error).__name__}: {error}). نبقي القديم")
+        details = details_before
+
+    details = {k: v for k, v in details.items() if k in valid_ids}
+    details_text = dump_details(details)
+    details_changed = details_text != details_before_text
     changed = text != previous_text
     log(f"إجمالي المباريات: {len(all_rows)} | " + ("تغيّر الجدول" if changed else "ما فيه تغيير"))
 
@@ -579,14 +947,17 @@ def run(root, dry_run=False, now=None, log=print):
     meta_path = os.path.join(root, "matches-meta.json")
     meta = read_json(meta_path, {})
     today = now.astimezone(RIYADH).strftime("%Y-%m-%d")
-    write_meta = changed or meta.get("checkedDate") != today
+    write_meta = changed or details_changed or meta.get("checkedDate") != today
 
     if dry_run:
         log("(تشغيل تجريبي: ما انكتب شي)")
-        return {"changed": changed, "rows": len(all_rows), "text": text}
+        return {"changed": changed, "rows": len(all_rows), "text": text, "details": details}
 
     if changed:
         write_text(os.path.join(root, "matches.json"), text)
+
+    if details_changed:
+        write_text(details_path, details_text)
 
     if write_meta:
         write_text(
@@ -603,7 +974,7 @@ def run(root, dry_run=False, now=None, log=print):
             ) + "\n",
         )
 
-    return {"changed": changed, "rows": len(all_rows), "text": text}
+    return {"changed": changed, "rows": len(all_rows), "text": text, "details": details}
 
 
 def main(argv):
